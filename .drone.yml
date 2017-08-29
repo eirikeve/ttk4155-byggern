@@ -4,8 +4,9 @@ pipeline:
     when:
       event: [push,pull_request]
     commands:
-      - apt install cmake ninja-build
-      - cmake -GNinja -DTARGET_GROUP=test .
-      - ninja -v
-      - ctest test --verbose
+      - apt-get update && apt-get install -y --no-install-recommends cmake
+      # - apt install cmake ninja-build
+      # - cmake -GNinja -DTARGET_GROUP=test .
+      # - ninja -v
+      # - ctest test --verbose
 
