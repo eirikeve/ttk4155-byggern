@@ -1,0 +1,11 @@
+pipeline:
+  test: 
+    image: "gcc:latest"
+    when:
+      event: [push,pull_request]
+      branches: "master"
+    commands:
+      - cmake -GNinja -DTARGET_GROUP=test .
+      - ninja -v
+      - ctest test --verbose
+
