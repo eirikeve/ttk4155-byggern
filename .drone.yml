@@ -3,8 +3,8 @@ pipeline:
     image: "gcc:latest"
     when:
       event: [push,pull_request]
-      branches: "master"
     commands:
+      - apt-get cmake ninja-build
       - cmake -GNinja -DTARGET_GROUP=test .
       - ninja -v
       - ctest test --verbose
