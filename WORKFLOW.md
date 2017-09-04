@@ -56,5 +56,7 @@ In this project a full peer review is a little bit overkill, but either way you 
     * `-X`: Only ignored files from .gitignore
     * `-f`: force remove
     * `-n`: Preview what would be removed
+    * `-d`: Remove directories
+    
 
 
