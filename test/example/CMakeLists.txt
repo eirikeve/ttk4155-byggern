@@ -3,8 +3,8 @@ add_executable(test_example_app
 )
  
 target_link_libraries(test_example_app
-    src
+    example
     Unity
 )
  
-add_test(test_example_test test_example_app)
+add_test(test_example test_example_app)
