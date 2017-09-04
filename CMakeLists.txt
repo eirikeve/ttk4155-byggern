@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
  
 set(TARGET_GROUP production CACHE STRING "Group to build")
  
-add_subdirectory(node_1)
+add_subdirectory(src)
  
 if(TARGET_GROUP STREQUAL production)
     add_subdirectory(main)
