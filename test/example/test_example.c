@@ -16,16 +16,10 @@ TEST_ASSERT_EQUAL_HEX8(84, AverageThreeBytes(0, 126, 126));
 }
 
 
-// void test_that_fails(void)
-// {
-//     TEST_ASSERT_TRUE(foo());
-// }
-
 int main(void)
 {
 UNITY_BEGIN();
 RUN_TEST(test_AverageThreeBytes_should_AverageMidRangeValues);
 RUN_TEST(test_AverageThreeBytes_should_AverageHighValues);
-// RUN_TEST(test_that_fails);
 return UNITY_END();
 }
