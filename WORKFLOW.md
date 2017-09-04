@@ -43,9 +43,18 @@ The general git workflow during development will therefore be:
 4. `git commit -m "feature_id: commit message that describes the changes done"`
 5. `git push`
 
+
+
 ### Opening a pull request
 When the development of a feature is finished on a branch, and the latest build is green, it needs to be merged back to master. This means that master will be updated with the code for the feature that has been implemented in a parallel branch. This process is done though what is called a pull request. When opening a pull request the code usually goes through a peer review with multiple people to remove possible bugs left from development, and that other people can comment and give their opinions about specific parts of your code, e.g possible improvements, or additional features they would like. When the pull request has been approved, the code is merged (hopefully automatically) into master.
 
 In this project a full peer review is a little bit overkill, but either way you should open a pull request to take a last look at the code, and to ensure that the code staged for merging into master functions correctly. To open a pull request, go to Github and click *create pull-request*. Then select *master* as base, and *feature branch* as head. You can then provide a short description of what has been implemented in the feature branch, and click on create pull-request. As long as the pull-request is open, it will be updated with all commits that is pushed to the branch. When there is no further updates to the feature, close the pull-request, and the code will be merged into master. In case of merge conflicts, manually fix all the conflicts, and then merge.
+
+
+# Useful Git commands
+1.  `git clean` Remove files from local directory
+    * `-X`: Only ignored files from .gitignore
+    * `-f`: force remove
+    * `-n`: Preview what would be removed
 
 
