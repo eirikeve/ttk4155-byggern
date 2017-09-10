@@ -1,4 +1,4 @@
-project("Sample Project" C)
+project("Sample Project" C CXX)
 cmake_minimum_required(VERSION 3.0)
  
 set(TARGET_GROUP production CACHE STRING "Group to build")
