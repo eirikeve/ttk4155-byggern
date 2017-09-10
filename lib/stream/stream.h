@@ -1,9 +1,6 @@
-#ifndef STREAM_H
-#define STREAM_H
+#pragma once
 
 class Stream {
 public:
     UART() {};
 };
-
-#endif //STREAM_H
