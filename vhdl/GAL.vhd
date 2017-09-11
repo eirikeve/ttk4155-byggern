@@ -5,15 +5,8 @@ use ieee.std_logic_unsigned.all;
 
 entity GAL_addrSelect is
     Port (
-        a11         : In std_logic;
-        a10         : In std_logic;
-        a9          : In std_logic;
-        a8          : In std_logic;
-
-        ram_cs      : Out std_logic;
-        adc_cs      : Out std_logic;
-        oled_cs     : Out std_logic;
-        oled_dc     : Out std_logic
+        a11,a10,a9,a8   : In std_logic;
+        ram_cs, adc_cs, oled_cs, oled_dc       : Out std_logic;
     );
     
     attribute LOC : string;
@@ -32,6 +25,11 @@ end;
 architecture behavioral of GAL_addrSelect is
 begin
 
-    -- implement the functionality here 
+    -- antar CS er aktiv hoy paa alle
+    -- Stod at oled_dc er unovdendig
+
+    oled_cs <= (not a11) and (not a10)
+    adc_cs  <= (not a11) and a10
+    ram_cs  <= a11
 
 end behavioral;
