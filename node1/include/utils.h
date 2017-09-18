@@ -17,6 +17,9 @@
 #define test_bit(reg, bit) (reg & (1 << (bit)))
 #define set_byte(reg, val) (reg = val)
 
+#define loop_until_bit_is_clear(sfr,bit) \
+do { } while (bit_is_set(sfr, bit)) 
+
 
 
 #endif /* UTILS_H_ */

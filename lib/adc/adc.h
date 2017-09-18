@@ -3,22 +3,28 @@
 // 18/09/2017
 
 #pragma once
+#include "../utilities/utilities.h"
+#include <stdint.h>
 
-enum Channel
-{ 
-    X=1, 
-    Y=2
+
+enum CHANNEL {
+    CH1 = 0b100,
+    CH2 = 0b101,
+    CH3 = 0b110,
+    CH4 = 0b111
 };
+
 
 class ADC
 {
-public:
-    Channel c;
+private:
+    CHANNEL c;
+    const uint8_t t_c = 45; 
+    volatile uint8_t *addr = (volatile uint8_t *) ADC_ADDR;
 
 public:
     ADC();
-    void read();
-    void selectChannel();
+    volatile uint8_t read(CHANNEL c);
     uint8_t testAdc();
 
-}
+};
