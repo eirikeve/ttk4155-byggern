@@ -4,7 +4,7 @@
 
 enum Channel
 { 
-    X, Y;
+    X=1, Y=2;
 }
 
 class ADC
