@@ -1,4 +1,4 @@
-#include "joystick.hpp"
+#include "joystick.h"
 
 namespace {
     enum MUX_SELECT {

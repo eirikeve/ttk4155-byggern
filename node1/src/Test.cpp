@@ -12,7 +12,7 @@ extern "C" {
 	#include "comm.h"
 }
 
- #include "../lib/joystick/joystick.hpp"
+ #include "../lib/joystick/joystick.h"
  #include <stdint.h>
 
  
