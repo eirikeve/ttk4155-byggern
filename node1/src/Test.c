@@ -10,6 +10,7 @@
 #include"utils.h"
 #include "util/delay.h"
 #include "comm.h"
+#include "lib/adc/adc.h"
 
 char* s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vestibulum erat a sapien luctus fermentum.";
 int main(void)
@@ -18,6 +19,7 @@ int main(void)
 	
 	init_uart();
 	uint8_t c;
+	ADC test;
 	
     while(1)
     {
@@ -25,7 +27,8 @@ int main(void)
         _delay_ms(500);
 		clr_bit(PORTB, 3);
 		_delay_ms(500);
-		printf("Hello World\n");
+		printf("%d\n", test.testAdc());
+		// printf("Hello World\n");
 		//put_uart_char('a');
 		//printf("This is a really long string: %s\n", s);
     }
