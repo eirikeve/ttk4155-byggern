@@ -2,10 +2,13 @@
 // Written by Håvard Borge, Eirik Vesterkjær
 // 18/09/2017
 
+#pragma once
+
 enum Channel
 { 
-    X=1, Y=2;
-}
+    X=1, 
+    Y=2
+};
 
 class ADC
 {
@@ -16,5 +19,6 @@ public:
     ADC();
     void read();
     void selectChannel();
+    uint8_t testAdc();
 
 }
