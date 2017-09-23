@@ -20,11 +20,11 @@ class ADC
 private:
     CHANNEL c;
     const uint8_t t_c = 45; 
-    volatile uint8_t *addr = (volatile uint8_t *) ADC_ADDR;
+    volatile uint16_t *addr = (uint16_t *) ADC_ADDR;
 
 public:
     ADC();
-    volatile uint8_t read(CHANNEL c);
+    uint8_t read(CHANNEL c);
     uint8_t testAdc();
 
 };

@@ -2,6 +2,8 @@
 extern "C" {
     #include "avr/io.h"  
     #include <util/delay.h>
+    #include "../../node1/include/comm.h"
+    #include <stdio.h>
 }
 #include "../utilities/utilities.h"
 
@@ -9,12 +11,10 @@ ADC::ADC() {
 	set_bit(MCUCR, SRE);
 }
 
-volatile uint8_t ADC::read(CHANNEL c){
-    // _delay_ms(this->t_c);
-    loop_until_bit_is_clear(PORTE, PE0);
+uint8_t ADC::read(CHANNEL c){
+    // loop_until_bit_is_clear(PINE, PE0);
     *(this->addr) = (uint8_t) c;
-    // _delay_ms(this->t_c);
-    loop_until_bit_is_clear(PORTE, PE0);
+    loop_until_bit_is_clear(PINE, PE0);
     return *(this->addr);
 }
 

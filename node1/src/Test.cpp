@@ -33,7 +33,7 @@ extern "C" {
 		 _delay_ms(100);
 		 clr_bit(PORTB, 0);
 		 _delay_ms(100);
-		joystick.readX(x);
+		// x = joystick.readY();
 		printf("%d\n", x);
 	 }
  }

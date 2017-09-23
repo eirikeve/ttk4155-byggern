@@ -17,3 +17,6 @@
 
 #define loop_until_bit_is_clear(sfr,bit) \
 do { } while (bit_is_set(sfr, bit)) 
+
+#define loop_until_bit_is_set(sfr,bit) \
+do { } while (bit_is_clear(sfr, bit)) 

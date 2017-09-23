@@ -1,4 +1,10 @@
 #include "joystick.h"
+extern "C" {
+    #include "../../node1/include/comm.h"
+    #include <stdio.h>
+    #include <stdlib.h>
+    
+}
 
 namespace {
     enum MUX_SELECT {
@@ -11,7 +17,87 @@ namespace {
 
 Joystick::Joystick(){
     state = 0;
+    this->autoCalibrate();
     return;
+}
+
+uint8_t Joystick::readX() {
+    return this->adc.read(CHANNEL::CH1);
+}
+
+uint8_t Joystick::readY() {
+    return this->adc.read(CHANNEL::CH2);
+}
+
+void Joystick::autoCalibrate() {
+    printf("\n");
+    // Get center points
+    
+    this->centre_x = this->readX();
+    printf("X: %d, ", centre_x);
+    this->centre_y = this->readY();
+    printf("Y: %d, ", this->centre_y);
+    
+    // printf("X etter: %d\n", centre_x);
+    // while (true) {
+    //     this->centre_x = this->readX();
+    //     printf("X: %d, ", centre_x);
+    //     this->centre_y = this->readY();
+    //     printf("Y: %d, ", centre_y);
+    //     printf("X etter: %d\n", centre_x);
+    // }
+
+    this->x_max = this->centre_x;
+    this->x_min = this->centre_x;
+    this->y_max = this->centre_y;
+    this->y_min = this->centre_y;
+
+    const uint8_t CALIBRATION_BREAK_LOOPS_X = 15;
+    const uint8_t CALIBRATION_BREAK_LOOPS_Y = 15;
+
+    uint8_t countX = 0;
+    uint8_t countY = 0;
+    uint8_t currentX;
+    uint8_t currentY;
+    // volatile uint8_t this->x;
+    // volatile uint8_t currentY;
+    // uint8_t* p1 = (uint8_t*) malloc(1);
+    // printf("%p", p1);
+    // uint8_t* p2 = (uint8_t*) malloc(1);
+    
+    do {
+        // Get current value for X and Y
+       
+        currentX = this->readX();
+        currentY = this->readY();
+        // uint8_t *p = (uint8_t*) 0x1400;
+        // *p = (uint8_t) 1000;
+        // currentY = this->centre_y;
+        
+
+        // Check if current value > max or current value < min
+        // If not, increment count
+        if ( abs(currentX - this->centre_x) > 10 && !(currentX > this->x_max || currentX < this->x_min)) {
+            countX++;
+        } else if (currentX > this->x_max) {
+            this->x_max = currentX;
+        } else if (currentX < this->x_min) {
+            this->x_min = currentX;
+        }
+
+        // *p2 = this->readY();
+        // currentY = *p2;
+        if (abs(currentY == this->centre_y) > 10 && !(currentY > this->y_max || currentY < this->y_min)) {
+            countY++;
+        } else if (currentY > this->y_max) {
+            this->y_max = currentY;
+        } else if (currentY < this->y_min) {
+            this->y_min = currentY;
+        }
+        printf("CX: %d, MAX: %d, MIX: %d, ", currentX, this->x_max, this->x_min);
+        printf("CY: %d, MAY: %d, MIY: %d\n", currentY, this->y_max, this->y_min);
+    } while (((abs(currentX - this->centre_x) < 10 && abs(currentY == this->centre_y) < 10)) && \
+            (countX < CALIBRATION_BREAK_LOOPS_X || countY < CALIBRATION_BREAK_LOOPS_Y));
 }
 
 // void Joystick::getRaw(Position * p)
@@ -27,14 +113,6 @@ Joystick::Joystick(){
 
 //     return;
 // }
-
-void Joystick::readX(uint8_t &x) {
-    x = this->adc.read(CHANNEL::CH1);
-}
-
-void Joystick::readY(uint8_t &y) {
-    y = this->adc.read(CHANNEL::CH2);
-}
 
 // void Joystick::getDir(dir_t * d)
 // {
