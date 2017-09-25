@@ -29,10 +29,10 @@ private:
 	int index;
 	
 public:
-	char **getChoices(SubMenu * menu); // returner en liste med alle valg i en undermeny
+	char * getChoices(SubMenu * menu); // returner en liste med alle valg i en undermeny
 	void select(); // velger et alternativ
 	void goBack();
 	void goUp();
 	void goDown();
 	
-} 
+};
