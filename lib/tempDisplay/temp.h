@@ -16,6 +16,7 @@ class OLED
 
     void clear();
     void goToPage(uint8_t page);
+    void goToColumn(uint8_t col);
     void goTo(uint8_t page, uint8_t col);
     void writeChar(unsigned char c);
     void writeString(char *string);
