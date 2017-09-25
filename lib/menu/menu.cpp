@@ -3,13 +3,14 @@
 #include <stdlib.h>
 #include "menu.h"
 
-char ** Menu::getChoices(Submenu * menu){
-	size = (uint8_t)sizeof(menu);
+char ** Menu::getChoices(SubMenu * menu){
+	/* size = (uint8_t)sizeof(menu);
 	char**outp = (char**) malloc(size);
 	for (int i = 0;i < size;i++){
 		*outp+i = menu->name;
 	}
-	return outp;
+	return outp; */
+	return;
 } 
 
 void Menu::select(){
