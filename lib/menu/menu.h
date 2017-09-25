@@ -9,7 +9,7 @@ public:
 	SubMenu() {
 		this->prev = NULL;
 		this->next = NULL;
-		this->name = "";
+		this->name = '';
 	}
 	SubMenu(SubMenu *parent, const uint8_t size, char*name)
 	{
