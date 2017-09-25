@@ -23,20 +23,20 @@ SubMenu*SubMenu::getPrev(){
 
 void Menu::select(){
 	
-	current = current.getNext() + index;
+	current = current->getNext() + index;
 	return;
 }
 
 void Menu::goBack(){
 	if (current != head){
-		current = current.getPrev();
+		current = current->getPrev();
 	}
 	return;
 }
 
 void Menu::goUp(){
 	if (index == 0){
-		index = (int)sizeof(current.getNext());
+		index = (int)sizeof(current->getNext());
 	}
 	else {
 		index = index -1;
@@ -44,7 +44,7 @@ void Menu::goUp(){
 }
 
 void Menu::goDown(){
-	if (index == (int)sizeof(current.getNext()){
+	if (index == (int)sizeof(current->getNext())){
 		index = 0;
 	}
 	else {
