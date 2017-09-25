@@ -16,7 +16,7 @@ char*SubMenu::getName(){
 }
 
 char ** Menu::getChoices(SubMenu * menu){
-	size = (uint8_t)sizeof(menu);
+	int size = (int)sizeof(menu->getNext());
 	char**outp = (char**) malloc(size);
 	for (int i = 0;i < size;i++){
 		outp[i] = (menu->getNext() + i)->getName();
