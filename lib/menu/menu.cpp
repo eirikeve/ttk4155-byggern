@@ -19,13 +19,12 @@ char ** Menu::getChoices(SubMenu * menu){
 	size = (uint8_t)sizeof(menu);
 	char**outp = (char**) malloc(size);
 	for (int i = 0;i < size;i++){
-		*outp+i = menu->(getNext() + i)->getName();
+		*outp+i = menu->getNext() + i->getName();
 	}
 	return outp;
 } 
 
 void Menu::select(){
-	
 	current = current->getNext() + index;
 	return;
 }
