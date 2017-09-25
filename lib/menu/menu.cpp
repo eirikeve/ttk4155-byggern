@@ -20,13 +20,13 @@ struct Node* getNewNode(char n,int size) {
 }
 
 struct Node* insertNode(Node *node,Node *parent,int index){
-	parent->next[index] = node;
+	parent->next+index = node;
 	node->prev = parent;
 	return parent;
 }
 
 char getChild(Node *node,int index){
-	char child = node->next[index]->name;
+	char child = node->next+index->name;
 	return child;
 	// int size = sizeof node->next;
 	// char children[size];
