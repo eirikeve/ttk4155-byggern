@@ -118,7 +118,7 @@ void Screen::updateScreenLines()
 
 void Screen::goToPage(uint8_t page)
 {
-    if (page < page1 - page0)
+    if (page < pagesize)
     {
         loc_page = page - page0;
     }
@@ -126,7 +126,7 @@ void Screen::goToPage(uint8_t page)
 
 void Screen::goToColumn(uint8_t col)
 {
-    if (col < col1 - col0)
+    if (col < colsize)
     {
         loc_col = col - col0;
     }
@@ -143,10 +143,10 @@ void Screen::writeChar(unsigned char c)
     if (loc_col + character_size <= colsize && loc_page < pagesize)
     {
         // Enough space to write one more char
-        oled.goTo(loc_page, loc_col);
+        oled.goTo(loc_page + page0, loc_col + col0);
         oled.writeChar(c);
         loc_col += (character_size + 1)
-        if (loc_col >= col1)
+        if (loc_col >= colsize)
         {
             loc_col =   1;
             loc_page += 1;
