@@ -11,15 +11,15 @@ SubMenu*SubMenu::getPrev(){
 	return this->prev;
 }
 
-// char ** Menu::getChoices(SubMenu * menu){
-	// /* size = (uint8_t)sizeof(menu);
-	// char**outp = (char**) malloc(size);
-	// for (int i = 0;i < size;i++){
-		// *outp+i = menu->name;
-	// }
-	// return outp; */
-	// return;
-// } 
+char ** Menu::getChoices(SubMenu * menu){
+	size = (uint8_t)sizeof(menu);
+	char**outp = (char**) malloc(size);
+	for (int i = 0;i < size;i++){
+		*outp+i = menu->name;
+	}
+	return outp;
+	return;
+} 
 
 void Menu::select(){
 	
