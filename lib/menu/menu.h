@@ -19,6 +19,7 @@ public:
 	}
 	SubMenu * getNext();
 	SubMenu * getPrev();
+	char * getName();
 	
 	
 };
