@@ -31,7 +31,7 @@ private:
 	int index;
 	
 public:
-	char * *getChoices(SubMenu * menu); // returner en liste med alle valg i en undermeny
+	//char * *getChoices(SubMenu * menu); // returner en liste med alle valg i en undermeny
 	void select(); // velger et alternativ
 	void goBack(); // går til prev
 	void goUp(); //index -1
