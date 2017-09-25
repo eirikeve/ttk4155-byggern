@@ -15,7 +15,7 @@ struct Node* getNewNode(char n,int size) {
 	struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
 	newNode->name = n;
 	newNode->prev = NULL;
-	newNode->next = (struct Node*)malloc(sizeof(int)*size);
+	newNode->next = (struct Node*)malloc(size*sizeof(struct Node));
 	return newNode;
 }
 
