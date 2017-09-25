@@ -14,13 +14,13 @@ char ** Menu::getChoices(SubMenu * menu){
 } 
 
 void Menu::select(){
-	current = current.next[index];
+	current = current->next[index];
 	return;
 }
 
 void Menu::goBack(){
 	if (current != head){
-		current = current.prev;
+		current = current->prev;
 	}
 	return;
 }
