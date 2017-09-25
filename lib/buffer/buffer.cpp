@@ -4,16 +4,17 @@ extern "C" {
 #include <string.h>
 }
 
-Buffer : Buffer(uint16_t size) : head(0), tail(0), size(size)
+Buffer::Buffer(uint16_t size) : head(0), tail(0), size(size)
 {
     // Check that size is a power of 2
-    assert(size != 0) && ((size & (size - 1)) == 0);
+    assert((size != 0) && ((size & (size - 1)) == 0));
     data = (uint8_t *)malloc(size);
 }
 
-enum BufferStatus Buffer::read(const uint8_t *data, uint16_t *size)
+enum BufferStatus Buffer::read(const uint8_t *data, uint16_t size)
 {
 }
+// enum BufferStatus Buffer::read(const uint8_t *data, uint16_t size) {}
 
 enum BufferStatus Buffer::readByteFromBuffer(uint8_t *byte)
 {
@@ -21,7 +22,7 @@ enum BufferStatus Buffer::readByteFromBuffer(uint8_t *byte)
     {
         return BUFFER_EMPTY;
     }
-    memcpy(byte, this->data[tail], 1);
+    // memcpy(byte, this->data[tail], 1);
     // *byte = this->data[head];
     this->tail = (this->tail + 1) % this->size;
     return BUFFER_OK;
@@ -33,7 +34,7 @@ enum BufferStatus Buffer::writeByteToBuffer(uint8_t *byte)
     {
         return BUFFER_FULL;
     }
-    memcpy(this->data[this->head], byte, 1]);
+    // memcpy(this->data[this->head], byte, 1);
     this->head = (this->head + 1) % this->size;
     return BUFFER_OK;
 
@@ -53,7 +54,7 @@ bool Buffer::isBufferEmpty() const
 
 bool Buffer::isBufferFull() const
 {
-    return this->tail = (this->tail + 1) % this->size == this->head;
+    return (this->tail + 1) % this->size == this->head;
 }
 
 void Buffer::flushBuffer(const bool clearBuffer)
