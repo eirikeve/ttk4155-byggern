@@ -19,13 +19,13 @@ struct Node* getNewNode(char n,int size) {
 	return newNode;
 }
 
-struct Node* insertNode(struct *node, struct *parent, int index){
+struct Node* insertNode(Node *node,Node *parent,int index){
 	parent->next[index] = node;
 	node->prev = parent;
 	return parent;
 }
 
-char getChild(struct *node,int index){
+char getChild(Node *node,int index){
 	char child = node->next[index]->name;
 	return child;
 	// int size = sizeof node->next;
