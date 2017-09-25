@@ -17,6 +17,8 @@ public:
 		this->next = (SubMenu*) malloc(size);
 		this->name = name;
 	}
+	SubMenu * getNext();
+	SubMenu * getPrev();
 	
 	
 };

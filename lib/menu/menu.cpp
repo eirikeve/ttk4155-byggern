@@ -3,6 +3,14 @@
 #include <stdlib.h>
 #include "menu.h"
 
+SubMenu*SubMenu::getNext(){
+	return this->next;
+}
+
+SubMenu*SubMenu::getPrev(){
+	return this->prev;
+}
+
 char ** Menu::getChoices(SubMenu * menu){
 	/* size = (uint8_t)sizeof(menu);
 	char**outp = (char**) malloc(size);
@@ -14,20 +22,21 @@ char ** Menu::getChoices(SubMenu * menu){
 } 
 
 void Menu::select(){
-	current = current->next[index];
+	
+	current = current.getNext() + index;
 	return;
 }
 
 void Menu::goBack(){
 	if (current != head){
-		current = current->prev;
+		current = current.getPrev();
 	}
 	return;
 }
 
 void Menu::goUp(){
 	if (index == 0){
-		index = (int)sizeof(current->next);
+		index = (int)sizeof(current.getNext());
 	}
 	else {
 		index = index -1;
@@ -35,7 +44,7 @@ void Menu::goUp(){
 }
 
 void Menu::goDown(){
-	if (index == (int)sizeof(current->next)){
+	if (index == (int)sizeof(current.getNext()){
 		index = 0;
 	}
 	else {
