@@ -3,35 +3,41 @@
 #include <stdlib.h>
 #include "menu.h"
 
-struct Node {
-	char name;
-	struct Node* next;
-	struct Node* prev;
-};
+char ** Menu::getChoices(Submenu * menu){
+	size = (uint8_t)sizeof(menu);
+	char**outp = (char**) malloc(size);
+	for (int i = 0;i < size;i++){
+		*outp+i = menu->name;
+	}
+	return outp;
+} 
 
-struct Node* head; // global pointer to head node
-
-struct Node* getNewNode(char n,int size) {
-	struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-	newNode->name = n;
-	newNode->prev = NULL;
-	newNode->next = (struct Node*)malloc(size*sizeof(struct Node));
-	return newNode;
+void Menu::select(){
+	current = current->next[index];
+	return;
 }
 
-struct Node* insertNode(Node *node,Node *parent,int index){
-	parent->next+index = node;
-	node->prev = parent;
-	return parent;
+void Menu::goBack(){
+	if (current != head){
+		current = current->prev;
+	}
+	return;
 }
 
-char getChild(Node *node,int index){
-	char child = node->next+index->name;
-	return child;
-	// int size = sizeof node->next;
-	// char children[size];
-	// for (int i = 0;i < size;i++){
-		// children[i] = node->next[i]->name;
-	// }
-	// return children;
+void Menu::goUp(){
+	if (index == 0){
+		index = (int)sizeof(current->next);
+	}
+	else {
+		index = index -1;
+	}
+}
+
+void Menu::goDown(){
+	if (index == (int)sizeof(current->next)){
+		index = 0;
+	}
+	else {
+		index = index + 1;
+	}
 }
