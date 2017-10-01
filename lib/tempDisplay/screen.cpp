@@ -1,20 +1,23 @@
-
+#include "screen.h"
+extern "C" {
+#include <stdlib.h>
+}
 Screen::Screen()
 {
     oled = OLED();
     superScreen = NULL;
-    subScreen   = NULL;
-    page0       = 0;
-    page1       = 8;
-    col0        = 0;
-    col1        = 128;
+    subScreen = NULL;
+    page0 = 0;
+    page1 = 8;
+    col0 = 0;
+    col1 = 128;
     pagesize = page1 - page0;
-    colsize = col1 - col0
-    loc_page    = 0;
-    loc_col     = 0;
+    colsize = col1 - col0;
+    loc_page = 0;
+    loc_col = 0;
 }
 
-Screen::Screen(Screen * superscreen, uint8_t sz, Orientation o) : Screen()
+Screen::Screen(Screen *superscreen, uint8_t sz, Orientation o) : Screen()
 {
     if (superscreen)
     {
@@ -51,13 +54,13 @@ Screen::~Screen()
     }
 }
 
-void Screen::addSubScreen(Screen * subscreen, uint8_t sz, Orientation o)
+void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
 {
     if (subscreen &&
         (((o == HORIZONTAL_LEFT || o == HORIZONTAL_RIGHT) &&
-         (sz < (>col1 - col0)))  ||
-         ((o == VERTICAL_LOWER || o == VERTICAL_LOWER)    &&
-         (sz < (page1 - page0)))))
+          (sz < (col1 - col0))) ||
+         ((o == VERTICAL_LOWER || o == VERTICAL_LOWER) &&
+          (sz < (page1 - page0)))))
     {
 
         subScreen = subscreen;
@@ -97,8 +100,8 @@ void Screen::removeSubScreen()
 {
     if (subScreen)
     {
-        subScreen::~Screen(); // Also sets page0, page1 etc.
-        subScreen = NULL;     // Done by the destructor I thiink
+        // subScreen.~Screen(); // Also sets page0, page1 etc.
+        subScreen = NULL; // Done by the destructor I thiink
     }
 }
 
@@ -111,7 +114,7 @@ void Screen::updateScreenLines()
     {
         goTo(p, 0);
         Screen::write(0xFF);
-        goTo(p, colsize)
+        goTo(p, colsize);
         Screen::write(0xFF);
     }
 }
@@ -120,7 +123,7 @@ void Screen::goToPage(uint8_t page)
 {
     if (page < pagesize)
     {
-        loc_page = page - page0;
+        loc_page = page;
     }
 }
 
@@ -128,7 +131,7 @@ void Screen::goToColumn(uint8_t col)
 {
     if (col < colsize)
     {
-        loc_col = col - col0;
+        loc_col = col;
     }
 }
 
@@ -145,10 +148,10 @@ void Screen::writeChar(unsigned char c)
         // Enough space to write one more char
         oled.goTo(loc_page + page0, loc_col + col0);
         oled.writeChar(c);
-        loc_col += (character_size + 1)
+        loc_col += (character_size + 1);
         if (loc_col >= colsize)
         {
-            loc_col =   1;
+            loc_col = 1;
             loc_page += 1;
         }
     }
@@ -160,23 +163,36 @@ void Screen::writeChar(unsigned char c)
     {
         if (colsize - 1 > character_size)
         {
-            loc_col =   1;
+            loc_col = 1;
             loc_page += 1;
             writeChar(c);
         }
     }
 }
 
-void Screen::writeString(char * string)
+void Screen::writeString(char *string)
 {
-    i = 0;
+    int i = 0;
     while (string[i] != '\0')
     {
-        writeChar(string[i++])
+        writeChar(string[i++]);
     }
 }
 
 void Screen::write(uint8_t c)
 {
     oled.write(c);
+}
+
+void Screen::clear(uint8_t v)
+{
+    for (int j = page0; j < page1; j++)
+    {
+        oled.goTo(j, 0);
+
+        for (int i = col0; i < col1; i++)
+        {
+            oled.write(v);
+        }
+    }
 }

@@ -64,9 +64,9 @@ void OLED::write(uint8_t c)
 
 void OLED::writeChar(unsigned char c)
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 5; i++)
     {
-        this->write(pgm_read_word(&font5[c - 32][i]));
+        this->write(pgm_read_word(&font5[c - ' '][i]));
         // printf("%d\n", font8[33][i]);
     }
 }
@@ -87,7 +87,7 @@ void OLED::goToPage(uint8_t page)
 void OLED::goToColumn(uint8_t col)
 {
     this->write_c(0x0F & col);
-    this->write_c(0x1F & (col >> 4));
+    this->write_c(0x10 | (0xF & col >> 4));
 }
 
 void OLED::goTo(uint8_t page, uint8_t col)
@@ -98,14 +98,4 @@ void OLED::goTo(uint8_t page, uint8_t col)
 
 void OLED::clear()
 {
-    for (int j = 0; j < 8; j++)
-    {
-        this->gotoPage(j);
-
-        for (int i = 0; i < 128; i++)
-        {
-            this->write(0x00);
-        }
-    }
 }
-
