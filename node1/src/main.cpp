@@ -100,7 +100,7 @@ int main(void)
 	sub.writeString("Removed Border Lines");
 
 	char letter = '-';
-	char loading_bar[10] {' '};
+	char loading_bar[11] {''};
 	int counter = 0;
 	char val[4];
 	bar.clear();
@@ -138,6 +138,7 @@ int main(void)
 				loading_bar[i] = ' ';
 			}
 		}
+		loading_bar[10] = '\0';
 
 		itoa(counter*10, val, 10);
 
@@ -145,11 +146,22 @@ int main(void)
 		bar.writeChar(letter);
 		bar.writeChar(' ');
 		bar.writeString(loading_bar);
-		//bar.writeChar(' ');
-		//bar.writeString(val);
-		//bar.writeChar('%');
+		bar.writeChar(' ');
+		bar.writeString(val);
+		bar.writeChar('%');
 		bar.writeChar('\n');
 		_delay_ms(300);
+		
+		o.goTo(0,1);
+		sub.goTo(0,1);
+		subsub.goTo(0,1);
+		o.writeChar('o');
+		sub.writeChar('s');
+		subsub.writeChar('s');
+		subsub.writeChar('s');
+		o.writeString(loading_bar);
+		sub.writeString(loading_bar);
+		subsub.writeString(loading_bar);
 	}
 
 	// sub.clear();
