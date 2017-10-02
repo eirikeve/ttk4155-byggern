@@ -107,8 +107,8 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
         colsize = col1 - col0;
 
         // Clear both screens so that we don't have remains of old text
-        subScreen->clear(0x00);
-        clear(0x00);
+        subScreen->clear();
+        clear();
     }
 }
 
@@ -259,14 +259,14 @@ void Screen::fill(uint8_t v)
         }
     }
 }
-void Screen::clear(uint8_t v)
+void Screen::clear()
 {
     fill(0x00);
 }
 
 void Screen::selfTest()
 {
-    clear(0x00);
+    clear();
     goTo(0, 0);
     // addBorderLines();
     writeString("Screen Test. superScreen:");
