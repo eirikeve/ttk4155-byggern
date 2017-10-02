@@ -257,13 +257,14 @@ void Screen::fill(uint8_t v)
 {
     for (int j = page0; j < page1; j++)
     {
-        oled.goTo(j, col0 + 1);
+        oled.goTo(j, col0);
 
-        for (int i = col0 + 1; i < col1; i++)
+        for (int i = col0; i < col1; i++)
         {
             oled.write(v);
         }
     }
+    updateBorderLines();
 }
 void Screen::clear()
 {
