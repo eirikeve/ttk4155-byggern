@@ -6,6 +6,7 @@ extern "C" {
 Screen::Screen()
 {
     oled = OLED();
+    vram = calloc(128 * 8, sizeof(uint8_t));
     superScreen = NULL;
     subScreen = NULL;
     page0 = 0;
@@ -302,4 +303,11 @@ void Screen::selfTest()
         dots[i] = '.';
     }
     writeString(dots);
+}
+
+void Screen::render()
+{
+    // Iterate through SRAM memory
+    // Write SRAM memory to the screen
+
 }

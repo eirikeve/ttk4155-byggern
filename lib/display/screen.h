@@ -15,8 +15,12 @@ class Screen
 public:
   OLED oled;
 
+  uint8_t *vram = NULL;
+
   Screen *superScreen;
   Screen *subScreen;
+
+
 
   uint8_t page0;
   uint8_t page1;
@@ -52,4 +56,7 @@ public:
   void fill(uint8_t v);
   void clear();
   void selfTest();
+
+  void render();
+
 };
