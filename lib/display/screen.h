@@ -2,10 +2,10 @@
 
 enum Orientation
 {
-  HORIZONTAL_LEFT,
-  HORIZONTAL_RIGHT,
-  VERTICAL_UPPER,
-  VERTICAL_LOWER
+  LEFT,
+  RIGHT,
+  UPPER,
+  LOWER
 };
 
 class Screen
@@ -49,6 +49,7 @@ public:
   void writeChar(unsigned char c);
   void writeString(char *string);
   void write(uint8_t c);
-  void clear(uint8_t v);
+  void fill(uint8_t v);
+  void clear();
   void selfTest();
 };
