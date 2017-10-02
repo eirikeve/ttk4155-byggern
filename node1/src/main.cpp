@@ -48,6 +48,23 @@ int main(void)
 	sub.selfTest();
 	_delay_ms(4000);
 	subsub.selfTest();
+	
+	char buffer[5];
+	o.goTo(0,0);
+	o.writeString('SubSub: page0:')
+    itoa(subsub.page0, buffer, 10);
+	writeString(buffer);
+	o.writeString(' page1:')
+    itoa(subsub.page1, buffer, 10);
+	writeString(buffer);
+	o.writeString(' col0:')
+    itoa(subsub.col0, buffer, 10);
+	writeString(buffer);
+	o.writeString(' col1:')
+    itoa(subsub.col1, buffer, 10);
+    writeString(buffer);
+
+	o.writeString()
 
 	// sub.clear(0xFF);
 	// _delay_ms(1000);

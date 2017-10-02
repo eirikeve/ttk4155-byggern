@@ -13,7 +13,7 @@ class SubMenu
 	{
 		this->prev = NULL;
 		this->next = NULL;
-		this->name = '\0';
+		this->name;
 		this->size = 0;
 	}
 	SubMenu(SubMenu *parent, const uint8_t size, char *name)
