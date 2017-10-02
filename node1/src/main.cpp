@@ -84,7 +84,7 @@ int main(void)
 	sub.page0, sub.page1, sub.col0, sub.col1, sub.pagesize, sub.colsize, sub.superScreen != NULL, sub.subScreen != NULL);
 	printf("\nSubsub:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
 	subsub.page0, subsub.page1, subsub.col0, subsub.col1, subsub.pagesize, subsub.colsize, subsub.superScreen != NULL, subsub.subScreen != NULL);
-
+	
 
 	// char buffer[5];
 	// o.clear();
@@ -115,18 +115,15 @@ int main(void)
 
 	// _delay_ms(std_wait_time);
 
+	bar.addBorderLines();
 
-	// o.addBorderLines();
-	// _delay_ms(std_wait_time);
-	// sub.addBorderLines();
-	// _delay_ms(std_wait_time);
-	// subsub.addBorderLines();
-	// _delay_ms(std_wait_time);
-	// o.removeBorderLines();
-	// sub.removeBorderLines();
-	// subsub.removeBorderLines();
-	// sub.clear();
-	// sub.writeString("Removed Border Lines");
+	o.addBorderLines();
+
+	sub.addBorderLines();
+
+	subsub.addBorderLines();
+
+
 
 	char letter = '-';
 	char loading_bar[11] {' '};
