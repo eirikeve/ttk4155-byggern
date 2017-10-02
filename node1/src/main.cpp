@@ -19,7 +19,7 @@ extern "C" {
 #include <stdint.h>
 #include "lib/fonts/fonts.h"
 
-void drawInitLogo(Screen main)
+void init(Screen main)
 {
 	const unsigned char appleLogo[8] =
 	{0b00000000, 0b01111000, 0b11111100, 0b11111110, 0b11001101, 0b01001000,0b00000000,0b00000000};
@@ -33,6 +33,15 @@ void drawInitLogo(Screen main)
 	char letter = '-';
 	for (int i = 0; i < 26; ++i)
 	{
+		if (i == 1)
+		{
+			set_bit(DDRB, 0);
+			clr_bit(DDRE, 0);
+		}
+		if (i == 10)
+		{
+			init_uart();
+		}
 		switch (letter)
 		{
 			case '-':
@@ -88,9 +97,7 @@ void drawInitLogo(Screen main)
 int main(void)
 {
 
-	set_bit(DDRB, 0);
-	clr_bit(DDRE, 0);
-	init_uart();
+	
 
 	// Joystick joystick(10);
 	uint8_t x;
@@ -104,7 +111,7 @@ int main(void)
 	y  = 0;
 	Screen bar;
 
-	drawInitLogo(bar);
+	init(bar);
 
 	printf("\n\nAdding bar:\n");
 	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
