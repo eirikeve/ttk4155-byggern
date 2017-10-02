@@ -247,7 +247,7 @@ void Screen::write(uint8_t c)
     oled.write(c);
 }
 
-void Screen::clear(uint8_t v)
+void Screen::fill(uint8_t v)
 {
     for (int j = page0; j < page1; j++)
     {
@@ -258,6 +258,10 @@ void Screen::clear(uint8_t v)
             oled.write(v);
         }
     }
+}
+void Screen::clear(uint8_t v)
+{
+    fill(0x00);
 }
 
 void Screen::selfTest()
