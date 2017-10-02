@@ -15,6 +15,7 @@ Screen::Screen()
     colsize = col1 - col0;
     loc_page = 0;
     loc_col = 0;
+    has_border_lines = false;
 }
 
 Screen::Screen(Screen *superscreen, uint8_t sz, Orientation o) : Screen()
@@ -195,4 +196,21 @@ void Screen::clear(uint8_t v)
             oled.write(v);
         }
     }
+}
+
+void Screen::selfTest()
+{
+    addBorderLines();
+    writeString('Screen Test. superScreen:');
+    writeString(itoa((int)(superScreen != nullptr), 10));
+    writeString(' Has subScreen:');
+    writeString(itoa((int)(subScreen != nullptr), 10));
+    writeString(' page0:');
+    writeString(itoa(page0, 10));
+    writeString(' page1');
+    writeString(itoa(page1, 10));
+    writeString(' col0:');
+    writeString(itoa(col0, 10));
+    writeString(' col1:');
+    writeString(itoa(col1, 10));
 }

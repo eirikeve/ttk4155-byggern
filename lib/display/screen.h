@@ -1,4 +1,4 @@
-#include "temp.h"
+#include "oled.h"
 
 enum Orientation
 {
@@ -10,7 +10,9 @@ enum Orientation
 
 class Screen
 {
-  private:
+  
+  //private:
+public:
     OLED oled;
 
     Screen *superScreen;
@@ -27,6 +29,8 @@ class Screen
     uint8_t loc_page;
     uint8_t loc_col;
 
+    bool has_border_lines;
+
     const uint8_t character_size = 5;
 
   public:
@@ -35,7 +39,9 @@ class Screen
     ~Screen();
     void addSubScreen(Screen *subscreen, uint8_t sz, Orientation o);
     void removeSubScreen();
-    void updateScreenLines();
+    void addBorderLines();
+    void updateBorderLines();
+    void removeBorderLines();
 
     void goToPage(uint8_t page);
     void goToColumn(uint8_t col);
@@ -44,4 +50,5 @@ class Screen
     void writeString(char *string);
     void write(uint8_t c);
     void clear(uint8_t v);
+    void selfTest();
 };
