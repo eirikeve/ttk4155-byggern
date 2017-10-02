@@ -35,7 +35,7 @@ int main(void)
 	y  = 0;
 	Screen bar;
 	Screen o;
-	bar.addSubScreen(&o, 3, LOWER);
+	bar.addSubScreen(&o, 1, LOWER);
 	bar.addBorderLines();
 	o.goTo(0, 0);
 	o.clear();
