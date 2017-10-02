@@ -102,7 +102,7 @@ int main(void)
 	char letter = '-';
 	char loading_bar[10] {' '};
 	int counter = 0;
-	char val[5];
+	char val[3];
 	
 	while (true)
 	{
