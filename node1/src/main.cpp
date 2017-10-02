@@ -23,7 +23,7 @@ void drawInitLogo(Screen main)
 {
 	const unsigned char appleLogo[8] =
 	{0b00000000, 0b01111000, 0b11111100, 0b11111110, 0b11001101, 0b01001000,0b00000000,0b00000000};
-
+	main.clear();
 	main.goTo(4,61);
 	for (int i= 0; i < 8; ++i)
 	{
