@@ -142,9 +142,9 @@ void Screen::updateBorderLines()
         for (uint8_t p = 0; p < pagesize; ++p)
         {
             goTo(p, 0);
-            Screen::write(0xFF);
+            Screen::write(0b01010101);
             goTo(p, colsize - 1);
-            Screen::write(0xFF);
+            Screen::write(0b01010101);
         }
     }
     else
