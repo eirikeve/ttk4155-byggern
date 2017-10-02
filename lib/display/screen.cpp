@@ -2,6 +2,7 @@
 extern "C" {
 #include <stdlib.h>
 }
+
 Screen::Screen()
 {
     oled = OLED();
@@ -94,6 +95,7 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
 
         subScreen->pagesize = subScreen->page1 - subScreen->page0;
         pagesize = page1 - page0;
+        subScreen->clear(0x00);
     }
 }
 
@@ -106,7 +108,7 @@ void Screen::removeSubScreen()
     }
 }
 
-void Screen::updateScreenLines()
+void Screen::updateBorderLines()
 {
     uint8_t old_loc_col = loc_col;
     uint8_t old_loc_page = loc_page;
@@ -200,17 +202,32 @@ void Screen::clear(uint8_t v)
 
 void Screen::selfTest()
 {
-    addBorderLines();
-    writeString('Screen Test. superScreen:');
-    writeString(itoa((int)(superScreen != nullptr), 10));
-    writeString(' Has subScreen:');
-    writeString(itoa((int)(subScreen != nullptr), 10));
-    writeString(' page0:');
-    writeString(itoa(page0, 10));
-    writeString(' page1');
-    writeString(itoa(page1, 10));
-    writeString(' col0:');
-    writeString(itoa(col0, 10));
-    writeString(' col1:');
-    writeString(itoa(col1, 10));
+    clear(0x00);
+    goTo(0, 0);
+    // addBorderLines();
+    writeString("Screen Test. superScreen:");
+    char buffer[5];
+    itoa((int)(superScreen != nullptr), buffer, 10);
+    writeString(buffer);
+    writeString(" Has subScreen:");
+    itoa((int)(subScreen != nullptr), buffer, 10);
+    writeString(buffer);
+    writeString(" page0:");
+    itoa(page0, buffer, 10);
+    writeString(buffer);
+    writeString(" page1:");
+    itoa(page1, buffer, 10);
+    writeString(buffer);
+    writeString(" col0:");
+    itoa(col0, buffer, 10);
+    writeString(buffer);
+    writeString(" col1:");
+    itoa(col1, buffer, 10);
+    writeString(buffer);
+    char dots[160];
+    for (int i = 0; i < 160; i++)
+    {
+        dots[i] = '.';
+    }
+    writeString(dots);
 }

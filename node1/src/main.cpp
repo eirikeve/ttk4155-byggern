@@ -14,7 +14,7 @@ extern "C" {
 }
 
 #include "../lib/joystick/joystick.h"
-#include "lib/tempDisplay/screen.h"
+#include "lib/display/screen.h"
 #include <stdint.h>
 #include "lib/fonts/fonts.h"
 
@@ -32,13 +32,26 @@ int main(void)
 	o.goTo(0, 0);
 	o.clear(0x00);
 	Screen sub;
-	Screen sub1;
-	o.addSubScreen(&sub, 4, Orientation::VERTICAL_UPPER);
-	// sub.addSubScreen(&sub1, 30, Orientation::HORIZONTAL_RIGHT);
+	o.selfTest();
+	_delay_ms(4000);
+	o.addSubScreen(&sub, 4, Orientation::VERTICAL_LOWER);
+	_delay_ms(4000);
+	o.selfTest();
+	_delay_ms(4000);
+	sub.selfTest();
+	Screen subsub;
+	_delay_ms(4000);
+	sub.addSubScreen(&subsub, 64, Orientation::HORIZONTAL_RIGHT);
+	o.selfTest();
+	_delay_ms(4000);
+
+	sub.selfTest();
+	_delay_ms(4000);
+	subsub.selfTest();
 
 	// sub.clear(0xFF);
 	// _delay_ms(1000);
-	o.writeString("123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja");
+	// o.writeString("123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja");
 	// o.goTo(0, 9);
 	// o.writeChar('B');
 	// const unsigned char PROGMEM a[8] = {0b00100000, 0b01110100, 0b01010100, 0b01010100, 0b00111100, 0b01111000, 0b01000000, 0b00000000};
