@@ -32,6 +32,7 @@ int main(void)
 
 	int std_wait_time = 5000;
 	printf("Test");
+	put_uart_char('A');
 	x  = 0;
 	y  = 0;
 	Screen bar;
