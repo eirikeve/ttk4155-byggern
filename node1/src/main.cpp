@@ -37,14 +37,14 @@ int main(void)
 	Screen sub;
 	o.selfTest();
 	_delay_ms(4000);
-	o.addSubScreen(&sub, 4, Orientation::VERTICAL_LOWER);
+	o.addSubScreen(&sub, 4, Orientation::LOWER);
 	_delay_ms(4000);
 	o.selfTest();
 	_delay_ms(4000);
 	sub.selfTest();
 	Screen subsub;
 	_delay_ms(4000);
-	sub.addSubScreen(&subsub, 64, Orientation::HORIZONTAL_RIGHT);
+	sub.addSubScreen(&subsub, 64, Orientation::RIGHT);
 	o.selfTest();
 	_delay_ms(4000);
 

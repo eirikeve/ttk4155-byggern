@@ -2,10 +2,10 @@
 
 enum Orientation
 {
-  HORIZONTAL_LEFT,
-  HORIZONTAL_RIGHT,
-  VERTICAL_UPPER,
-  VERTICAL_LOWER
+  LEFT,
+  RIGHT,
+  UPPER,
+  LOWER
 };
 
 class Screen
