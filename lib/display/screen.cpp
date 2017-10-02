@@ -6,7 +6,7 @@ extern "C" {
 Screen::Screen()
 {
     oled = OLED();
-    vram = 0x1BFF;
+    vram = (uint8_t*)0x1BFF;
     superScreen = NULL;
     subScreen = NULL;
     page0 = 0;
