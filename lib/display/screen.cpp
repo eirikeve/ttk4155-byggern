@@ -6,7 +6,7 @@ extern "C" {
 Screen::Screen()
 {
     oled = OLED();
-    vram = NULL;
+    vram = 0x1BFF;
     superScreen = NULL;
     subScreen = NULL;
     page0 = 0;
@@ -316,10 +316,7 @@ void Screen::selfTest()
     writeString(dots);
 }
 
-void Screen::initVRAM()
-{
-    vram = (uint8_t*)calloc(128 * 8, sizeof(uint8_t));
-}
+
 
 void Screen::render()
 {

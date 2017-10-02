@@ -37,7 +37,6 @@ int main(void)
 	x  = 0;
 	y  = 0;
 	Screen bar;
-	bar.initVRAM();
 	bar.clear();
 	bar.writeString("Hello World");
 	bar.render();
