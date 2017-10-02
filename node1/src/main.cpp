@@ -19,6 +19,69 @@ extern "C" {
 #include <stdint.h>
 #include "lib/fonts/fonts.h"
 
+void drawInitLogo(Screen main)
+{
+	const unsigned char appleLogo[8] =
+	{0b00000000, 0b01111000, 0b11111100, 0b11111110, 0b11001101, 0b01001000,0b00000000,0b00000000};
+
+	main.goTo(4,61);
+	for (int i= 0; i < 8; ++i)
+	{
+		main.write(appleLogo[i]);
+	}
+	_delay_ms(200);
+	char letter = '-';
+	for (int i = 0; i < 26; ++i)
+	{
+		switch (letter)
+		{
+			case '-':
+				letter = '\\';
+				break;
+			case '\\':
+				letter = '|';
+				break;
+			case '|':
+				letter = '/';
+				break;
+			case '/':
+				letter = '-';
+				break;
+		}
+		main.goTo(6, 29);
+		main.writeString("Initializing ");
+		main.writeChar(letter);
+		main.goTo(7, 0);
+		for (int j = 0; j <= i; ++j)
+		{
+			main.writeChar('-');
+		}
+		
+		_delay_ms(100);
+	}
+	_delay_ms(250);
+
+	main.goTo(7, 0);
+	for (int j = 0; j <= 26; ++j)
+	{
+		main.writeChar('=');
+	}
+
+	_delay_ms(250);
+
+	main.goTo(7, 0);
+	for (int j = 0; j <= 26; ++j)
+	{
+		main.writeChar('-');
+	}
+
+	_delay_ms(150);
+
+	main.clear();
+
+	
+}
+
 int main(void)
 {
 
@@ -37,6 +100,9 @@ int main(void)
 	x  = 0;
 	y  = 0;
 	Screen bar;
+
+	drawInitLogo(bar);
+
 	printf("\n\nAdding bar:\n");
 	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
 	bar.page0, bar.page1, bar.col0, bar.col1, bar.pagesize, bar.colsize, bar.superScreen != NULL, bar.subScreen != NULL);
@@ -134,7 +200,10 @@ int main(void)
 	sub.clear();
 	subsub.clear();
 
-	while (true)
+	bool do_anim = false;
+	bool do_joystick = true;
+
+	while (do_anim)
 	{
 		
 		counter = (counter + 1) % 11;
@@ -186,6 +255,16 @@ int main(void)
 		}
 		
 	}
+
+	// Joystick j(10);
+
+	// uint8_t x;
+	// uint8_t y;
+
+	// while (do_joystick)
+	// {
+	// 	c = r
+	// }
 
 	// sub.clear();
 	// _delay_ms(1000);
