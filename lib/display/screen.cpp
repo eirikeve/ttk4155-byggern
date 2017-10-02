@@ -171,6 +171,7 @@ void Screen::goToPage(uint8_t page)
     if (page < pagesize)
     {
         loc_page = page;
+        oled.goToPage(loc_page + page0);
     }
 }
 
@@ -179,6 +180,7 @@ void Screen::goToColumn(uint8_t col)
     if (col < colsize)
     {
         loc_col = col;
+        oled.goToColumn(loc_col + col0);
     }
 }
 
@@ -202,15 +204,19 @@ void Screen::writeChar(unsigned char c)
             loc_col = 1;
             loc_page += 1;
         }
-        // Enough space to write one more char
-        oled.goTo(loc_page + page0, loc_col + col0);
-        oled.writeChar(c);
-        loc_col += (character_size + 1);
-        if (loc_col >= colsize)
+        else
         {
-            loc_col = 1;
-            loc_page += 1;
+            // Enough space to write one more char
+            oled.goTo(loc_page + page0, loc_col + col0);
+            oled.writeChar(c);
+            loc_col += (character_size + 1);
+            if (loc_col >= colsize)
+            {
+                loc_col = 1;
+                loc_page += 1;
+            }
         }
+
     }
     else if (loc_page >= pagesize)
     {
