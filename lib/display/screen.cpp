@@ -59,10 +59,15 @@ Screen::~Screen()
 void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
 {
     // sz is number of pages (if o is UPPER or LOWER), else number of columns, for the subscreen
-    if (subscreen &&) &&
-          (sz < (col1 - col0))) ||
-         ) &&
-          (sz < (page1 - page0)))))
+    if  (
+         subscreen            && // subcreen argument is not NULL
+        (subScreen ==  NULL)  && // This Screen does not have subScreen
+        (
+            // Check that we have enough space
+            ( sz < (colsize)  && (o == LEFT  || o == RIGHT) )  ||
+            ( sz < (pagesize) && (o == UPPER || o == LOWER) )
+        )
+        )
     {
 
         subScreen = subscreen;
@@ -192,7 +197,7 @@ void Screen::writeChar(unsigned char c)
             while (loc_col < colsize)
             {
                 write(0x00);
-                loc_col += 1;
+                loc_col+= 1;
             }
             loc_col = 1;
             loc_page += 1;
