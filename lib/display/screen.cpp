@@ -320,11 +320,11 @@ void Screen::selfTest()
 
 void Screen::render()
 {
-    for (int p = page0; p < page1; ++p)
+    for (int p = 0; p < 8; ++p)
     {
         oled.goToPage(p);
-        oled.goToColumn(col0);
-        for (int c = col0; c < col1; ++c)
+        oled.goToColumn(0);
+        for (int c = 0; c < 128; ++c)
         {
             oled.write(vram[p * 128 + c]);
         }
