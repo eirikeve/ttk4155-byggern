@@ -141,7 +141,7 @@ int main(void)
 		bar.writeChar(letter);
 		bar.writeChar(' ');
 		bar.writeString(loading_bar);
-		bar.writeChar(' ')
+		bar.writeChar(' ');
 		bar.writeString(val);
 		bar.writeChar('%');
 		_delay_ms(300);
