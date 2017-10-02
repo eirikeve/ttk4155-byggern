@@ -11,6 +11,7 @@ extern "C" {
 #include <stdio.h>
 #include "comm.h"
 #include <avr/pgmspace.h>
+#include <stdlib.h>
 }
 
 #include "../lib/joystick/joystick.h"
@@ -28,6 +29,8 @@ int main(void)
 	// Joystick joystick(10);
 	uint8_t x;
 	uint8_t y;
+	x  = 0;
+	y  = 0;
 	Screen o;
 	o.goTo(0, 0);
 	o.clear(0x00);
@@ -51,20 +54,18 @@ int main(void)
 	
 	char buffer[5];
 	o.goTo(0,0);
-	o.writeString('SubSub: page0:')
+	o.writeString("SubSub: page0:");
     itoa(subsub.page0, buffer, 10);
-	writeString(buffer);
-	o.writeString(' page1:')
+	o.writeString(buffer);
+	o.writeString(" page1:");
     itoa(subsub.page1, buffer, 10);
-	writeString(buffer);
-	o.writeString(' col0:')
+	o.writeString(buffer);
+	o.writeString(" col0:");
     itoa(subsub.col0, buffer, 10);
-	writeString(buffer);
-	o.writeString(' col1:')
+	o.writeString(buffer);
+	o.writeString(" col1:");
     itoa(subsub.col1, buffer, 10);
-    writeString(buffer);
-
-	o.writeString()
+    o.writeString(buffer);
 
 	// sub.clear(0xFF);
 	// _delay_ms(1000);
