@@ -39,6 +39,7 @@ int main(void)
 	Screen bar;
 	bar.clear();
 	bar.writeString("Hello World, this is a test of the display. Does it wrap? \nDoes it newline? Does it work?");
+	bar.writeString(" This is a new string. It is pretty nice. String string strange thing bling bling.");
 	bar.render();
 
 	
