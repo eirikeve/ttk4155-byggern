@@ -31,7 +31,8 @@ int main(void)
 	uint8_t y;
 
 	int std_wait_time = 5000;
-	printf("Test");
+	put_uart_char('B');
+	printf("Test\n");
 	put_uart_char('A');
 	x  = 0;
 	y  = 0;
