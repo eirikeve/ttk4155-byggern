@@ -144,7 +144,7 @@ void Screen::updateBorderLines()
             goTo(p, 0);
             Screen::write(0b01010101);
             goTo(p, colsize - 1);
-            Screen::write(0b01010101);
+            Screen::write(0b10101010);
         }
     }
     else
@@ -275,11 +275,11 @@ void Screen::selfTest()
     clear();
     goTo(0, 0);
     // addBorderLines();
-    writeString("Screen Test. superScreen:");
+    writeString("Screen Test. supSc:");
     char buffer[5];
     itoa((int)(superScreen != nullptr), buffer, 10);
     writeString(buffer);
-    writeString(" Has subScreen:");
+    writeString(" subScr:");
     itoa((int)(subScreen != nullptr), buffer, 10);
     writeString(buffer);
     writeString(" page0:");

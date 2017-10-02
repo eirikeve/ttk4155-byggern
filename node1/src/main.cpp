@@ -53,6 +53,7 @@ int main(void)
 	subsub.selfTest();
 	
 	char buffer[5];
+	o.clear();
 	o.goTo(0,1);
 	o.writeString("SubSub: page0:");
     itoa(subsub.page0, buffer, 10);
@@ -71,11 +72,23 @@ int main(void)
 	o.clear();
 	o.goTo(0,1);
 	o.writeString("1\nW\nPer\nLine");
+
 	_delay_ms(4000);
+
+	o.clear();
+	sub.clear();
+	subsub.clear();
+
+	_delay_ms(4000);
+
 	o.addBorderLines();
 	sub.addBorderLines();
 	_delay_ms(4000);
 	subsub.addBorderLines();
+	_delay_ms(4000);
+	o.removeBorderLines();
+	sub.removeBorderLines();
+	subsub.removeBorderLines();
 
 	// sub.clear();
 	// _delay_ms(1000);
