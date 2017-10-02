@@ -94,6 +94,38 @@ int main(void)
 	sub.clear();
 	sub.writeString("Removed Border Lines");
 
+	char letter = 'x';
+	char loading_bar[10] {' '};
+	int counter = 0;
+	char val[5];
+	while (true)
+	{
+		counter = (counter + 1) % 11;
+		letter = (letter == 'x') ? '+' : 'x';
+		for (int i = 0; i < 10; ++i)
+		{
+			if (i < counter)
+			{
+				loading_bar[i] = '=';
+			}
+			else
+			{
+				loading_bar[i] = ' ';
+			}
+		}
+
+		itoa(counter, val, 10);
+
+		subsub.goTo(0,1);
+		subsub.writeChar(letter);
+		subsub.goTo(1,1);
+		subsub.writeString(loading_bar);
+		subsub.goTo(2,1);
+		subsub.writeString(val);
+		subsub.writeChar('%');
+		_delay_ms(300);
+	}
+
 	// sub.clear();
 	// _delay_ms(1000);
 	// o.writeString("123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja");
