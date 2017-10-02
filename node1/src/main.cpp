@@ -10,7 +10,7 @@ extern "C" {
 #include "util/delay.h"
 #include <stdio.h>
 #include <avr/pgmspace.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include "comm.h"
 }
 
@@ -42,7 +42,7 @@ int main(void)
 	bar.page0, bar.page1, bar.col0, bar.col1, bar.pagesize, bar.colsize, bar.superScreen != NULL, bar.subScreen != NULL);
 	
 	Screen o;
-	bar.addSubScreen(&o, 6, LOWER);
+	bar.addSubScreen(&o, 7, LOWER);
 	printf("\n\nAdding o:\n");
 	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
 	bar.page0, bar.page1, bar.col0, bar.col1, bar.pagesize, bar.colsize, bar.superScreen != NULL, bar.subScreen != NULL);
@@ -137,66 +137,58 @@ int main(void)
 	sub.clear();
 	subsub.clear();
 
-	bar.fill(0b01000010);
-	o.fill(  0b01100110);
-	sub.fill(0b01110110);
-	subsub.fill(0b01111111);
-
-	// while (true)
-	// {
+	while (true)
+	{
 		
-	// 	counter = (counter + 1) % 11;
-	// 	switch (letter)
-	// 	{
-	// 		case '-':
-	// 			letter = '\\';
-	// 			break;
-	// 		case '\\':
-	// 			letter = '|';
-	// 			break;
-	// 		case '|':
-	// 			letter = '/';
-	// 			break;
-	// 		case '/':
-	// 			letter = '-';
-	// 			break;
-	// 	}
-	// 	for (int i = 0; i < 10; ++i)
-	// 	{
-	// 		if (i < counter)
-	// 		{
-	// 			loading_bar[i] = '=';
-	// 		}
-	// 		else
-	// 		{
-	// 			loading_bar[i] = ' ';
-	// 		}
-	// 	}
-	// 	loading_bar[10] = '\0';
+		counter = (counter + 1) % 11;
+		switch (letter)
+		{
+			case '-':
+				letter = '\\';
+				break;
+			case '\\':
+				letter = '|';
+				break;
+			case '|':
+				letter = '/';
+				break;
+			case '/':
+				letter = '-';
+				break;
+		}
+		for (int i = 0; i < 10; ++i)
+		{
+			if (i < counter)
+			{
+				loading_bar[i] = '=';
+			}
+			else
+			{
+				loading_bar[i] = ' ';
+			}
+		}
+		loading_bar[10] = '\0';
 
-	// 	//itoa(counter*10, val, 10);
+		itoa(counter*10, val, 10);
 
-	// 	bar.goTo(0,1);
-	// 	bar.writeChar(letter);
-	// 	bar.writeChar(' ');
-	// 	bar.writeString(loading_bar);
-	// 	bar.writeChar(' ');
-	// 	//bar.writeString(val);
-	// 	//bar.writeChar('%');
-	// 	bar.writeChar('\n');
-	// 	_delay_ms(300);
+		bar.goTo(0,1);
+		bar.writeChar(letter);
+		bar.writeChar(' ');
+		bar.writeString(loading_bar);
+		bar.writeChar(' ');
+		bar.writeString(val);
+		bar.writeChar('%');
+		bar.writeChar('\n');
+		_delay_ms(300);
 		
-	// 	o.goTo(0,1);
-	// 	sub.goTo(0,1);
-	// 	subsub.goTo(0,1);
-	// 	o.writeChar('o');
-	// 	sub.writeChar('s');
-	// 	subsub.writeChar('s');
-	// 	subsub.writeChar('s');
-	// 	o.writeString(loading_bar);
-	// 	sub.writeString(loading_bar);
-	// 	subsub.writeString(loading_bar);
-	// }
+		for (int i = 0; i < 5; ++i)
+		{
+			o.writeString("abacabadabacabaeabacabadabacaba");
+			sub.writeString("The red fox was beautiful. ");
+			subsub.writeString("Ipsum lorem fucking shit! ");
+		}
+		
+	}
 
 	// sub.clear();
 	// _delay_ms(1000);
