@@ -3,53 +3,77 @@
 #include <stdlib.h>
 #include "menu.h"
 
-SubMenu*SubMenu::getNext(){
+SubMenu *SubMenu::getNext()
+{
 	return this->next;
 }
 
-SubMenu*SubMenu::getPrev(){
+SubMenu *SubMenu::getPrev()
+{
 	return this->prev;
 }
 
-char*SubMenu::getName(){
+char *SubMenu::getName()
+{
 	return this->name;
 }
 
-char ** Menu::getChoices(SubMenu * menu){
-	int size = (int)sizeof(menu->getNext());
-	char**outp = (char**) malloc(size);
-	for (int i = 0;i < size;i++){
-		outp[i] = (menu->getNext() + i)->getName();
+uint8_t SubMenu::getSize()
+{
+	return this->size;
+}
+
+~SubMenu()
+{
+	free(next);
+}
+
+char **Menu::getChoices()
+{
+	uint8_t size = current->getSize();
+	char **outp = (char **)malloc(size);
+	for (int i = 0; i < size; i++)
+	{
+		outp[i] = (current->getNext() + i)->getName();
 	}
 	return outp;
-} 
+}
 
-void Menu::select(){
+void Menu::select()
+{
 	current = current->getNext() + index;
 	return;
 }
 
-void Menu::goBack(){
-	if (current != head){
+void Menu::goBack()
+{
+	if (current != head)
+	{
 		current = current->getPrev();
 	}
 	return;
 }
 
-void Menu::goUp(){
-	if (index == 0){
+void Menu::goUp()
+{
+	if (index == 0)
+	{
 		index = (int)sizeof(current->getNext());
 	}
-	else {
-		index = index -1;
+	else
+	{
+		index = index - 1;
 	}
 }
 
-void Menu::goDown(){
-	if (index == (int)sizeof(current->getNext())){
+void Menu::goDown()
+{
+	if (index == (int)sizeof(current->getNext()))
+	{
 		index = 0;
 	}
-	else {
+	else
+	{
 		index = index + 1;
 	}
 }
