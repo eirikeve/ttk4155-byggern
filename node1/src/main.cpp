@@ -104,6 +104,10 @@ int main(void)
 	int counter = 0;
 	char val[4];
 	bar.clear();
+	o.clear();
+	sub.clear();
+	subsub.clear();
+
 	while (true)
 	{
 		
@@ -141,9 +145,9 @@ int main(void)
 		bar.writeChar(letter);
 		bar.writeChar(' ');
 		bar.writeString(loading_bar);
-		bar.writeChar(' ');
+		//bar.writeChar(' ');
 		//bar.writeString(val);
-		bar.writeChar('%');
+		//bar.writeChar('%');
 		bar.writeChar('\n');
 		_delay_ms(300);
 	}
