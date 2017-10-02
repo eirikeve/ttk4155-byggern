@@ -223,7 +223,7 @@ void Screen::writeChar(unsigned char c)
                 this->write(pgm_read_word(&font5[c - ' '][i]));
                 // printf("%d\n", font8[33][i]);
             }
-            loc_col += (character_size + 1);
+            loc_col += (1);
             if (loc_col >= colsize)
             {
                 loc_col = 1;
