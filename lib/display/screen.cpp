@@ -79,25 +79,25 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
         subScreen->col0 = col0;
         subScreen->col1 = col1;
 
-        if (o == LEFT)
+        if (o == LEFT) // SubScreen on left part of this screen
         {
             col0 =  col0 + sz;
-            subScreen->col1 = col0 + sz;
+            subScreen->col1 = subScreen->col0 + sz;
         }
         else if (o == RIGHT)
         {
             col1 = col1 - sz;
-            subScreen->col0 = col1 - sz;
+            subScreen->col0 = subScreen->col1 - sz;
         }
         else if (o == LOWER)
         {
             page1 = page1 - sz;
-            subScreen->page0 = page1 - sz;
+            subScreen->page0 = subScreen->page1 - sz;
         }
         else // (o == UPPER)
         {
             page0 = page0 + sz;
-            subScreen->page1 = page0 + sz;
+            subScreen->page1 = subScreen->page0 + sz;
         }
 
         
