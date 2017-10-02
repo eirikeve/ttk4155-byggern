@@ -94,14 +94,30 @@ int main(void)
 	sub.clear();
 	sub.writeString("Removed Border Lines");
 
-	char letter = 'x';
+	char letter = '-';
 	char loading_bar[10] {' '};
 	int counter = 0;
 	char val[5];
+	
 	while (true)
 	{
+		subsub.clear();
 		counter = (counter + 1) % 11;
-		letter = (letter == 'x') ? '+' : 'x';
+		switch (letter)
+		{
+			case '-':
+				letter = '\\';
+				break;
+			case '\\':
+				letter = '|';
+				break;
+			case '|':
+				letter = '/';
+				break;
+			case '/':
+				letter = '-';
+				break;
+		}
 		for (int i = 0; i < 10; ++i)
 		{
 			if (i < counter)
@@ -114,7 +130,7 @@ int main(void)
 			}
 		}
 
-		itoa(counter, val, 10);
+		itoa(counter*10, val, 10);
 
 		subsub.goTo(0,1);
 		subsub.writeChar(letter);
