@@ -6,7 +6,7 @@ extern "C" {
 Screen::Screen()
 {
     oled = OLED();
-    vram = calloc(128 * 8, sizeof(uint8_t));
+    vram = NULL;
     superScreen = NULL;
     subScreen = NULL;
     page0 = 0;
@@ -55,6 +55,11 @@ Screen::~Screen()
         }
         superScreen->subScreen = NULL;
     }
+    else
+    {
+        // No superscreen, so we need to free the vram!
+        free(vram);
+    }
 }
 
 void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
@@ -70,11 +75,18 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
         )
         )
     {
+        if (subScreen->vram != NULL)
+        {
+            free(subScreen->vram);
+        }
 
         subScreen = subscreen;
         subScreen->superScreen = this;
+        subScreen->vram = vram;
+
 
         // Update variables - depending on the Orientation o
+        
         subScreen->page0 = page0;
         subScreen->page1 = page1;
         subScreen->col0 = col0;
@@ -172,7 +184,6 @@ void Screen::goToPage(uint8_t page)
     if (page < pagesize)
     {
         loc_page = page;
-        oled.goToPage(loc_page + page0);
     }
 }
 
@@ -181,7 +192,6 @@ void Screen::goToColumn(uint8_t col)
     if (col < colsize)
     {
         loc_col = col;
-        oled.goToColumn(loc_col + col0);
     }
 }
 
@@ -208,8 +218,11 @@ void Screen::writeChar(unsigned char c)
         else
         {
             // Enough space to write one more char
-            oled.goTo(loc_page + page0, loc_col + col0);
-            oled.writeChar(c);
+            for (int i = 0; i < 5; i++)
+            {
+                this->write(pgm_read_word(&font5[c - ' '][i]));
+                // printf("%d\n", font8[33][i]);
+            }
             loc_col += (character_size + 1);
             if (loc_col >= colsize)
             {
@@ -251,18 +264,16 @@ void Screen::writeString(char *string)
 
 void Screen::write(uint8_t c)
 {
-    oled.write(c);
+    vram[loc_page * 128 + loc_col++] = c;
 }
 
 void Screen::fill(uint8_t v)
 {
     for (int j = page0; j < page1; j++)
     {
-        oled.goTo(j, col0);
-
         for (int i = col0; i < col1; i++)
         {
-            oled.write(v);
+            vram[j * 128 + i] = v;
         }
     }
     updateBorderLines();
@@ -305,8 +316,22 @@ void Screen::selfTest()
     writeString(dots);
 }
 
+void Screen::initVRAM()
+{
+    vram = (uint8_t*)calloc(128 * 8, sizeof(uint8_t));
+}
+
 void Screen::render()
 {
+    for (int p = page0; p < page1; ++p)
+    {
+        oled.goToPage(p);
+        oled.goToColumn(col0);
+        for (int c = col0; c < col1; ++c)
+        {
+            oled.write(vram[p * 128 + c]);
+        }
+    }
     // Iterate through SRAM memory
     // Write SRAM memory to the screen
 

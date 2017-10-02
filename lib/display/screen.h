@@ -1,4 +1,8 @@
 #include "oled.h"
+#include "../fonts/fonts.h"
+extern "C" {
+  #include <stdlib.h>
+  }
 
 enum Orientation
 {
@@ -15,7 +19,7 @@ class Screen
 public:
   OLED oled;
 
-  uint8_t *vram = NULL;
+  uint8_t *vram;
 
   Screen *superScreen;
   Screen *subScreen;
@@ -57,6 +61,7 @@ public:
   void clear();
   void selfTest();
 
+  void initVRAM();
   void render();
 
 };
