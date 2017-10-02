@@ -95,6 +95,8 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
 
         subScreen->pagesize = subScreen->page1 - subScreen->page0;
         pagesize = page1 - page0;
+        subScreen->colsize = subScreen->col1 - subscreen->col0;
+        colsize = col1 - col0;
         subScreen->clear(0x00);
     }
 }
