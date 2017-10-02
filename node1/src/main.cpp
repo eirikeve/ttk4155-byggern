@@ -56,7 +56,16 @@ int main(void)
 	_delay_ms(std_wait_time);
 	subsub.clear();
 	subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-	
+	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen",
+	bar.page0, bar.page1, bar.col0, bar.col1, bar.pagesize, bar.colsize, bar.superScreen != NULL, bar.subScreen != NULL);
+	printf("\no:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen",
+	o.page0, o.page1, o.col0, o.col1, o.pagesize, o.colsize, o.superScreen != NULL, o.subScreen != NULL);
+	printf("\nSub:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen",
+	sub.page0, sub.page1, sub.col0, sub.col1, sub.pagesize, sub.colsize, sub.superScreen != NULL, sub.subScreen != NULL);
+	printf("\nSubsub:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen",
+	subsub.page0, subsub.page1, subsub.col0, subsub.col1, subsub.pagesize, subsub.colsize, subsub.superScreen != NULL, subsub.subScreen != NULL);
+
+
 	char buffer[5];
 	o.clear();
 	o.goTo(0,1);
