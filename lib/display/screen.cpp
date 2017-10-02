@@ -143,7 +143,7 @@ void Screen::updateBorderLines()
         {
             goTo(p, 0);
             Screen::write(0xFF);
-            goTo(p, colsize);
+            goTo(p, colsize - 1);
             Screen::write(0xFF);
         }
     }
@@ -153,7 +153,7 @@ void Screen::updateBorderLines()
         {
             goTo(p, 0);
             Screen::write(0x00);
-            goTo(p, colsize);
+            goTo(p, colsize - 1);
             Screen::write(0x00);
         }
     }
