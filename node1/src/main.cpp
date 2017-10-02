@@ -9,9 +9,9 @@ extern "C" {
 #include <avr/io.h>
 #include "util/delay.h"
 #include <stdio.h>
-#include "comm.h"
 #include <avr/pgmspace.h>
 #include <stdlib.h>
+#include "comm.h¨
 }
 
 #include "../lib/joystick/joystick.h"
