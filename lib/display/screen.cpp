@@ -91,8 +91,8 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
         }
         else if (o == LOWER)
         {
-            page1 = page1 - sz;
-            subScreen->page0 = page1 - sz;
+            page1 = page1 - sz + 1;
+            subScreen->page0 = page1 - sz + 1;
         }
         else // (o == UPPER)
         {
