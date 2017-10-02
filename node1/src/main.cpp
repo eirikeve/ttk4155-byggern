@@ -137,61 +137,66 @@ int main(void)
 	sub.clear();
 	subsub.clear();
 
-	while (true)
-	{
-		
-		counter = (counter + 1) % 11;
-		switch (letter)
-		{
-			case '-':
-				letter = '\\';
-				break;
-			case '\\':
-				letter = '|';
-				break;
-			case '|':
-				letter = '/';
-				break;
-			case '/':
-				letter = '-';
-				break;
-		}
-		for (int i = 0; i < 10; ++i)
-		{
-			if (i < counter)
-			{
-				loading_bar[i] = '=';
-			}
-			else
-			{
-				loading_bar[i] = ' ';
-			}
-		}
-		loading_bar[10] = '\0';
+	bar.fill(0b01000010);
+	o.fill(  0b01100110);
+	sub.fill(0b01110110);
+	subsub.fill(0b01111111);
 
-		//itoa(counter*10, val, 10);
-
-		bar.goTo(0,1);
-		bar.writeChar(letter);
-		bar.writeChar(' ');
-		bar.writeString(loading_bar);
-		bar.writeChar(' ');
-		//bar.writeString(val);
-		//bar.writeChar('%');
-		bar.writeChar('\n');
-		_delay_ms(300);
+	// while (true)
+	// {
 		
-		o.goTo(0,1);
-		sub.goTo(0,1);
-		subsub.goTo(0,1);
-		o.writeChar('o');
-		sub.writeChar('s');
-		subsub.writeChar('s');
-		subsub.writeChar('s');
-		o.writeString(loading_bar);
-		sub.writeString(loading_bar);
-		subsub.writeString(loading_bar);
-	}
+	// 	counter = (counter + 1) % 11;
+	// 	switch (letter)
+	// 	{
+	// 		case '-':
+	// 			letter = '\\';
+	// 			break;
+	// 		case '\\':
+	// 			letter = '|';
+	// 			break;
+	// 		case '|':
+	// 			letter = '/';
+	// 			break;
+	// 		case '/':
+	// 			letter = '-';
+	// 			break;
+	// 	}
+	// 	for (int i = 0; i < 10; ++i)
+	// 	{
+	// 		if (i < counter)
+	// 		{
+	// 			loading_bar[i] = '=';
+	// 		}
+	// 		else
+	// 		{
+	// 			loading_bar[i] = ' ';
+	// 		}
+	// 	}
+	// 	loading_bar[10] = '\0';
+
+	// 	//itoa(counter*10, val, 10);
+
+	// 	bar.goTo(0,1);
+	// 	bar.writeChar(letter);
+	// 	bar.writeChar(' ');
+	// 	bar.writeString(loading_bar);
+	// 	bar.writeChar(' ');
+	// 	//bar.writeString(val);
+	// 	//bar.writeChar('%');
+	// 	bar.writeChar('\n');
+	// 	_delay_ms(300);
+		
+	// 	o.goTo(0,1);
+	// 	sub.goTo(0,1);
+	// 	subsub.goTo(0,1);
+	// 	o.writeChar('o');
+	// 	sub.writeChar('s');
+	// 	subsub.writeChar('s');
+	// 	subsub.writeChar('s');
+	// 	o.writeString(loading_bar);
+	// 	sub.writeString(loading_bar);
+	// 	subsub.writeString(loading_bar);
+	// }
 
 	// sub.clear();
 	// _delay_ms(1000);
