@@ -268,6 +268,7 @@ void Screen::fill(uint8_t v)
 void Screen::clear()
 {
     fill(0x00);
+    goTo(0, 1);
 }
 
 void Screen::selfTest()

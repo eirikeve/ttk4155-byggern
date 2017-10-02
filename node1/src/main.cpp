@@ -35,22 +35,19 @@ int main(void)
 	o.goTo(0, 0);
 	o.clear();
 	Screen sub;
-	o.selfTest();
+	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 	_delay_ms(4000);
 	o.addSubScreen(&sub, 4, Orientation::LOWER);
 	_delay_ms(4000);
-	o.selfTest();
+	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 	_delay_ms(4000);
-	sub.selfTest();
+	sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 	Screen subsub;
 	_delay_ms(4000);
 	sub.addSubScreen(&subsub, 64, Orientation::RIGHT);
-	o.selfTest();
+	sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 	_delay_ms(4000);
-
-	sub.selfTest();
-	_delay_ms(4000);
-	subsub.selfTest();
+	subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 	
 	char buffer[5];
 	o.clear();
@@ -69,19 +66,15 @@ int main(void)
 	o.writeString(buffer);
 
 	_delay_ms(4000);
-	o.clear();
-	o.goTo(0,1);
-	o.writeString("1\nW\nPer\nLine");
-
-	_delay_ms(4000);
-
-	o.clear();
 	sub.clear();
-	subsub.clear();
+	sub.goTo(0,1);
+	sub.writeString("1\nW\nPer\nLine");
 
 	_delay_ms(4000);
+
 
 	o.addBorderLines();
+	_delay_ms(4000);
 	sub.addBorderLines();
 	_delay_ms(4000);
 	subsub.addBorderLines();
@@ -89,6 +82,8 @@ int main(void)
 	o.removeBorderLines();
 	sub.removeBorderLines();
 	subsub.removeBorderLines();
+	sub.clear();
+	sub.writeString("Removed Border Lines");
 
 	// sub.clear();
 	// _delay_ms(1000);
