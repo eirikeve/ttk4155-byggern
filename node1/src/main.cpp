@@ -11,7 +11,7 @@ extern "C" {
 #include <stdio.h>
 #include <avr/pgmspace.h>
 #include <stdlib.h>
-#include "comm.h¨
+#include "comm.h"
 }
 
 #include "../lib/joystick/joystick.h"
