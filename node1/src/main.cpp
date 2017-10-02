@@ -102,11 +102,11 @@ int main(void)
 	char letter = '-';
 	char loading_bar[10] {' '};
 	int counter = 0;
-	char val[3];
-	
+	char val[4];
+	bar.clear();
 	while (true)
 	{
-		bar.clear();
+		
 		counter = (counter + 1) % 11;
 		switch (letter)
 		{
@@ -144,6 +144,7 @@ int main(void)
 		bar.writeChar(' ');
 		bar.writeString(val);
 		bar.writeChar('%');
+		bar.writeChar('\n');
 		_delay_ms(300);
 	}
 
