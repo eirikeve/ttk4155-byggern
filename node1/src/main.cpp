@@ -35,7 +35,7 @@ int main(void)
 	y  = 0;
 	Screen bar;
 	Screen o;
-	bar.addSubScreen(&o, 7, LOWER);
+	bar.addSubScreen(&o, 3, LOWER);
 	bar.addBorderLines();
 	o.goTo(0, 0);
 	o.clear();
@@ -100,7 +100,7 @@ int main(void)
 	sub.writeString("Removed Border Lines");
 
 	char letter = '-';
-	char loading_bar[11] {''};
+	char loading_bar[11] {' '};
 	int counter = 0;
 	char val[4];
 	bar.clear();
