@@ -37,8 +37,17 @@ int main(void)
 	x  = 0;
 	y  = 0;
 	Screen bar;
+	printf("Adding Bar:");
+	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
+	bar.page0, bar.page1, bar.col0, bar.col1, bar.pagesize, bar.colsize, bar.superScreen != NULL, bar.subScreen != NULL);
+	
 	Screen o;
 	bar.addSubScreen(&o, 6, LOWER);
+	printf("Adding O:");
+	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
+	bar.page0, bar.page1, bar.col0, bar.col1, bar.pagesize, bar.colsize, bar.superScreen != NULL, bar.subScreen != NULL);
+	printf("\no:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
+	o.page0, o.page1, o.col0, o.col1, o.pagesize, o.colsize, o.superScreen != NULL, o.subScreen != NULL);
 	// bar.addBorderLines();
 	// o.goTo(0, 0);
 	// o.clear();
@@ -46,6 +55,13 @@ int main(void)
 	//o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 	// _delay_ms(std_wait_time);
 	o.addSubScreen(&sub, 4, Orientation::LOWER);
+	printf("Adding Sub:");
+	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
+	bar.page0, bar.page1, bar.col0, bar.col1, bar.pagesize, bar.colsize, bar.superScreen != NULL, bar.subScreen != NULL);
+	printf("\no:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
+	o.page0, o.page1, o.col0, o.col1, o.pagesize, o.colsize, o.superScreen != NULL, o.subScreen != NULL);
+	printf("\nSub:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
+	sub.page0, sub.page1, sub.col0, sub.col1, sub.pagesize, sub.colsize, sub.superScreen != NULL, sub.subScreen != NULL);
 	// _delay_ms(std_wait_time);
 	// o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 	// _delay_ms(std_wait_time);
@@ -53,6 +69,7 @@ int main(void)
 	Screen subsub;
 	// _delay_ms(std_wait_time);
 	sub.addSubScreen(&subsub, 64, Orientation::RIGHT);
+	printf("Adding SubSub:");
 	// sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 	// _delay_ms(std_wait_time);
 	// subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
@@ -60,13 +77,13 @@ int main(void)
 	// subsub.clear();
 	// subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 	printf("INFO\n");
-	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen",
+	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
 	bar.page0, bar.page1, bar.col0, bar.col1, bar.pagesize, bar.colsize, bar.superScreen != NULL, bar.subScreen != NULL);
-	printf("\no:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen",
+	printf("\no:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
 	o.page0, o.page1, o.col0, o.col1, o.pagesize, o.colsize, o.superScreen != NULL, o.subScreen != NULL);
-	printf("\nSub:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen",
+	printf("\nSub:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
 	sub.page0, sub.page1, sub.col0, sub.col1, sub.pagesize, sub.colsize, sub.superScreen != NULL, sub.subScreen != NULL);
-	printf("\nSubsub:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen",
+	printf("\nSubsub:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen %d",
 	subsub.page0, subsub.page1, subsub.col0, subsub.col1, subsub.pagesize, subsub.colsize, subsub.superScreen != NULL, subsub.subScreen != NULL);
 
 
