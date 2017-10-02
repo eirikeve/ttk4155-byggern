@@ -33,7 +33,7 @@ int main(void)
 	y  = 0;
 	Screen o;
 	o.goTo(0, 0);
-	o.clear(0x00);
+	o.clear();
 	Screen sub;
 	o.selfTest();
 	_delay_ms(4000);
@@ -71,7 +71,7 @@ int main(void)
 	o.clear();
 	o.writeString("1\nW\nPer\nLine");
 
-	// sub.clear(0xFF);
+	// sub.clear();
 	// _delay_ms(1000);
 	// o.writeString("123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja123456789123456 abcdefghijklmnopqrstuvwxyz ja");
 	// o.goTo(0, 9);
