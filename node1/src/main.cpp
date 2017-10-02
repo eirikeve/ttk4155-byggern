@@ -35,11 +35,11 @@ int main(void)
 	o.goTo(0, 0);
 	o.clear();
 	Screen sub;
-	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 	_delay_ms(4000);
 	o.addSubScreen(&sub, 4, Orientation::LOWER);
 	_delay_ms(4000);
-	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 	_delay_ms(4000);
 	sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 	Screen subsub;
@@ -47,6 +47,9 @@ int main(void)
 	sub.addSubScreen(&subsub, 64, Orientation::RIGHT);
 	sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 	_delay_ms(4000);
+	subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+	_delay_ms(4000);
+	subsub.clear();
 	subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 	
 	char buffer[5];
@@ -63,6 +66,12 @@ int main(void)
 	o.writeString(buffer);
 	o.writeString(" col1:");
     itoa(subsub.col1, buffer, 10);
+	o.writeString(buffer);
+	o.writeString(" pgsz:");
+    itoa(subsub.pagesize, buffer, 10);
+	o.writeString(buffer);
+	o.writeString(" colsz:");
+    itoa(subsub.colsize, buffer, 10);
 	o.writeString(buffer);
 
 	_delay_ms(4000);
