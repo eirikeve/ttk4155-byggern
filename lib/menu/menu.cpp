@@ -18,12 +18,12 @@ char *SubMenu::getName()
 	return this->name;
 }
 
-uint8_t SubMenu::getSize()
+uint8_t SubMenu::getSize() const
 {
 	return this->size;
 }
 
-~SubMenu()
+SubMenu::~SubMenu()
 {
 	free(next);
 }
