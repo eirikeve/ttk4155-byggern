@@ -58,7 +58,10 @@ void drawInitLogo(Screen main)
 		}
 		
 		_delay_ms(100);
+		
 	}
+	main.goTo(6, 29);
+	main.writeString("Initializing *");
 	_delay_ms(250);
 
 	main.goTo(7, 0);
