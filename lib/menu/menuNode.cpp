@@ -7,7 +7,8 @@ extern "C" {
 
 MenuNode::MenuNode(char *name) : parent(NULL),
                                  child(NULL),
-                                 sibling(NULL),
+                                 nextSibling(NULL),
+                                 prevSibling(NULL),
                                  name(name),
                                  totNrOfChildren(0),
                                  indexOfSiblings(0) {}
@@ -24,21 +25,21 @@ void MenuNode::setIndexOfSiblings(uint16_t index)
 
 void MenuNode::addSibling(MenuNode &menu)
 {
-    if (this->sibling)
+    if (this->nextSibling)
     {
-        this->sibling->addSibling(menu);
+        this->nextSibling->addSibling(menu);
     }
     else
     {
-        this->sibling = &menu;
+        this->nextSibling = &menu;
+        menu.prevSibling = this;
         menu.setParent(*this->parent);
         menu.setIndexOfSiblings(this->getTotNrOfSiblings());
         menu.parent->totNrOfChildren++;
         // printf("nr of sib: %d, index of sib: %d\n", menu.getTotNrOfSiblings(), menu.indexOfSiblings);
         // printf("------------------------\n");
-        // printf("name: %s, sibling: %s, par: %s, par ch: %d\n", menu.getName(), menu.getSibling(0)->getName(), menu.getParent()->getName(), menu.getParent()->getTotNrOfChildren());
+        // printf("name: %s, nextSibling: %s, par: %s, par ch: %d\n", menu.getName(), menu.getSibling(0)->getName(), menu.getParent()->getName(), menu.getParent()->getTotNrOfChildren());
         // printf("------------------------\n");
-        
     }
 }
 void MenuNode::addChild(MenuNode &menu)
@@ -53,10 +54,10 @@ void MenuNode::addChild(MenuNode &menu)
         menu.setParent(*this);
         this->totNrOfChildren++;
         menu.setIndexOfSiblings(1);
-        // printf("nr of sib: %d, index of sib: %d\n", menu.getTotNrOfSiblings(), menu.indexOfSiblings);        
+        // printf("nr of sib: %d, index of sib: %d\n", menu.getTotNrOfSiblings(), menu.indexOfSiblings);
         // printf("------------------------\n");
-        // printf("name: %s, sibling: %s, par: %s, par ch: %d\n", menu.getName(), menu.getSibling(0)->getName(), menu.getParent()->getName(), menu.getParent()->getTotNrOfChildren());
-        // printf("------------------------\n");    
+        // printf("name: %s, nextSibling: %s, par: %s, par ch: %d\n", menu.getName(), menu.getSibling(0)->getName(), menu.getParent()->getName(), menu.getParent()->getTotNrOfChildren());
+        // printf("------------------------\n");
     }
 }
 
@@ -87,15 +88,19 @@ uint16_t MenuNode::getTotNrOfSiblings()
     }
 }
 
-MenuNode *MenuNode::getSibling(uint8_t offset)
+MenuNode *MenuNode::getSibling(int8_t offset)
 {
     if (offset == 0)
     {
         return this;
     }
-    else if (this->sibling)
+    else if (this->nextSibling && offset > 0)
     {
-        this->sibling->getSibling(offset - 1);
+        return this->nextSibling->getSibling(offset - 1);
+    }
+    else if (this->prevSibling && offset < 0)
+    {
+        return this->prevSibling->getSibling(offset + 1);
     }
     else
     {
@@ -164,7 +169,8 @@ char **MenuNode::getSiblingNames()
     // Get siblings before current
     for (uint16_t i = 0; i < this->indexOfSiblings; i++)
     {
-        menus[i] = this->parent->getChild(i)->getName();
+        // menus[i] = this->parent->getChild(i)->getName();
+        menus[i] = this->getSibling(-this->indexOfSiblings + i)->getName();
     }
 
     // Get siblings after current

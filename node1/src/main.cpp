@@ -73,6 +73,7 @@ void menu_test()
 	// printf("name: %s, sibling: %s, par: %s, par ch: %d\n", nr3.getName(), nr3.getSibling(0)->getName(), nr3.getParent()->getName(), nr3.getParent()->getTotNrOfChildren());
 	main.addChild(nr4);
 	// printf("siblings main: %d\n", main.getTotNrOfSiblings());
+	// printf("sib 0 for u2: %s\n", nr2.getSibling(-1)->getName());
 	char **res = nr2.getSiblingNames();
 	for (int i = 0; i < main.getTotNrOfChildren() - 1; i++)
 	{

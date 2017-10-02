@@ -1,51 +1,24 @@
-// #pragma once
-// extern "C" {
-// #include <stdlib.h>
-// }
 
-// class SubMenu
-// {
-// private:
-// 	char *name;
-// 	SubMenu **children;
-// 	SubMenu **parent;
-// 	uint8_t size;
-// 	uint8_t currentIndex;
+#pragma once
+extern "C" {
+#include <stdint.h>
+}
 
-// 	// SubMenu &operator=(SubMenu rhs) = delete;
-// 	// SubMenu(const SubMenu &rhs) = delete;
+#include "menuNode.h"
 
-// public:
-// 	static int i;
-// 	SubMenu();
-// 	SubMenu(char *name, uint8_t size);
+class Menu
+{
+  private:
+    MenuNode *head;
+    MenuNode *current;
+    uint16_t selectIndex;
 
-// 	SubMenu *getChildren() const;
-// 	SubMenu *getParent() const;
-// 	char *getName() const;
-// 	uint8_t getSize() const;
+  public:
+    Menu(MenuNode *head);
 
-// 	SubMenu addSubMenu(char *name, uint8_t size);
-// 	void addParent(SubMenu *parent);
-
-// 	char **getChildrenNames();
-
-// 	~SubMenu();
-// 	void debug() const;
-// };
-
-// class Menu
-// {
-// private:
-// 	SubMenu *head;
-// 	SubMenu *current;
-// 	int index;
-
-// public:
-// 	Menu(SubMenu *head);
-// 	char **getChoices(); // returner en liste med alle valg i en undermeny
-// 	void select();			 // velger et alternativ
-// 	void goBack();			 // går til prev
-// 	void goUp();				 //index -1
-// 	void goDown();			 // index +1
-// };
+    MenuNode *getCurrent();
+    MenuNode *select();
+    MenuNode *back();
+    MenuNode *up();
+    MenuNode *down();
+};
