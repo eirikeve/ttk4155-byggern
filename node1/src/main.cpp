@@ -10,7 +10,7 @@ extern "C" {
 #include "util/delay.h"
 #include <stdio.h>
 #include <avr/pgmspace.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include "comm.h"
 }
 
@@ -39,26 +39,26 @@ int main(void)
 	Screen bar;
 	Screen o;
 	bar.addSubScreen(&o, 6, LOWER);
-	bar.addBorderLines();
-	o.goTo(0, 0);
-	o.clear();
+	// bar.addBorderLines();
+	// o.goTo(0, 0);
+	// o.clear();
 	Screen sub;
-	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-	_delay_ms(std_wait_time);
+	//o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+	// _delay_ms(std_wait_time);
 	o.addSubScreen(&sub, 4, Orientation::LOWER);
-	_delay_ms(std_wait_time);
-	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-	_delay_ms(std_wait_time);
-	sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+	// _delay_ms(std_wait_time);
+	// o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+	// _delay_ms(std_wait_time);
+	// sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 	Screen subsub;
-	_delay_ms(std_wait_time);
+	// _delay_ms(std_wait_time);
 	sub.addSubScreen(&subsub, 64, Orientation::RIGHT);
-	sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-	_delay_ms(std_wait_time);
-	subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-	_delay_ms(std_wait_time);
-	subsub.clear();
-	subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+	// sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+	// _delay_ms(std_wait_time);
+	// subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+	// _delay_ms(std_wait_time);
+	// subsub.clear();
+	// subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 	printf("INFO\n");
 	printf("\nBar:\nPage0 %d, Page1 %d, Col0 %d, Col1 %d, Pagesize %d, Colsize %d, HasSuperScreen %d, HasSubScreen",
 	bar.page0, bar.page1, bar.col0, bar.col1, bar.pagesize, bar.colsize, bar.superScreen != NULL, bar.subScreen != NULL);
@@ -70,47 +70,47 @@ int main(void)
 	subsub.page0, subsub.page1, subsub.col0, subsub.col1, subsub.pagesize, subsub.colsize, subsub.superScreen != NULL, subsub.subScreen != NULL);
 
 
-	char buffer[5];
-	o.clear();
-	o.goTo(0,1);
-	o.writeString("SubSub: page0:");
-    itoa(subsub.page0, buffer, 10);
-	o.writeString(buffer);
-	o.writeString(" page1:");
-    itoa(subsub.page1, buffer, 10);
-	o.writeString(buffer);
-	o.writeString(" col0:");
-    itoa(subsub.col0, buffer, 10);
-	o.writeString(buffer);
-	o.writeString(" col1:");
-    itoa(subsub.col1, buffer, 10);
-	o.writeString(buffer);
-	o.writeString(" pgsz:");
-    itoa(subsub.pagesize, buffer, 10);
-	o.writeString(buffer);
-	o.writeString(" colsz:");
-    itoa(subsub.colsize, buffer, 10);
-	o.writeString(buffer);
+	// char buffer[5];
+	// o.clear();
+	// o.goTo(0,1);
+	// o.writeString("SubSub: page0:");
+    // itoa(subsub.page0, buffer, 10);
+	// o.writeString(buffer);
+	// o.writeString(" page1:");
+    // itoa(subsub.page1, buffer, 10);
+	// o.writeString(buffer);
+	// o.writeString(" col0:");
+    // itoa(subsub.col0, buffer, 10);
+	// o.writeString(buffer);
+	// o.writeString(" col1:");
+    // itoa(subsub.col1, buffer, 10);
+	// o.writeString(buffer);
+	// o.writeString(" pgsz:");
+    // itoa(subsub.pagesize, buffer, 10);
+	// o.writeString(buffer);
+	// o.writeString(" colsz:");
+    // itoa(subsub.colsize, buffer, 10);
+	// o.writeString(buffer);
 
-	_delay_ms(std_wait_time);
-	sub.clear();
-	sub.goTo(0,1);
-	sub.writeString("1\nW\nPer\nLine");
+	// _delay_ms(std_wait_time);
+	// sub.clear();
+	// sub.goTo(0,1);
+	// sub.writeString("1\nW\nPer\nLine");
 
-	_delay_ms(std_wait_time);
+	// _delay_ms(std_wait_time);
 
 
-	o.addBorderLines();
-	_delay_ms(std_wait_time);
-	sub.addBorderLines();
-	_delay_ms(std_wait_time);
-	subsub.addBorderLines();
-	_delay_ms(std_wait_time);
-	o.removeBorderLines();
-	sub.removeBorderLines();
-	subsub.removeBorderLines();
-	sub.clear();
-	sub.writeString("Removed Border Lines");
+	// o.addBorderLines();
+	// _delay_ms(std_wait_time);
+	// sub.addBorderLines();
+	// _delay_ms(std_wait_time);
+	// subsub.addBorderLines();
+	// _delay_ms(std_wait_time);
+	// o.removeBorderLines();
+	// sub.removeBorderLines();
+	// subsub.removeBorderLines();
+	// sub.clear();
+	// sub.writeString("Removed Border Lines");
 
 	char letter = '-';
 	char loading_bar[11] {' '};
@@ -153,15 +153,15 @@ int main(void)
 		}
 		loading_bar[10] = '\0';
 
-		itoa(counter*10, val, 10);
+		//itoa(counter*10, val, 10);
 
 		bar.goTo(0,1);
 		bar.writeChar(letter);
 		bar.writeChar(' ');
 		bar.writeString(loading_bar);
 		bar.writeChar(' ');
-		bar.writeString(val);
-		bar.writeChar('%');
+		//bar.writeString(val);
+		//bar.writeChar('%');
 		bar.writeChar('\n');
 		_delay_ms(300);
 		
