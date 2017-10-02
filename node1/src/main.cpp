@@ -29,26 +29,31 @@ int main(void)
 	// Joystick joystick(10);
 	uint8_t x;
 	uint8_t y;
+
+	int std_wait_time = 100;
 	x  = 0;
 	y  = 0;
+	Screen bar;
 	Screen o;
+	bar.addSubScreen(&o, 7, LOWER);
+	bar.addBorderLines();
 	o.goTo(0, 0);
 	o.clear();
 	Screen sub;
 	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	o.addSubScreen(&sub, 4, Orientation::LOWER);
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	o.writeString("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 	Screen subsub;
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	sub.addSubScreen(&subsub, 64, Orientation::RIGHT);
 	sub.writeString("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	subsub.clear();
 	subsub.writeString("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 	
@@ -74,20 +79,20 @@ int main(void)
     itoa(subsub.colsize, buffer, 10);
 	o.writeString(buffer);
 
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	sub.clear();
 	sub.goTo(0,1);
 	sub.writeString("1\nW\nPer\nLine");
 
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 
 
 	o.addBorderLines();
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	sub.addBorderLines();
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	subsub.addBorderLines();
-	_delay_ms(4000);
+	_delay_ms(std_wait_time);
 	o.removeBorderLines();
 	sub.removeBorderLines();
 	subsub.removeBorderLines();
@@ -101,7 +106,7 @@ int main(void)
 	
 	while (true)
 	{
-		subsub.clear();
+		bar.clear();
 		counter = (counter + 1) % 11;
 		switch (letter)
 		{
@@ -132,13 +137,13 @@ int main(void)
 
 		itoa(counter*10, val, 10);
 
-		subsub.goTo(0,1);
-		subsub.writeChar(letter);
-		subsub.goTo(1,1);
-		subsub.writeString(loading_bar);
-		subsub.goTo(2,1);
-		subsub.writeString(val);
-		subsub.writeChar('%');
+		bar.goTo(0,1);
+		bar.writeChar(letter);
+		bar.writeChar(' ');
+		bar.writeString(loading_bar);
+		bar.writeChar(' ')
+		bar.writeString(val);
+		bar.writeChar('%');
 		_delay_ms(300);
 	}
 
