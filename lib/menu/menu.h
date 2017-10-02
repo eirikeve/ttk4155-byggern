@@ -1,47 +1,51 @@
 #pragma once
+extern "C" {
+#include <stdlib.h>
+}
 
 class SubMenu
 {
-  private:
+private:
 	char *name;
-	SubMenu *next;
-	SubMenu *prev;
+	SubMenu **children;
+	SubMenu **parent;
 	uint8_t size;
+	uint8_t currentIndex;
 
-  public:
-	SubMenu()
-	{
-		this->prev = NULL;
-		this->next = NULL;
-		this->name = '\0';
-		this->size = 0;
-	}
-	SubMenu(SubMenu *parent, const uint8_t size, char *name)
-	{
-		this->prev = parent;
-		this->size = size;
-		this->next = (SubMenu *)malloc(size);
-		this->name = name;
-	}
-	SubMenu *getNext();
-	SubMenu *getPrev();
-	char *getName();
+	// SubMenu &operator=(SubMenu rhs) = delete;
+	// SubMenu(const SubMenu &rhs) = delete;
+
+public:
+	static int i;
+	SubMenu();
+	SubMenu(char *name, uint8_t size);
+
+	SubMenu *getChildren() const;
+	SubMenu *getParent() const;
+	char *getName() const;
 	uint8_t getSize() const;
 
+	SubMenu addSubMenu(char *name, uint8_t size);
+	void addParent(SubMenu *parent);
+
+	char **getChildrenNames();
+
 	~SubMenu();
+	void debug() const;
 };
 
 class Menu
 {
-  private:
+private:
 	SubMenu *head;
 	SubMenu *current;
 	int index;
 
-  public:
+public:
+	Menu(SubMenu *head);
 	char **getChoices(); // returner en liste med alle valg i en undermeny
-	void select();		 // velger et alternativ
-	void goBack();		 // går til prev
-	void goUp();		 //index -1
-	void goDown();		 // index +1
+	void select();			 // velger et alternativ
+	void goBack();			 // går til prev
+	void goUp();				 //index -1
+	void goDown();			 // index +1
 };
