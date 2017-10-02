@@ -68,7 +68,7 @@ int main(void)
 	o.writeString(buffer);
 
 	_delay_ms(4000);
-	sub.writeString('1\nW\nPer\nLine');
+	sub.writeString("1\nW\nPer\nLine");
 
 	// sub.clear(0xFF);
 	// _delay_ms(1000);
