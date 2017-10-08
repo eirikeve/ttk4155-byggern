@@ -10,7 +10,8 @@
 int main(void)
 {
 
-	menu_test();
+	// menu_test();
+	menu_navigate();
 
 	// disp_test();
 
@@ -41,6 +42,88 @@ int main(void)
 		// x = joystick.readY();
 		// printf("%d\n", x);
 	}
+}
+
+
+void menu_navigate() {
+	MenuNode main("main");
+	MenuNode nr1("This is a test for the menu system");
+	MenuNode nr2("Use the joystick to go up and down");
+	MenuNode nr3("and swipe to the right");
+	MenuNode nr4("to select a choice");
+
+	MenuNode nr5("Lorem ipsum dolor sit amet");
+	MenuNode nr6("consectetur adipiscing elit");
+
+	MenuNode nr7("sed do eiusmod tempor incididunt");
+	MenuNode nr8("ut labore et dolore magna aliqua");
+	MenuNode nr9("Ut enim ad minim veniam");
+	MenuNode nr10("quis nostrud exercitation ullamco laboris");
+
+	main.addChild(nr1);
+	main.addChild(nr2);
+	main.addChild(nr3);
+	main.addChild(nr4);
+	
+	nr1.addChild(nr5);
+	nr1.addChild(nr6);
+
+	nr2.addChild(nr7);
+	nr2.addChild(nr8);
+	
+	nr5.addChild(nr9);
+	nr6.addChild(nr10);
+
+	Menu menuStructure(&main);
+
+	Screen disp;
+
+	Joystick stick(10);
+
+	uint8_t dummy;
+
+
+
+	while (true) {
+		disp.clear();
+		char ** choices = menuStructure.getCurrent()->getChildrenNames();
+		for (int i = 0; i < menuStructure.getCurrent()->getTotNrOfChildren(); i++) {
+			if (i == menuStructure.getSelectIndex())
+			{
+				disp.writeChar(">");
+			}
+			disp.writeString(choices[i]);
+			disp.goTo(i, 1);
+		}
+		Direction dir = stick.read(&dummy, &dummy);
+
+		switch(dir) {
+			case Direction::NORTH: {
+				menuStructure.up();
+				break;
+			} case Direction::SOUTH: {
+				menuStructure.down();
+				break;
+			} case Direction::EAST: {
+				menuStructure.select();
+				break;
+			} case Direction::WEST: {
+				menuStructure.back();
+				break;
+			} default: {
+				break;
+			}
+		}
+
+	}
+
+
+
+
+
+
+
+
 }
 
 void menu_test()

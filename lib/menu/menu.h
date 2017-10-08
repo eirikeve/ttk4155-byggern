@@ -11,14 +11,16 @@ class Menu
   private:
     MenuNode *head;
     MenuNode *current;
-    uint16_t selectIndex;
+    uint8_t selectIndex;
 
   public:
     Menu(MenuNode *head);
 
+    uint8_t getSelectIndex();
+
     MenuNode *getCurrent();
     MenuNode *select();
-    MenuNode *back();
-    MenuNode *up();
-    MenuNode *down();
+    void *back();
+    void *up();
+    void *down();
 };
