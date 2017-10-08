@@ -13,6 +13,7 @@ extern "C" {
 #include <stdint.h>
 #include "lib/fonts/fonts.h"
 #include "lib/menu/menuNode.h"
+#include "lib/menu/menu.h"
 void menu_navigate();
 void menu_test();
 void disp_test();

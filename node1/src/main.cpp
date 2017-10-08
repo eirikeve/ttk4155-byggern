@@ -90,7 +90,7 @@ void menu_navigate() {
 		for (int i = 0; i < menuStructure.getCurrent()->getTotNrOfChildren(); i++) {
 			if (i == menuStructure.getSelectIndex())
 			{
-				disp.writeChar(">");
+				disp.writeChar('>');
 			}
 			disp.writeString(choices[i]);
 			disp.goTo(i, 1);
