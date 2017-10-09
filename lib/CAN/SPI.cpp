@@ -1,5 +1,5 @@
 #pragma once
-#include "../utilities/utilities.h"
+#include "SPI.h"
 
  SPI_init(void){
 
