@@ -1,4 +1,5 @@
 #pragma once
+#include "MCP2515.h"
 
 uint8_t mcp2515_init(){
 	uint8_t value;
@@ -23,13 +24,13 @@ uint8_t mcp2515_init(){
 uint8_t mcp2515_read(uint8_t address){
 	uint8_t result;
 	
-	PORTB &= ~(1<<CAN_CS); // Select CAN-controller
+	clr_bit(PORTB, 4); // Select CAN-controller
 	
-	SPI_write(MCP_READ); // Send read command
-	SPI_write(address); // Send address
+	SPI_send(MCP_READ); // Send read command
+	SPI_send(address); // Send address
 	result =SPI_read(); // Read result
 	
-	PORTB |= (1<<CAN_CS); // Deselect CAN-controller
+	set_bit(PORTB, 4); // Deselect CAN-controller
 	
 	return result;
 }
