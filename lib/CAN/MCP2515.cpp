@@ -2,7 +2,9 @@
 
 uint8_t mcp2515_init(){
 	uint8_t value;
-	
+	 /* Set PB4 (SS' = OC3B) to low, activating the MCP2515 (slave) SPI*/
+	clr_bit(DDRB, DDB4);
+
 	SPI_init(); // initialize SPI
 	mcp2515_reset();
 	
