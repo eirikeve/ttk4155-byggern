@@ -1,5 +1,14 @@
 #pragma once
+#include "../utilities/utilities.h"
+extern "C"{
+    #include <avr/io.h>
+}
+
 
 void SPI_init(void);
 void SPI_send(char cData);
-void SPI_read();
+void SPI_send_string(char * c_string);
+char SPI_read();
+
+
+
