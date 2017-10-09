@@ -1,5 +1,6 @@
 #pragma once
 #include "../utilities/utilities.h"
+#include <stdint.h>
 extern "C"{
     #include <avr/io.h>
 }
