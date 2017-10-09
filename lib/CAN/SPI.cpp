@@ -1,7 +1,7 @@
 #pragma once
 #include "SPI.h"
 
- SPI_init(void){
+void SPI_init(void){
 
 	/* Set 		 SS' 	  MOSI and 	 SCK to output, all others input */
 	DDRB = (1 <<DDB4)|(1<<DDB5)|(1<<DDB7);
@@ -23,7 +23,7 @@ void SPI_send_string(char * c_string)
 	uint8_t index = 0;
 	while (c_string[index] != '\0')
 	{
-		SPI_send(c_string[index])
+		SPI_send(c_string[index]);
 		index += 1;
 		if (index == UINT8_MAX) return; // To avoid infinite loop
 	}

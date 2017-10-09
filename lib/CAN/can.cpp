@@ -4,7 +4,7 @@
 
 
 struct can_message{
-	unsigned int id;
+	uint8_t id;
 	uint8_t length;
 	uint8_t data[8];
 };
