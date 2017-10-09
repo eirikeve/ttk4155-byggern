@@ -154,10 +154,12 @@ MenuNode **MenuNode::getSiblings()
 }
 char **MenuNode::getChildrenNames()
 {
-
-    char **names = (char **)malloc(this->getTotNrOfChildren());
+    // printf("%u\n", this->getTotNrOfChildren());
+    char **names = (char **) malloc(sizeof(char*) * this->getTotNrOfChildren());
     for (uint16_t i = 0; i < this->getTotNrOfChildren(); i++)
     {
+        // printf("%s\n", this->getChild(i)->getName());
+        // printf("%x\n", &names[i]);
         names[i] = this->getChild(i)->getName();
     }
     return names;

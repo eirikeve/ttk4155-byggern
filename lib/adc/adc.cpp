@@ -10,6 +10,7 @@ extern "C" {
 ADC::ADC()
 {
     set_bit(MCUCR, SRE);
+    clr_bit(DDRE, 0);
 }
 
 uint8_t ADC::read(CHANNEL c)
