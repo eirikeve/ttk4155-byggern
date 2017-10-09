@@ -1,7 +1,11 @@
 #pragma once
 #include "../utilities/utilities.h"
+#include "SPI.h"
+#include <stdint.h>
+#include <stdio.h>
 extern "C" {
     #include <avr/interrupt.h>
+    #include <avr/io.h>
 }
 
 
@@ -15,6 +19,6 @@ void mcp_read_status();
 
 ISR(INT1_vect)
 {
-    if ()
+    if (true) return;
     // Interrupt handler for SPI
 }
