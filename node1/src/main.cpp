@@ -13,42 +13,73 @@ extern "C" {
 #include <avr/pgmspace.h>
 }
 
-#include "../lib/joystick/joystick.h"
+#include "../lib/CAN/SPI.h"
 #include "lib/tempDisplay/temp.h"
+#include "../lib/CAN/MCP2515.h"
 #include <stdint.h>
 #include "lib/fonts/fonts.h"
+#include "lib/CAN/can.h"
 
 int main(void)
 {
-
+	// SPI_init();
+	init_uart();
+	// printf("Hei\n");
+	// mcp2515_init();
 	set_bit(DDRB, 0);
 	clr_bit(DDRE, 0);
 	init_uart();
+	clr_bit(PORTB, PB4);
+	can_init();
+	sei();
+	can_message msg;
+	msg.id = 2;
+	msg.length = 1;
+	uint8_t i = 0;
+	msg.data[0] = i;
+	bool has_msg = false;
 
-	// Joystick joystick(10);
-	uint8_t x;
-	uint8_t y;
-	OLED o;
+	// printf("\n\nAfter init:\n");
+	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
+	// printf("Sending now\n");
+	// can_message_send(&msg);
+	// printf("After sending msg:\n");
+	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
+	// can_message recv = can_data_receive();
+	// printf("After recv msg:\n");
+	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
+	// printf("Sending now\n");
+	// can_message_send(&msg);
+	// printf("After sending msg:\n");
+	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
+	// can_message recv1 = can_data_receive();
+	// printf("After recv1 msg:\n");
+	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
+	
 
-	o.clear();
-	// const unsigned char PROGMEM a[8] = {0b00100000, 0b01110100, 0b01010100, 0b01010100, 0b00111100, 0b01111000, 0b01000000, 0b00000000};
-	o.gotoPage(0);
-	// for (int i = 0; i < 8; i++)
-	// {
-	// 	o.write(pgm_read_word(&font8[33][i]));
-	// }
-	o.writeString("->Play game       Highscores      Extra           Credits         End Game");
-
+	
+	
 	while (1)
 	{
-		// printf("%d\n", *ext_ram);
+		i++;
+		msg.data[0] = i;
+		can_message_send(&msg);
+		can_message recv = can_data_receive();
+		printf("id: %d, len: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
+
+
+		
+		// mcp2515_write(0x36, 'X');
+		// printf("%c\n", mcp2515_read(0x36));
+		// clr_bit(PORTB, PB4); // Select CAN-controller
+		// SPI_send(0xA5);
+		// // _delay_ms(1000);
+		// set_bit(PORTB, PB4); // Select CAN-controller
+		// mcp2515_write(0x00, 'z');
+		// printf("asd %d\n", mcp2515_read(0x01));
 		set_bit(PORTB, 0);
 		_delay_ms(100);
 		clr_bit(PORTB, 0);
 		_delay_ms(100);
-		// Direction dir = joystick.read(&x, &y);
-		// printf("x: %d, y: %d, dir: %d\n", x, y, dir);
-		// x = joystick.readY();
-		// printf("%d\n", x);
 	}
 }
