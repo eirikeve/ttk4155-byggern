@@ -56,7 +56,9 @@ UART::~UART()
     --this->num;
     if (this->num <= 0)
     {
-
+        free(instance)
+        instance = NULL;
+        num = 0;
     }
 }
 
@@ -83,7 +85,7 @@ volatile static UART * UART::instance()
 {
     if (!instance) // Check if an instance exists already
     {
-        instance = ( *UART) malloc(sizeof(UART)); // If this doesn't work, try sizeof(UART*)
+        instance = ( *UART) malloc(sizeof(UART)); // If this doesn't work, try sizeof(UART), sizeof()
         num = 0;
     }
     num += 1;
