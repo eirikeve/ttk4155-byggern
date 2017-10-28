@@ -9,3 +9,5 @@ void SPI_init(void);
 void SPI_send(char cData);
 void SPI_send_string(char *c_string);
 char SPI_read();
+void SPI_select_slave();
+void SPI_deselect_slave();

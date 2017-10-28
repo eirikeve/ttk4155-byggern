@@ -1,8 +1,9 @@
+#ifdef __AVR_ATmega162__
 #include "adc.h"
 extern "C" {
 #include "avr/io.h"
 #include <util/delay.h>
-#include "../../node1/include/comm.h"
+#include "../comm/comm.h"
 #include <stdio.h>
 }
 #include "../utilities/utilities.h"
@@ -10,6 +11,7 @@ extern "C" {
 ADC::ADC()
 {
     set_bit(MCUCR, SRE);
+    clr_bit(DDRE, 0);
 }
 
 uint8_t ADC::read(CHANNEL c)
@@ -30,3 +32,4 @@ uint8_t ADC::read(CHANNEL c)
 //     loop_until_bit_is_clear(PORTE, PE0);
 //     return ext_ram[0];
 // }
+#endif

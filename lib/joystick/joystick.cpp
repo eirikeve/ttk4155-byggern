@@ -1,6 +1,7 @@
+#ifdef __AVR_ATmega162__
 #include "joystick.h"
 extern "C" {
-#include "../../node1/include/comm.h"
+#include "../comm/comm.h"
 #include <stdio.h>
 #include <stdlib.h>
 }
@@ -18,7 +19,7 @@ enum MUX_SELECT
 
 Joystick::Joystick(uint8_t threshold) : threshold(threshold)
 {
-    this->autoCalibrate();
+    // this->autoCalibrate();
 }
 
 uint8_t Joystick::readX()
@@ -169,3 +170,4 @@ void Joystick::autoCalibrate()
     } while ((!(movedInX && movedInY)) ||
              (countX < CALIBRATION_BREAK_LOOPS_X || countY < CALIBRATION_BREAK_LOOPS_Y));
 }
+#endif

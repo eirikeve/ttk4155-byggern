@@ -53,11 +53,13 @@
 // 	////fdevopen(put_uart_char, recv_char);
 // 	//return 0;
 // 	/* Set baud rate */
+// #ifdef __AVR_ATmega162__
 // 	UBRR0L = ubrr;
 // 	/* Enable receiver and transmitter */
 // 	UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 // 	/* Set frame format: 8data, 2stop bit */
 // 	UCSR0C = (1<<URSEL0)|(1<<UCSZ01)|(1<<UCSZ00);
 // 	fdevopen(put_uart_char, recv_char);
+// #endif
 // 	return 0;
 // }

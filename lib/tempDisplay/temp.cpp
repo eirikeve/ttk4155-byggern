@@ -1,3 +1,4 @@
+#ifdef __atmega162__
 #include "temp.h"
 #include "../utilities/utilities.h"
 
@@ -98,3 +99,4 @@ void OLED::clear()
         }
     }
 }
+#endif

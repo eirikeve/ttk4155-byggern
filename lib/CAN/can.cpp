@@ -7,6 +7,13 @@ extern "C" {
 	#include <avr/io.h>
 	#include <stdio.h>
 }
+
+#ifdef __AVR_ATmega162__
+#define MCP2515_INT INT1_vect
+#elif __AVR_ATmega2560__
+#define MCP2515_INT INT4_vect
+#endif
+
 static volatile uint8_t received_buffer_0 = 0;
 static uint8_t received_buffer_1 = 0;
 
@@ -15,7 +22,7 @@ void clrB0() {received_buffer_0 = 0;}
 uint8_t getB1() {return received_buffer_1;}
 
 void can_init() {
-    mcp2515_init();
+	mcp2515_init();
     // set CNF 1..3
 	// Possible set TXRTSCRTL
 	mcp2515_bit_modify(MCP_RXM0SIDH, 0xFF, 0x0); // Set MCP mask registers to 0, to accept all messages
@@ -34,14 +41,18 @@ void can_init() {
 
 
 	// Enable loopback mode
-	mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, MODE_LOOPBACK);
+	mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, MODE_NORMAL);
 
 	mcp2515_bit_modify(MCP_CANINTE, 0x1, 0xFF);
-	// mcp2515_bit_modify(MCP_CANINTF, 0x01, 0x00); // Clear all int flags
 
 		// Enable interrupt pin on AVR
+#ifdef __AVR_ATmega162__
 	set_bit(GICR, INT1); // Enable interrupt1
 	set_bit(MCUCR, ISC11); // Trigger falling edge
+#elif __AVR_ATmega2560__
+    EICRB |= (2<<ISC40); // Falling edge
+	EIMSK |= (1<<INT4); // Enable the interrupt
+#endif
 }
 
 void can_message_send(can_message* msg){
@@ -59,13 +70,8 @@ void can_message_send(can_message* msg){
 
 	for (int i = 0; i < msg->length & 0x0F; i++) {
 		mcp2515_write(MCP_TXB0D0 + i, msg->data[i]);
-	}
-
-	// write TXREQ, page 18
-	// printf("IN can Before: %d\n", (mcp2515_read(MCP_TXB0CTRL) & 0x4) >> 3);	
+	}	
 	mcp2515_bit_modify(MCP_TXB0CTRL, 0x0B, 0x0B); //Request transmission, highest priority
-	// printf("IN can after: %d\n", (mcp2515_read(MCP_TXB0CTRL) & 0x4) >> 3);	
-	// mcp2515_request_to_send(0);
 }
 
 can_message can_data_receive() {
@@ -97,29 +103,9 @@ can_message can_data_receive() {
 	return msg;
 } 
 
-// void can_int_vect() {
-
-	
-// }
-static uint8_t foo = 0;
-ISR(INT1_vect) {
+ISR(MCP2515_INT) {
 	uint8_t reg = mcp2515_read(MCP_CANINTF);
-	// printf("%d\n", reg & 1);
 	if (reg & 1) {
-		// printf("Interrupt\n");
-		// printf("recv before: %d\n", received_buffer_0);
 		received_buffer_0 = true;
-		// printf("recv after: %d\n", received_buffer_0);
 	}
-	// else if (bit_is_set(reg, MCP_RX1IF)) {
-	// 	received_buffer_1 = 1;
-	// }
-	// if (!foo) {
-	// 	printf("Hello\n");
-	// 	foo = 1;
-	// }
-	// printf("recv end: %d\n", received_buffer_0);
-	// received_buffer_0 = true;
-
-// set_bit(PORTB, 0);
 }
