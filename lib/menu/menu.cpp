@@ -1,79 +1,58 @@
-#pragma once
-#include <stdio.h>
+extern "C" {
 #include <stdlib.h>
+#include <stdio.h>
+}
 #include "menu.h"
 
-SubMenu *SubMenu::getNext()
+Menu::Menu(MenuNode *head) : head(head),
+                             current(head),
+                             selectIndex(0)
 {
-	return this->next;
+}
+uint8_t Menu::getSelectIndex()
+{
+    return this->selectIndex;
+}
+MenuNode *Menu::getCurrent()
+{
+    return this->current;
 }
 
-SubMenu *SubMenu::getPrev()
+MenuNode *Menu::select()
 {
-	return this->prev;
+    if (this->current->getChild(0) != NULL)
+    {
+        // printf("%s\n", this->current->getName());
+        printf("%s\n", this->current->getChild(this->selectIndex)->getName());
+        this->current = this->current->getChild(this->selectIndex);
+        this->selectIndex = 0;
+    }
 }
 
-char *SubMenu::getName()
+void *Menu::back()
 {
-	return this->name;
+    if (this->current == this->head)
+    {
+        // Root level in menu
+        // this->selectIndex = 0;
+        return this->head;
+    }
+    this->current = this->current->getParent();
+    this->selectIndex = 0;
 }
 
-uint8_t SubMenu::getSize()
+void *Menu::up()
 {
-	return this->size;
+    if (this->selectIndex > 0)
+    {
+        this->selectIndex--;
+    }
 }
 
-~SubMenu()
+void *Menu::down()
 {
-	free(next);
-}
-
-char **Menu::getChoices()
-{
-	uint8_t size = current->getSize();
-	char **outp = (char **)malloc(size);
-	for (int i = 0; i < size; i++)
-	{
-		outp[i] = (current->getNext() + i)->getName();
-	}
-	return outp;
-}
-
-void Menu::select()
-{
-	current = current->getNext() + index;
-	return;
-}
-
-void Menu::goBack()
-{
-	if (current != head)
-	{
-		current = current->getPrev();
-	}
-	return;
-}
-
-void Menu::goUp()
-{
-	if (index == 0)
-	{
-		index = (int)sizeof(current->getNext());
-	}
-	else
-	{
-		index = index - 1;
-	}
-}
-
-void Menu::goDown()
-{
-	if (index == (int)sizeof(current->getNext()))
-	{
-		index = 0;
-	}
-	else
-	{
-		index = index + 1;
-	}
+    if (this->selectIndex < this->current->getTotNrOfChildren() - 1)
+    {
+        this->selectIndex++;
+    }
 }
