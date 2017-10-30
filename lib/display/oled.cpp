@@ -1,5 +1,5 @@
-#ifdef __atmega162__
-#include "temp.h"
+#ifdef __AVR_ATmega162__
+#include "oled.h"
 #include "../utilities/utilities.h"
 
 extern "C" {
@@ -38,7 +38,7 @@ OLED::OLED()
     write_c(0x21);
     write_c(0x20);
     //Set Memory Addressing Mode
-    write_c(0x00);
+    write_c(0x02);
     write_c(0xdb);
     //VCOM deselect level mode
     write_c(0x30);
@@ -65,9 +65,9 @@ void OLED::write(uint8_t c)
 
 void OLED::writeChar(unsigned char c)
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 5; i++)
     {
-        this->write(pgm_read_word(&font8[c - 32][i]));
+        this->write(pgm_read_word(&font5[c - ' '][i]));
         // printf("%d\n", font8[33][i]);
     }
 }
@@ -80,23 +80,24 @@ void OLED::writeString(char *string)
     }
 }
 
-void OLED::gotoPage(uint8_t page)
+void OLED::goToPage(uint8_t page)
 {
     this->write_c(0xB0 + page);
-    this->write_c(0x00);
-    this->write_c(0x10);
+}
+
+void OLED::goToColumn(uint8_t col)
+{
+    this->write_c(0x0F & col);
+    this->write_c(0x10 | (0xF & col >> 4));
+}
+
+void OLED::goTo(uint8_t page, uint8_t col)
+{
+    goToPage(page);
+    goToColumn(col);
 }
 
 void OLED::clear()
 {
-    for (int j = 0; j < 8; j++)
-    {
-        this->gotoPage(j);
-
-        for (int i = 0; i < 128; i++)
-        {
-            this->write(0x00);
-        }
-    }
 }
 #endif

@@ -1,10 +1,11 @@
 #pragma once
 extern "C" {
-    #include <stdint.h>
+	#include <stdint.h>
+	#include <stdlib.h>
 }
 
 struct can_message{
-	uint8_t id;
+	uint8_t id = NULL;
 	uint8_t length;
 	uint8_t data[8];
 };

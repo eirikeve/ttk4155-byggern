@@ -54,9 +54,7 @@
 // 	// can_message recv1 = can_data_receive();
 // 	// printf("After recv1 msg:\n");
 // 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-	
-	
-	
+
 // 	while (1)
 // 	{
 // 		(msg.data[0])++;
@@ -64,8 +62,6 @@
 // 		can_message recv = can_data_receive();
 // 		printf("id: %d, len: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
 
-
-		
 // 	// 	// mcp2515_write(0x36, 'X');
 // 	// 	// printf("%c\n", mcp2515_read(0x36));
 // 	// 	// clr_bit(PORTB, PB4); // Select CAN-controller
@@ -82,64 +78,84 @@
 // }
 
 extern "C" {
-	#include <avr/io.h>
-	#include "util/delay.h"
-	#include <stdio.h>
-	#include "../lib/comm/comm.h"
-	#include "../lib/utilities/utilities.h"
-	}
-	#include "../lib/CAN/SPI.h"
-	#include "../lib/CAN/MCP2515.h"
-	#include "lib/CAN/can.h"
-	#include "lib/timer/timer.h"
-	#include <stdint.h>
+#include <avr/io.h>
+#include "util/delay.h"
+#include <stdio.h>
+#include "../lib/comm/comm.h"
+#include "../lib/utilities/utilities.h"
+}
+#include "../lib/CAN/SPI.h"
+#include "../lib/CAN/MCP2515.h"
+#include "lib/CAN/can.h"
+#include "lib/timer/timer.h"
+#include "lib/joystick/joystick.h"
+#include <stdint.h>
 
-	// #include "lib/joystick/joystick.h"
-	#include "test/test.h"
+// #include "lib/joystick/joystick.h"
+#include "test/test.h"
+
+void toggle_led() {
+	PORTB ^= (1 << PB0);
+}
+
+int main(void)
+{
+	// testJoystick();
+	set_bit(DDRB, 0);
+	set_bit(PORTB, 0);
+	// Timer timer1 = Timer::instance(0);
+	// timer1.init(0, 500, toggle_led);
+	// timer1.start();
+	init_timer(500);
+
+	init_uart();
+	can_init();
+	// SPI_init();
+	// while (1) {
+	// 	SPI_send(0xa5);
+	// }
+
+	// while(1) {
+	// 	printf("FOO\n");
+	// }
+
+	sei();
+	// testJoystick();
+	can_message msg;
+	msg.id = 2;
+	msg.length = 3;
+	Joystick joystick(10);
+	int8_t x;
+	int8_t y;
+	// uint8_t i = 0;
+	// msg.data[0] = 0;
+	// msg.data[1] = 0;
 	
-	int main(void)
+	// clr_bit(PORTB, PB4);
+	// while (1) {
+	// 	printf("Fooo\n");
+	// }
+	while (1)
 	{
-		testJoystick();
-		init_timer(500);
-		
-		init_uart();
-		can_init();
-		// SPI_init();
-		// while (1) {
-		// 	SPI_send(0xa5);
-		// }
-		
-		// while(1) {
-		// 	printf("FOO\n");
-		// }
-		
-		sei();
-		// can_message msg;
-		// msg.id = 2;
-		// msg.length = 1;
-		// uint8_t i = 0;
-		// msg.data[0] = 0;
-		// clr_bit(PORTB, PB4);
-		// while (1) {
-		// 	printf("Fooo\n");
-		// }
-		while (1)
-		{
-			// PORTB ^= (1 << PB0);
-			// _delay_ms(500);
-			// (msg.data[0])++;
-			// can_message_send(&msg);
-			// can_message recv = can_data_receive();
-			// if (recv.id != 0) {
-			// 	printf("id: %d, len: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
-				
-			// }
-		}
-		
-		
-		// while(1) {
-		// 	// printf("Hello world\n");
-		// 	// mcp2515_write(0x36, 0xa5);
-		// 	// printf("Data: %d\n", mcp2515_read(0x36));
-		// }
+		Direction dir = joystick.read(&x, &y);
+		// printf("Node1\n");
+		// PORTB ^= (1 << PB0);
+		// _delay_ms(500);
+		msg.data[0] = x;
+		msg.data[1] = y;
+		msg.data[2] = dir;
+		// (msg.data[1])++;		
+		can_message_send(&msg);
+	// 	can_message recv = can_data_receive();
+	// 	if (recv.id != NULL)
+	// 	{
+	// 		printf("id: %d, len: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
+	// 	}
 	}
+
+	// while(1) {
+	// 	// printf("Hello world\n");
+	// 	// mcp2515_write(0x36, 0xa5);
+	// 	// printf("Data: %d\n", mcp2515_read(0x36));
+	// }
+}

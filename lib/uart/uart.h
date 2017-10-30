@@ -1,18 +1,30 @@
-// #ifndef UART_H
-// #define UART_H
+// /*
+// * utils.h
+// *
+// * Created: 04.09.2017 11:29:32
+// *  Author: eirikeve
+// */
 
-// #include<avr/io.h>
+// #pragma once
 
-// #include "../stream/stream.h"
-// class UART : public Stream {
+// class UART{
+// private:
+//     volatile static UART * instance;
+//     volatile static int8_t num;
+
+//     UART();
+//     static int init();
+//     static unsigned char _recv_char();
+//     static void _flush();
+
 // public:
 
-//     void Init(uint16_t baud_rate);
-//     void Write(uint8_t *string, uint16_t size);
-//     void 
+//     ~UART();
 
-//     UART(const UART&) = delete;
-//     void operator=(const UART&) = delete;
+//     static int put_char(char c);
+
+//     static unsigned char recv_char();
+
+//     volatile static UART * instance();
+
 // };
-
-// #endif //UART_H

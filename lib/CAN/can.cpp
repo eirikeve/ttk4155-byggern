@@ -6,6 +6,7 @@ extern "C" {
 	#include <avr/interrupt.h>
 	#include <avr/io.h>
 	#include <stdio.h>
+	#include "util/delay.h"
 }
 
 #ifdef __AVR_ATmega162__
@@ -56,8 +57,11 @@ void can_init() {
 }
 
 void can_message_send(can_message* msg){
-	
+	_delay_ms(1);
+	uint8_t error = mcp2515_read(MCP_EFLG);
+	printf("Før: %d\n", error);
 	uint8_t is_clear = mcp2515_read(MCP_TXB0CTRL);
+	// printf("%d\n", is_clear);
 	if (bit_is_set(is_clear, 3)) {
 		//ERROR
 		printf("ERROR, buffer is already pending transmission\n");
@@ -71,6 +75,10 @@ void can_message_send(can_message* msg){
 	for (int i = 0; i < msg->length & 0x0F; i++) {
 		mcp2515_write(MCP_TXB0D0 + i, msg->data[i]);
 	}	
+
+	error = mcp2515_read(MCP_EFLG);
+	printf("Etter: %d\n", error);
+
 	mcp2515_bit_modify(MCP_TXB0CTRL, 0x0B, 0x0B); //Request transmission, highest priority
 }
 
@@ -105,6 +113,7 @@ can_message can_data_receive() {
 
 ISR(MCP2515_INT) {
 	uint8_t reg = mcp2515_read(MCP_CANINTF);
+	// printf("Hei\n");
 	if (reg & 1) {
 		received_buffer_0 = true;
 	}

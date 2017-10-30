@@ -12,8 +12,8 @@ void testJoystick()
 {
         init_uart();
         Joystick joystick(10);
-        uint8_t x;
-        uint8_t y;
+        int8_t x;
+        int8_t y;
     
         while (1)
         {
