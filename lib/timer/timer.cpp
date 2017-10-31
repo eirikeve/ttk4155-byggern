@@ -79,35 +79,35 @@ ISR(TIMER1_COMPA_vect) {
     // t.callFunc();
     PORTB ^= (1 << PB0);
 }
-#elif __AVR_ATmega2560__
-void init_timer() 
-{
-    // set PB5 output
-    set_bit(DDRB, DDB5);
-    // clr at cmp match, set at bottom
-    set_bit(TCCR1A, COM1A1);
+// #elif __AVR_ATmega2560__
+// void init_timer() 
+// {
+//     // set PB5 output
+//     set_bit(DDRB, DDB5);
+//     // clr at cmp match, set at bottom
+//     set_bit(TCCR1A, COM1A1);
 
-    // Set mode 14, fast PWM
-    set_bit(TCCR1A, WGM11);
-    set_bit(TCCR1B, WGM12);
-    set_bit(TCCR1B, WGM13);
+//     // Set mode 14, fast PWM
+//     set_bit(TCCR1A, WGM11);
+//     set_bit(TCCR1B, WGM12);
+//     set_bit(TCCR1B, WGM13);
 
-    // prescaler 8
-    set_bit(TCCR1B, CS11);
+//     // prescaler 8
+//     set_bit(TCCR1B, CS11);
 
-    // top = 39999
-    ICR1 = 39999;
+//     // top = 39999
+//     ICR1 = 39999;
     
-    sei();
-}
+//     sei();
+// }
 
-void pwm_set_duty(float ms) {
-    printf("%d\n", (uint8_t) ms * 1000);
-    if (ms >= 1.0 && ms <= 2.0) {
-        uint16_t foo = (ms*ICR1)/20;
-        OCR1A = foo;
-    }
+// void pwm_set_duty(float ms) {
+//     printf("%d\n", (uint8_t) ms * 1000);
+//     if (ms >= 1.0 && ms <= 2.0) {
+//         uint16_t foo = (ms*ICR1)/20;
+//         OCR1A = foo;
+//     }
 
-}
+// }
 #endif
 

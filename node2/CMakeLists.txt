@@ -12,7 +12,7 @@ set(BAUD 9600)
 
 # Programmer options
 set(PROG_TYPE wiring)
-set(USBPORT /dev/ttyACM0)
+set(USBPORT /dev/ttyS0)
 set(BITCLOCK 115200)
 
 # program names
@@ -39,11 +39,12 @@ set(INC_PATH     "${BASE_PATH}/include")
 set(SRC_PATH     "${BASE_PATH}/src")
 set(LIB_DIR_PATH "${BASE_PATH}/lib")
 set(BUILD_PATH   "${BASE_PATH}/build")
+set(TEST_PATH    "${BASE_PATH}/test")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BUILD_PATH}")
 
 # ControlGoToItem files to be compiled
-file(GLOB SRC_FILES "${SRC_PATH}/*.c" "${SRC_PATH}/*.cpp" "${SRC_PATH}/*.asm")
-file(GLOB INC_FILES "${INC_PATH}/*.h")
+file(GLOB SRC_FILES "${SRC_PATH}/*.c" "${SRC_PATH}/*.cpp" "${SRC_PATH}/*.asm" "${TEST_PATH}/*.cpp" "${TEST_PATH}/*.c")
+file(GLOB INC_FILES "${INC_PATH}/*.h" "${TEST_PATH}/*.h")
 
 set(LIB_SRC_FILES)
 set(LIB_INC_PATHS subdir ${LIBRARIES})
@@ -85,9 +86,8 @@ set(CMAKE_CXX_FLAGS "${CXXFLAGS}")
 set(CMAKE_ASM_FLAGS   "${CFLAGS}")
 
 # Project setup
-include_directories(${INC_PATH} ${BASE_PATH} ${LIB_INC_PATHS})
-#add_executable(${PROJECT_NAME} ${SRC_FILES} ${INC_FILES} ${LIB_SRC_FILES} ${LIB_INC_FILES})
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${LIB_SRC_FILES})
+include_directories(${INC_PATH} ${BASE_PATH} ${LIB_INC_PATHS} ${TEST_PATH})
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${LIB_SRC_FILES} ${TEST_PATH})
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 
 # Defines
@@ -97,22 +97,22 @@ add_definitions(-DBAUD=${BAUD})
 add_definitions(-DMCU_${MCU})
 
 # Compiling targets
-add_custom_target(doxygen       ${DOXYGEN} ${BASE_PATH}/Doxyfile WORKING_DIRECTORY ${BASE_PATH})
+# add_custom_target(doxygen       ${DOXYGEN} ${BASE_PATH}/Doxyfile WORKING_DIRECTORY ${BASE_PATH})
 add_custom_target(strip ALL     ${AVRSTRIP} "${BUILD_PATH}/${PROJECT_NAME}.elf" DEPENDS ${PROJECT_NAME})
 add_custom_target(hex   ALL     ${OBJCOPY} -R .eeprom -O ihex "${BUILD_PATH}/${PROJECT_NAME}.elf" "${BUILD_PATH}/${PROJECT_NAME}.hex" DEPENDS strip)
-add_custom_target(eeprom        ${OBJCOPY} -j .eeprom --change-section-lma .eeprom=0 -O ihex "${BUILD_PATH}/${PROJECT_NAME}.elf" "${BUILD_PATH}/${PROJECT_NAME}.eeprom" DEPENDS strip)
-add_custom_target(disassemble   ${OBJDUMP} -S "${BUILD_PATH}/${PROJECT_NAME}.elf" > "${BUILD_PATH}/${PROJECT_NAME}.lst" DEPENDS ${PROJECT_NAME})
+# add_custom_target(eeprom        ${OBJCOPY} -j .eeprom --change-section-lma .eeprom=0 -O ihex "${BUILD_PATH}/${PROJECT_NAME}.elf" "${BUILD_PATH}/${PROJECT_NAME}.eeprom" DEPENDS strip)
+# add_custom_target(disassemble   ${OBJDUMP} -S "${BUILD_PATH}/${PROJECT_NAME}.elf" > "${BUILD_PATH}/${PROJECT_NAME}.lst" DEPENDS ${PROJECT_NAME})
 # Flashing targets
 
 add_custom_target(flash         ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} -D -P ${USBPORT} -b ${BITCLOCK} -U flash:w:${BUILD_PATH}/${PROJECT_NAME}.hex DEPENDS hex)
 #  -U lfuse:w:0xFF:m -U hfuse:w:0x90:m -U efuse:w:0xFD:m 
-add_custom_command(TARGET flash POST_BUILD COMMAND ${MINICOM})
-add_custom_target(minicom ${MINICOM})
-add_custom_target(flash_eeprom  ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} -P ${USBPORT} -b ${BITCLOCK} -D -U eeprom:w:${BUILD_PATH}/${PROJECT_NAME}.hex DEPENDS eeprom)
-add_custom_target(size          ${AVRSIZE} -C --mcu=${MCU} ${BUILD_PATH}/${PROJECT_NAME}.elf DEPENDS ${PROJECT_NAME})
+# add_custom_command(TARGET flash POST_BUILD COMMAND ${MINICOM})
+# add_custom_target(minicom ${MINICOM})
+# add_custom_target(flash_eeprom  ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} -P ${USBPORT} -b ${BITCLOCK} -D -U eeprom:w:${BUILD_PATH}/${PROJECT_NAME}.hex DEPENDS eeprom)
+# add_custom_target(size          ${AVRSIZE} -C --mcu=${MCU} ${BUILD_PATH}/${PROJECT_NAME}.elf DEPENDS ${PROJECT_NAME})
 
 # Fuses
-add_custom_target(fuses_16mhz   ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -U lfuse:w:0xFF:m)
+# add_custom_target(fuses_16mhz   ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -U lfuse:w:0xFF:m)
 # Utilities targets
 #add_custom_target(avr_terminal  ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -nt)
 

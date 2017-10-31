@@ -40,8 +40,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BUILD_PATH}")
 
 file(GLOB SRC_FILES "${SRC_PATH}/*.cpp" "${SRC_PATH}/*.c" "${SRC_PATH}/*.asm" "${TEST_PATH}/*.cpp" "${TEST_PATH}/*.c")
 file(GLOB INC_FILES "${INC_PATH}/*.h" "${INC_PATH}/*.hpp" "${TEST_PATH}/*.h")
-# file(GLOB TEST_SRC_FILES "${TEST_PATH}/*.cpp" "${TEST_PATH}/*.c")
-# file(GLOB TEST_INC_FILES "${TEST_PATH}/*.h")
 
 
 set(LIB_SRC_FILES)

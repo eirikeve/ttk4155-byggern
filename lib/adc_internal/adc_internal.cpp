@@ -39,6 +39,7 @@ ADC_internal::ADC_internal() {
     ADMUX &= ~(1 << MUX2);
 }
 
+
 uint8_t ADC_internal::read() {
     // Start conversion
     set_bit(ADCSRA, ADSC);

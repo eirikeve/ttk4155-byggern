@@ -1,5 +1,4 @@
-#ifndef TIMER_H
-#define TIMER_H
+#pragma once
 extern "C" {
     #include <avr/io.h>
     #include <avr/interrupt.h>
@@ -36,11 +35,8 @@ extern "C" {
 void init_timer(uint16_t ms);
 ISR(TIMER1_COMPA_vect);
 
-#elif __AVR_ATmega2560__
+// #elif __AVR_ATmega2560__
 
-void init_timer();
-void pwm_set_duty(float ms);
-#endif
-
-
+// void init_timer();
+// void pwm_set_duty(float ms);
 #endif
