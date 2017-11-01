@@ -22,12 +22,15 @@ extern "C" {
 
 int main(void)
 {
+	// testUartTransmit();
+	// testPrintfWithUart();
 	// testServoPercentage();
+	// testUartReceive();
 	testServoAngle();
 	// Servo& servo = Servo::getInstance();
 	// servo.initialize(40);
 	// init_timer();
-	init_uart();
+	// init_uart();
     // can_init();
 	// ADC_internal& adc_internal = ADC_internal::getInstance();
 	

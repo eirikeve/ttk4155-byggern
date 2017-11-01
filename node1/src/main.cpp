@@ -108,7 +108,7 @@ int main(void)
 	// timer1.start();
 	init_timer(500);
 
-	init_uart();
+	// init_uart();
 	can_init();
 	// SPI_init();
 	// while (1) {
