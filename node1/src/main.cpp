@@ -81,7 +81,7 @@ extern "C" {
 #include <avr/io.h>
 #include "util/delay.h"
 #include <stdio.h>
-#include "../lib/comm/comm.h"
+// #include "../lib/comm/comm.h"
 #include "../lib/utilities/utilities.h"
 }
 #include "../lib/CAN/SPI.h"
@@ -100,50 +100,29 @@ void toggle_led() {
 
 int main(void)
 {
-	// testJoystick();
 	set_bit(DDRB, 0);
 	set_bit(PORTB, 0);
-	// Timer timer1 = Timer::instance(0);
-	// timer1.init(0, 500, toggle_led);
-	// timer1.start();
 	init_timer(500);
 
-	// init_uart();
 	can_init();
-	// SPI_init();
-	// while (1) {
-	// 	SPI_send(0xa5);
-	// }
-
-	// while(1) {
-	// 	printf("FOO\n");
-	// }
 
 	sei();
-	// testJoystick();
 	can_message msg;
 	msg.id = 2;
 	msg.length = 3;
-	Joystick joystick(10);
+	// Joystick joystick(10);
 	int8_t x;
 	int8_t y;
-	// uint8_t i = 0;
-	// msg.data[0] = 0;
-	// msg.data[1] = 0;
-	
-	// clr_bit(PORTB, PB4);
-	// while (1) {
-	// 	printf("Fooo\n");
 	// }
 	while (1)
 	{
-		Direction dir = joystick.read(&x, &y);
+		// Direction dir = joystick.read(&x, &y);
 		// printf("Node1\n");
 		// PORTB ^= (1 << PB0);
 		// _delay_ms(500);
 		msg.data[0] = x;
 		msg.data[1] = y;
-		msg.data[2] = dir;
+		// msg.data[2] = dir;
 		// (msg.data[1])++;		
 		can_message_send(&msg);
 	// 	can_message recv = can_data_receive();

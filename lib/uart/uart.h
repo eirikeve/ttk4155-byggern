@@ -42,7 +42,6 @@ class UART
         // Private due to singleton design pattern
         UART() {}
 
-        
     public:
 
         // Deleted due to singleton design pattern

@@ -1,11 +1,6 @@
-// ADC class for use in TTK4155
-// Written by Håvard Borge, Eirik Vesterkjær
-// 18/09/2017
-
 #pragma once
-#include "../utilities/utilities.h"
-#include <stdint.h>
 
+#include <stdint.h>
 
 enum CHANNEL {
     CH1 = 0b100,
@@ -15,16 +10,40 @@ enum CHANNEL {
 };
 
 
+
+/**
+ * Class for reading analog signal using an external ADC accessed via
+ * an external addres in the memory map.
+ * */
 class ADC
 {
-private:
-    CHANNEL c;
-    const uint8_t t_c = 45; 
-    volatile uint16_t *addr = (uint16_t *) ADC_ADDR;
+    public:
+        static ADC& getInstance()
+        {
+            static ADC instance;
+            return instance;
+        }
 
-public:
-    ADC();
-    uint8_t read(CHANNEL c);
-    uint8_t testAdc();
+        /**
+         * Read a value of a channel in the ADC
+         * @param c channel to be read from.
+         * */
+        uint8_t read(CHANNEL c);
+
+    private:
+
+        // Private due to singleton design pattern
+        ADC();
+
+        // The address of the external memory map the ADC is located at
+        volatile uint16_t *addr;
+        
+    public:
+
+        // Deleted due to singleton design pattern
+        ADC(ADC const&)    = delete;
+
+        // Deleted due to singleton design pattern
+        void operator=(ADC const&)  = delete;
 
 };

@@ -6,7 +6,9 @@
     #include "test.h"
     #include "lib/utilities/printf.h"
     #include "lib/uart/uart.h"
+    #include "lib/adc/adc.h"
     #include "lib/joystick/joystick.h"
+
     
 void testUartTransmit() {
     UART & uart = UART::getInstance();
@@ -38,16 +40,34 @@ void testPrintfWithUart() {
     
 void testJoystick()
 {
-        // init_uart();
-        Joystick joystick(10);
-        int8_t x;
-        int8_t y;
-    
-        while (1)
-        {
-            Direction dir = joystick.read(&x, &y);
-            printf("x: %d, y: %d, dir: %d\n", x, y, dir);
-            // x = joystick.readY();
-            // printf("%d\n", x);
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10);
+
+    int8_t x;
+    int8_t y;
+
+    while (1)
+    {
+        Direction dir = joystick.read(&x, &y);
+        printf("x: %d, y: %d, dir: %d\n", x, y, dir);
+        // x = joystick.readY();
+        // printf("%d\n", x);
+    }
+}
+
+void testJoystickButton() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10);
+
+    while (true) {
+        if (joystick.buttonPressed()) {
+            printf("Button pressed at joystick\n");
         }
+    }
 }
