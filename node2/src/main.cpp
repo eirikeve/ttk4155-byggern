@@ -8,7 +8,7 @@ extern "C" {
 #include <avr/io.h>
 #include "util/delay.h"
 #include <stdio.h>
-#include "../lib/comm/comm.h"
+// #include "../lib/comm/comm.h"
 #include "../lib/utilities/utilities.h"
 }
 #include "../lib/CAN/SPI.h"
@@ -26,7 +26,8 @@ int main(void)
 	// testPrintfWithUart();
 	// testServoPercentage();
 	// testUartReceive();
-	testServoAngle();
+	// testServoAngle();
+	testTimerStop();
 	// Servo& servo = Servo::getInstance();
 	// servo.initialize(40);
 	// init_timer();

@@ -102,7 +102,7 @@ int main(void)
 {
 	set_bit(DDRB, 0);
 	set_bit(PORTB, 0);
-	init_timer(500);
+	// init_timer(500);
 
 	can_init();
 

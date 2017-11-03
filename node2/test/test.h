@@ -7,6 +7,10 @@ void testUartReceive();
 // Test printf
 void testPrintfWithUart();
 
+// Test timer
+void testTimer();
+void testTimerStop();
+
 // Test the servo
 void testServoPercentage();
 void testServoAngle();

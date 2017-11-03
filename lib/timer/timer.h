@@ -1,42 +1,110 @@
 #pragma once
-extern "C" {
-    #include <avr/io.h>
-    #include <avr/interrupt.h>
-    #include <stdint.h>
-    #include <stdio.h>
+#include <stdio.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+#include "../utilities/pin.h"
+
+namespace {
+    #ifdef __AVR_ATmega162__
+        #define TIMER0_vect TIMER1_COMPA_vect
+        #define TIMER1_vect TIMER3_COMPA_vect
+    
+    #elif __AVR_ATmega2560__
+        #define TIMER0_vect TIMER3_COMPA_vect
+        #define TIMER1_vect TIMER4_COMPA_vect
+    #endif
 }
+ISR(TIMER0_vect);
+ISR(TIMER1_vect);
 
-#include "../utilities/utilities.h"
+
+/**
+ * A class for using 16-bits timers on atmega162 and 2560. 
+ * Using a multiton design pattern.
+ * 
+ * ATmega162:
+ *  Id 0: Timer 1
+ *  Id 1: Timer 3
+ *
+ * ATmega2560:
+ *  Id 0: Timer 3
+ *  Id 1: Timer 4
+ * */
+class Timer
+{
+    public:
+        static Timer& getInstance(uint8_t id) {
+            if(id == 0){
+                static Timer instance(0);
+                return instance;
+            }
+            else if (id == 1){
+                static Timer instance(1);
+                return instance;
+            }
+            else {
+                printf("Timer error: Maximum number of instances are: 2, with the highest id: 1. Trying to access Timer id: %d\n", id);
+                assert(false);
+            }
+        }
+        
+        /**
+         * Initialize the timer to trigger every given ms.
+         * @param ms number of milli seconds between each trigger.
+         *  ATmega162: max(ms) < 13650 ms.
+         *  ATmega2560: max(ms) < 4190 ms.
+         * @param callbackFunction function to be called during trigger.
+         * */
+        void initialize(uint16_t ms, void (*callbackFunction)(void), PIN* pin);
+
+        /**
+         * Start timer.
+         * */
+        void start();
+
+        /**
+         * Stop timer.
+         * */
+        void stop();
 
 
-// class Timer{
-// private:
+    private:
 
-//     Timer();
-//     void (*func)();
 
-// public:
+        // Private due to multiton design pattern
+        Timer(uint8_t id);
 
-//     static Timer instance(int nr) {
-//         if (nr == 0) {
-//             static Timer timer0 = Timer();
-//             return timer0;
-//         }
-//     }
+        // Id of timer
+        uint8_t id;
 
-//     void init(int nr, uint16_t ms, void (*func)());
-//     void start();
-//     void stop();
-//     void callFunc();
+        // // Maximum number of instances
+        // const static int MAXIMUM_NUMBER_OF_INSTANCES = 2;
 
-// };
+        // // All instances of the timer
+        // static Timer instances[MAXIMUM_NUMBER_OF_INSTANCES];
 
-#ifdef __AVR_ATmega162__
-void init_timer(uint16_t ms);
-ISR(TIMER1_COMPA_vect);
+        // Function to be called during interrupt
+        void (*callbackFunction)(void);
 
-// #elif __AVR_ATmega2560__
+        
 
-// void init_timer();
-// void pwm_set_duty(float ms);
-#endif
+        // Made private.
+        // Due to multiton design pattern, it cannot
+        // Be deleted, because it is used in getInstance
+        Timer& operator=(Timer const&) {return *this;};
+    public:
+
+        // Interrupt handler for timer 0
+        friend void TIMER0_vect();
+
+        // Interrupt handler for timer 1
+        friend void TIMER1_vect();
+
+        // Deleted due to multiton design pattern
+        Timer(Timer const&)    = delete;
+
+
+};

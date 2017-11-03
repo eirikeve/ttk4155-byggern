@@ -1,113 +1,128 @@
-#include "timer.h"
-#include "../utilities/utilities.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <avr/interrupt.h>
+
+#include "timer.h"
+#include "../utilities/utilities.h"
 
 
-// Timer::Timer(): func(NULL) {}
-
-// void Timer::init(int nr, uint16_t ms, void (*func)()) {
-// #ifdef __AVR_ATmega162__
-//     if (nr == 0) {
-//         TCCR1B |= (1<<WGM12);
-//         OCR1A = (uint16_t) (ms * 0.001 *  (F_CPU) / (1024));
-//         TIMSK |= (1<<OCIE1A);
-//     }
-// #endif
-//     this->func = func;
-// }
-
-// void Timer::start() {
-// #ifdef __AVR_ATmega162__
-//     TCNT1 = 0x0000;
-//     TCCR1B |= ((1 << CS10) | (1 << CS12));
-// #endif
-// }
-
-// void Timer::stop() {
-// #ifdef __AVR_ATmega162__
-//     clr_bit(TCCR1B, CS10);
-//     clr_bit(TCCR1B, CS11);
-//     clr_bit(TCCR1B, CS12);
-// #endif
-// }
-
-// void Timer::callFunc()
-// {
-//     if (this->func != NULL)
-//     {
-//         this->func();
-//     }
-// }
-
-
-
-
-// void init_timer(){
-// #ifdef __AVR_ATmega162__
-//     set_bit(TCCR1A, COM1A0); // Compare match
-//     set_bit(TIMSK, OCIE1A);
-//     TCCR1B = (1 << CS12) | (1 << CS10) | (1 << WGM12);
-//     OCR1A = 4800;
-
-//     clr_bit(DDRB, 0);
-//     set_bit(PORTB, 0);
-// #endif
-// }
+namespace {
 #ifdef __AVR_ATmega162__
-void init_timer(uint16_t ms)
-{
+    #define TIMER0_TCCR TCCR1B
+    #define TIMER0_OCRn OCR1A
+    #define TIMER0_TIMSK TIMSK
+    #define TIMER0_WGM2 WGM12
+    #define TIMER0_OCIE OCIE1A
+    #define TIMER0_TCNT TCNT1
+    #define TIMER0_CS0 CS10
+    #define TIMER0_CS0 CS11
+    #define TIMER0_CS2 CS12
 
-    // set_bit(TCCR1A, COM1A0); // Compare match
-    // set_bit(TIMSK, OCIE1A);
-    // TCCR1B = (1 << CS12) | (1 << CS10) | (1 << WGM12);
-    // OCR1A = 4800;
+    #define TIMER1_TCCR TCCR3B
+    #define TIMER1_OCRn OCR3A
+    #define TIMER1_TIMSK TIMSK
+    #define TIMER1_WGM2 WGM32
+    #define TIMER1_OCIE OCIE3A
+    #define TIMER1_TCNT TCNT3
+    #define TIMER1_CS0 CS30
+    #define TIMER1_CS1 CS31
+    #define TIMER1_CS2 CS32
 
-    set_bit(DDRB, 0);
-    set_bit(PORTB, 0);
+#elif __AVR_ATmega2560__
+    #define TIMER0_TCCR TCCR3B
+    #define TIMER0_OCRn OCR3A
+    #define TIMER0_TIMSK TIMSK3
+    #define TIMER0_WGM2 WGM32
+    #define TIMER0_OCIE OCIE3A
+    #define TIMER0_TCNT TCNT3
+    #define TIMER0_CS0 CS30
+    #define TIMER0_CS1 CS31
+    #define TIMER0_CS2 CS32
 
-    TCCR1B |= (1<<WGM12);
-    OCR1A = (uint16_t) (ms * 0.001 *  (F_CPU) / (1024));
-    TIMSK |= (1<<OCIE1A);
-    sei();
-    TCNT1 = 0x0000;
-    TCCR1B |= ((1 << CS10) | (1 << CS12));
-}   
-
-ISR(TIMER1_COMPA_vect) {
-    // Timer t = Timer::instance(0);
-    // t.callFunc();
-    PORTB ^= (1 << PB0);
-}
-// #elif __AVR_ATmega2560__
-// void init_timer() 
-// {
-//     // set PB5 output
-//     set_bit(DDRB, DDB5);
-//     // clr at cmp match, set at bottom
-//     set_bit(TCCR1A, COM1A1);
-
-//     // Set mode 14, fast PWM
-//     set_bit(TCCR1A, WGM11);
-//     set_bit(TCCR1B, WGM12);
-//     set_bit(TCCR1B, WGM13);
-
-//     // prescaler 8
-//     set_bit(TCCR1B, CS11);
-
-//     // top = 39999
-//     ICR1 = 39999;
-    
-//     sei();
-// }
-
-// void pwm_set_duty(float ms) {
-//     printf("%d\n", (uint8_t) ms * 1000);
-//     if (ms >= 1.0 && ms <= 2.0) {
-//         uint16_t foo = (ms*ICR1)/20;
-//         OCR1A = foo;
-//     }
-
-// }
+    #define TIMER1_TCCR TCCR4B
+    #define TIMER1_OCRn OCR4A
+    #define TIMER1_TIMSK TIMSK4
+    #define TIMER1_WGM2 WGM42
+    #define TIMER1_OCIE OCIE4A
+    #define TIMER1_TCNT TCNT4
+    #define TIMER1_CS0 CS40
+    #define TIMER1_CS1 CS41
+    #define TIMER1_CS2 CS42
 #endif
+}
 
+void TIMER0_vect() {
+    Timer &t = Timer::getInstance(0);
+    if(t.callbackFunction != NULL){
+        (*(t.callbackFunction))();
+    }
+}
+
+void TIMER1_vect() {
+    Timer &t = Timer::getInstance(1);
+    if(t.callbackFunction != NULL){
+        (*(t.callbackFunction))();
+    }
+}
+
+Timer::Timer(uint8_t id): id(id), callbackFunction(NULL) {}
+
+void Timer::initialize(uint16_t ms, void (*callbackFunction)(void), PIN* pin) {
+    cli();
+    // Calculate top value for timer using a prescaler at 1024.
+    uint16_t OCRn = (uint16_t) (ms * 0.001 *  (F_CPU) / (1024));
+    if (this->id == 0) {
+
+        // CTC mode
+        TIMER0_TCCR |= (1<<TIMER0_WGM2);
+
+        // Set top value for timer.
+        TIMER0_OCRn = OCRn;
+
+        // Enable interrupt for timer
+        TIMER0_TIMSK |= (1<<TIMER0_OCIE);
+
+    }
+    else if (this->id == 1) {
+        // CTC mode
+        TIMER1_TCCR |= (1<<TIMER1_WGM2);
+
+        // Set top value for timer.
+        TIMER1_OCRn = OCRn;
+
+        // Enable interrupt for timer
+        TIMER1_TIMSK |= (1<<TIMER1_OCIE);
+    }
+
+    if (pin != NULL) {
+        // Enable pin for output
+        set_bit(*pin->ddr, pin->nr);
+        set_bit(*pin->port, pin->nr);
+    }
+
+    this->callbackFunction = callbackFunction;
+
+    // Enable global interrupts
+    sei();
+
+}
+
+void Timer::start() {
+    if (this->id == 0) {
+        TIMER0_TCNT = 0x0000;
+        TIMER0_TCCR |= ((1 << TIMER0_CS0) | (1 << TIMER0_CS2));
+    }
+    else if (this->id == 1) {
+        TIMER1_TCNT = 0x0000;
+        TIMER1_TCCR |= ((1 << TIMER1_CS0) | (1 << TIMER1_CS2));
+    }
+}
+
+void Timer::stop() {
+    if (this->id == 0) {
+        TIMER0_TCCR &= ~((1 << TIMER0_CS0) | (1 << TIMER0_CS1) | (1 << TIMER0_CS2));
+    }
+    else if (this->id == 1) {
+        TIMER1_TCCR &= ~((1 << TIMER1_CS0) | (1 << TIMER1_CS1) | (1 << TIMER1_CS2));
+    }
+}
