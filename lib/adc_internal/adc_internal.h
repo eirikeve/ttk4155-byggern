@@ -13,7 +13,7 @@ class ADC_internal
             return instance;
         }
 
-        uint8_t read();
+        uint16_t read();
 
     private:
 

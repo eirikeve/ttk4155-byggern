@@ -40,14 +40,14 @@ ADC_internal::ADC_internal() {
 }
 
 
-uint8_t ADC_internal::read() {
+uint16_t ADC_internal::read() {
     // Start conversion
     set_bit(ADCSRA, ADSC);
 
     while (test_bit(ADCSRA, ADSC));
     uint8_t data = ADCL;
     uint8_t dataH = ADCH;
-    return data;
+    return (dataH << 8) | data;
 }
 
 
