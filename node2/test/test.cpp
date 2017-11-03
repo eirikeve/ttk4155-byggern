@@ -6,6 +6,7 @@
 #include "lib/servo/servo.h"
 #include "lib/uart/uart.h"
 #include "lib/timer/timer.h"
+#include "lib/adc_internal/adc_internal.h"
 
 void testUartTransmit() {
     UART & uart = UART::getInstance();
@@ -117,5 +118,14 @@ void testServoAngle() {
 			angle = -90;
 		}
     }
+}
 
+void testADC() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    ADC_internal& adc = ADC_internal::getInstance();
+    while (true) {
+        printf("%d\n", adc.read());
+    }
 }

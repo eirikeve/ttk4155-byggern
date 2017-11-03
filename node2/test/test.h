@@ -14,3 +14,7 @@ void testTimerStop();
 // Test the servo
 void testServoPercentage();
 void testServoAngle();
+
+// Test the internal adc
+
+void testADC();

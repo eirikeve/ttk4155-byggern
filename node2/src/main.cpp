@@ -27,7 +27,7 @@ int main(void)
 	// testServoPercentage();
 	// testUartReceive();
 	// testServoAngle();
-	testTimerStop();
+	testADC();
 	// Servo& servo = Servo::getInstance();
 	// servo.initialize(40);
 	// init_timer();
