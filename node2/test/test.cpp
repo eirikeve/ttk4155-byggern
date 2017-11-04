@@ -7,6 +7,7 @@
 #include "lib/uart/uart.h"
 #include "lib/timer/timer.h"
 #include "lib/adc_internal/adc_internal.h"
+#include "lib/ir_detector/ir_detector.h"
 
 void testUartTransmit() {
     UART & uart = UART::getInstance();
@@ -127,5 +128,20 @@ void testADC() {
     ADC_internal& adc = ADC_internal::getInstance();
     while (true) {
         printf("%d\n", adc.read());
+    }
+}
+
+void testIRDetector() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    ADC_internal& adc = ADC_internal::getInstance();
+
+    IR_detector& ir = IR_detector::getInstance();
+    ir.initialize(&adc, 100, 4);
+    while (true) {
+        if(ir.blocked()) {
+            printf("Beam blocked\n");
+        }
     }
 }

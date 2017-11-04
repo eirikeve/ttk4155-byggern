@@ -90,9 +90,10 @@ void testJoystick()
 {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
+    enablePrintfWithUart();
     ADC& adc = ADC::getInstance();
     Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 10);
+    joystick.initialize(&adc, 10, NULL);
 
     int8_t x;
     int8_t y;
@@ -109,13 +110,17 @@ void testJoystick()
 void testJoystickButton() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
+    enablePrintfWithUart();
     ADC& adc = ADC::getInstance();
+
+    PIN pin(&DDRB, &PORTB, &PINB, PB3);
     Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 10);
+    joystick.initialize(&adc, 10, &pin);
 
     while (true) {
         if (joystick.buttonPressed()) {
             printf("Button pressed at joystick\n");
         }
+        // printf("%d\n", joystick.buttonPressed());
     }
 }

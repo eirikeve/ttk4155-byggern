@@ -15,12 +15,12 @@ namespace {
     #define TIMER0_OCIE OCIE1A
     #define TIMER0_TCNT TCNT1
     #define TIMER0_CS0 CS10
-    #define TIMER0_CS0 CS11
+    #define TIMER0_CS1 CS11
     #define TIMER0_CS2 CS12
 
     #define TIMER1_TCCR TCCR3B
     #define TIMER1_OCRn OCR3A
-    #define TIMER1_TIMSK TIMSK
+    #define TIMER1_TIMSK ETIMSK
     #define TIMER1_WGM2 WGM32
     #define TIMER1_OCIE OCIE3A
     #define TIMER1_TCNT TCNT3

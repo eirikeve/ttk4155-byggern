@@ -16,5 +16,7 @@ void testServoPercentage();
 void testServoAngle();
 
 // Test the internal adc
-
 void testADC();
+
+// Test the IR detector
+void testIRDetector();

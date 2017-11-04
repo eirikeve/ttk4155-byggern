@@ -12,7 +12,7 @@ set(BAUD 9600)
 
 # Programmer options
 set(PROG_TYPE wiring)
-set(USBPORT /dev/ttyS0)
+set(USBPORT /dev/ttyACM0)
 set(BITCLOCK 115200)
 
 # program names

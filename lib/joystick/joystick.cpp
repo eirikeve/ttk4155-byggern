@@ -6,43 +6,48 @@
 #include "../adc/adc.h"
 #include "../utilities/utilities.h"
 
-
 namespace
 {
-    enum MUX_SELECT
-    {
-        X = 0b100,
-        Y = 0b101,
-        LSLIDE = 0b110,
-        RSLIDE = 0b111
-    };
+enum MUX_SELECT
+{
+    X = 0b100,
+    Y = 0b101,
+    LSLIDE = 0b110,
+    RSLIDE = 0b111
+};
 
-    void formatValue(uint8_t raw, int8_t *result, uint8_t center, uint8_t threshold) {
-        if (raw < center + threshold && raw > center - threshold)
-        {
-            raw = center;
-        }
-        if (center > 128 && raw < center - 128) {
-            *result = -128;
-        }
-        else if (center < 128 && raw > 128 + center) {
-            *result = 128;
-        }
-        else {
-            *result = raw - center;
-        }
-        *result /= 1.28;
-    
-        return;
+void formatValue(uint8_t raw, int8_t *result, uint8_t center, uint8_t threshold){
+    if (raw < center + threshold && raw > center - threshold)
+    {
+        raw = center;
     }
+    if (center > 128 && raw < center - 128) {
+        *result = -128;
+    }
+    else if (center < 128 && raw > 128 + center) {
+        *result = 128;
+    }
+    else {
+        *result = raw - center;
+    }
+    *result /= 1.28;
+
+    return;
+}
 }
 
-void Joystick::initialize(ADC* adc, uint8_t threshold) {
+void Joystick::initialize(ADC *adc, uint8_t threshold, PIN *buttonPin) {
     this->adc = adc;
     clr_bit(DDRE, 0);
     this->calibrate();
 
+    this->buttonPin = buttonPin;
+    this->buttonPressedDown = false;
     // TODO: Initialize the button.
+    if (buttonPin != NULL) {
+        // Enable pin for input
+        clr_bit(*buttonPin->ddr, buttonPin->nr);
+    }
 }
 
 int8_t Joystick::readX()
@@ -139,16 +144,18 @@ Direction Joystick::getDirY() {
 }
 
 bool Joystick::buttonPressed() {
-    //TODO: implement buttonPressed
-    // if (pin low/high) {
-    //     if (!this->buttonPressedDown) {
-    //         this->buttonPressedDown = true;
-    //         return this->buttonPressedDown;
-    //     }
-    // }
-    // this->buttonPressedDown = false;
-    // return this->buttonPressedDown;
-
+    // Check if button is pressed
+    if (this->buttonPin != NULL && !test_bit(*this->buttonPin->pin, this->buttonPin->nr)) {
+        if (!this->buttonPressedDown) {
+            this->buttonPressedDown = true;
+            return this->buttonPressedDown;
+        }
+        else {
+            return false;
+        }
+    }
+    this->buttonPressedDown = false;
+    return this->buttonPressedDown;
 }
 
 void Joystick::calibrate()
