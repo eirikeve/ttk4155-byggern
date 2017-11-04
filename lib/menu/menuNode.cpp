@@ -1,9 +1,9 @@
-#include "menuNode.h"
-extern "C" {
 #include <stdlib.h>
-#include "../../node1/include/comm.h"
 #include <stdio.h>
-}
+
+#include "menuNode.h"
+
+
 
 MenuNode::MenuNode(char *name) : parent(NULL),
                                  child(NULL),
@@ -36,10 +36,6 @@ void MenuNode::addSibling(MenuNode &menu)
         menu.setParent(*this->parent);
         menu.setIndexOfSiblings(this->getTotNrOfSiblings());
         menu.parent->totNrOfChildren++;
-        // printf("nr of sib: %d, index of sib: %d\n", menu.getTotNrOfSiblings(), menu.indexOfSiblings);
-        // printf("------------------------\n");
-        // printf("name: %s, nextSibling: %s, par: %s, par ch: %d\n", menu.getName(), menu.getSibling(0)->getName(), menu.getParent()->getName(), menu.getParent()->getTotNrOfChildren());
-        // printf("------------------------\n");
     }
 }
 void MenuNode::addChild(MenuNode &menu)
@@ -54,10 +50,6 @@ void MenuNode::addChild(MenuNode &menu)
         menu.setParent(*this);
         this->totNrOfChildren++;
         menu.setIndexOfSiblings(1);
-        // printf("nr of sib: %d, index of sib: %d\n", menu.getTotNrOfSiblings(), menu.indexOfSiblings);
-        // printf("------------------------\n");
-        // printf("name: %s, nextSibling: %s, par: %s, par ch: %d\n", menu.getName(), menu.getSibling(0)->getName(), menu.getParent()->getName(), menu.getParent()->getTotNrOfChildren());
-        // printf("------------------------\n");
     }
 }
 
@@ -127,18 +119,13 @@ MenuNode **MenuNode::getChildren()
     {
         menus[i] = this->getChild(i);
     }
-    // menus[1] = this->getChild(1);
-
-    // for (int i = 0; i < this->getTotNrOfChildren(); i++)
-    // {
-    //     printf("%s\n", menus[i]->getName());
-    // }
     return menus;
 }
 
 MenuNode **MenuNode::getSiblings()
 {
     MenuNode **menus = (MenuNode **)malloc(this->getTotNrOfSiblings());
+
     // Get siblings before current
     for (uint16_t i = 0; i < this->indexOfSiblings; i++)
     {
@@ -154,12 +141,9 @@ MenuNode **MenuNode::getSiblings()
 }
 char **MenuNode::getChildrenNames()
 {
-    // printf("%u\n", this->getTotNrOfChildren());
     char **names = (char **) malloc(sizeof(char*) * this->getTotNrOfChildren());
     for (uint16_t i = 0; i < this->getTotNrOfChildren(); i++)
     {
-        // printf("%s\n", this->getChild(i)->getName());
-        // printf("%x\n", &names[i]);
         names[i] = this->getChild(i)->getName();
     }
     return names;
@@ -171,7 +155,6 @@ char **MenuNode::getSiblingNames()
     // Get siblings before current
     for (uint16_t i = 0; i < this->indexOfSiblings; i++)
     {
-        // menus[i] = this->parent->getChild(i)->getName();
         menus[i] = this->getSibling(-this->indexOfSiblings + i)->getName();
     }
 

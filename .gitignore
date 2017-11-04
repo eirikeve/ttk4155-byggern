@@ -70,3 +70,5 @@ CTestTestfile.cmake
 
 #vscode
 .vscode/
+
+build/*

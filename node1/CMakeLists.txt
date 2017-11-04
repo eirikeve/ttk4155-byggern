@@ -35,10 +35,12 @@ set(INC_PATH     "${BASE_PATH}/include")
 set(SRC_PATH     "${BASE_PATH}/src")
 set(LIB_DIR_PATH "${BASE_PATH}/lib")
 set(BUILD_PATH   "${BASE_PATH}/build")
+set(TEST_PATH    "${BASE_PATH}/test")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BUILD_PATH}")
 
-file(GLOB SRC_FILES "${SRC_PATH}/*.cpp" "${SRC_PATH}/*.c" "${SRC_PATH}/*.asm")
-file(GLOB INC_FILES "${INC_PATH}/*.h" "${INC_PATH}/*.hpp")
+file(GLOB SRC_FILES "${SRC_PATH}/*.cpp" "${SRC_PATH}/*.c" "${SRC_PATH}/*.asm" "${TEST_PATH}/*.cpp" "${TEST_PATH}/*.c")
+file(GLOB INC_FILES "${INC_PATH}/*.h" "${INC_PATH}/*.hpp" "${TEST_PATH}/*.h")
+
 
 set(LIB_SRC_FILES)
 set(LIB_INC_PATHS subdir ${LIBRARIES})
@@ -72,8 +74,8 @@ set(CMAKE_CXX_FLAGS "${CXXFLAGS}")
 set(CMAKE_ASM_FLAGS   "${CFLAGS}")
 
 # Project setup
-include_directories(${INC_PATH} ${BASE_PATH} ${LIB_INC_PATHS})
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${LIB_SRC_FILES})
+include_directories(${INC_PATH} ${BASE_PATH} ${LIB_INC_PATHS} ${TEST_PATH})
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${LIB_SRC_FILES} ${TEST_PATH})
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 
 # Defines

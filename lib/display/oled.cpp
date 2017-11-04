@@ -1,3 +1,4 @@
+#ifdef __AVR_ATmega162__
 #include "oled.h"
 #include "../utilities/utilities.h"
 
@@ -99,3 +100,4 @@ void OLED::goTo(uint8_t page, uint8_t col)
 void OLED::clear()
 {
 }
+#endif

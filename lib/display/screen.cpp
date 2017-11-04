@@ -1,3 +1,4 @@
+#ifdef __AVR_ATmega162__
 #include "screen.h"
 extern "C" {
 #include <stdlib.h>
@@ -59,15 +60,13 @@ Screen::~Screen()
 void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
 {
     // sz is number of pages (if o is UPPER or LOWER), else number of columns, for the subscreen
-    if  (
-         subscreen            && // subcreen argument is not NULL
-        (subScreen ==  NULL)  && // This Screen does not have subScreen
+    if (
+        subscreen &&           // subcreen argument is not NULL
+        (subScreen == NULL) && // This Screen does not have subScreen
         (
             // Check that we have enough space
-            ( sz < (colsize)  && (o == LEFT  || o == RIGHT) )  ||
-            ( sz < (pagesize) && (o == UPPER || o == LOWER) )
-        )
-        )
+            (sz < (colsize) && (o == LEFT || o == RIGHT)) ||
+            (sz < (pagesize) && (o == UPPER || o == LOWER))))
     {
 
         subScreen = subscreen;
@@ -81,7 +80,7 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
 
         if (o == LEFT) // SubScreen on left part of this screen
         {
-            col0 =  col0 + sz;
+            col0 = col0 + sz;
             subScreen->col1 = subScreen->col0 + sz;
         }
         else if (o == RIGHT)
@@ -100,7 +99,6 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
             subScreen->page1 = subScreen->page0 + sz;
         }
 
-        
         subScreen->pagesize = subScreen->page1 - subScreen->page0;
         pagesize = page1 - page0;
         subScreen->colsize = subScreen->col1 - subscreen->col0;
@@ -119,7 +117,7 @@ void Screen::removeSubScreen()
         // subScreen.~Screen(); // Also sets page0, page1 etc.
         // Done by the destructor I thiink?
 
-        subScreen = NULL; 
+        subScreen = NULL;
     }
 }
 
@@ -199,7 +197,7 @@ void Screen::writeChar(unsigned char c)
             while (loc_col < colsize)
             {
                 write(0x00);
-                loc_col+= 1;
+                loc_col += 1;
             }
             loc_col = 1;
             loc_page += 1;
@@ -216,7 +214,6 @@ void Screen::writeChar(unsigned char c)
                 loc_page += 1;
             }
         }
-
     }
     else if (loc_page >= pagesize)
     {
@@ -303,3 +300,4 @@ void Screen::selfTest()
     }
     writeString(dots);
 }
+#endif
