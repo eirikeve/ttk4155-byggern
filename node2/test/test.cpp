@@ -2,12 +2,15 @@
 
 #include "test.h"
 #include "lib/utilities/printf.h"
-#include "lib/utilities/pin.h"
+#include "lib/pins/pins.h"
 #include "lib/servo/servo.h"
 #include "lib/uart/uart.h"
 #include "lib/timer/timer.h"
 #include "lib/adc_internal/adc_internal.h"
 #include "lib/ir_detector/ir_detector.h"
+#include "lib/spi/spi.h"
+#include "lib/can/can.h"
+
 
 void testUartTransmit() {
     UART & uart = UART::getInstance();
@@ -142,6 +145,98 @@ void testIRDetector() {
     while (true) {
         if(ir.blocked()) {
             printf("Beam blocked\n");
+        }
+    }
+}
+
+void testSpi() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    SPI& spi = SPI::getInstance(0);
+    while (true) {
+        spi.transmit(0xA5);
+    }
+}
+
+void testCanLoopback() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, true);
+
+    CanMessage msg;
+    msg.id = 2;
+    msg.length = 1;
+    msg.data[0] = 0;
+
+    while (true) {
+        can.transmit(&msg);
+        CanMessage recv = can.receive();
+        if (recv.id != NULL) {
+            printf("id: %d, length: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
+        }
+
+        msg.data[0]++;
+    }
+}
+
+void testCanTransmit() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    CanMessage msg;
+    msg.id = 2;
+    msg.length = 1;
+    msg.data[0] = 0;
+
+    while (true) {
+        can.transmit(&msg);
+        msg.data[0]++;
+    }
+}
+
+void testCanReceive() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    while (true) {
+        CanMessage recv = can.receive();
+        if (recv.id != NULL) {
+            printf("id: %d, length: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
+        }
+    }
+}
+
+void testControlServoOverCan() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    Servo& servo = Servo::getInstance();
+    servo.initialize(40);
+
+    while (true) {
+        CanMessage recv = can.receive();
+        if (recv.id != NULL) {
+            servo.setAnglePercentage(recv.data[0]);
         }
     }
 }

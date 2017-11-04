@@ -38,6 +38,7 @@ void formatValue(uint8_t raw, int8_t *result, uint8_t center, uint8_t threshold)
 
 void Joystick::initialize(ADC *adc, uint8_t threshold, PIN *buttonPin) {
     this->adc = adc;
+    this->threshold = threshold;
     clr_bit(DDRE, 0);
     this->calibrate();
 

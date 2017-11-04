@@ -5,7 +5,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "../utilities/pin.h"
+#include "../pins/pins.h"
 
 namespace {
     #ifdef __AVR_ATmega162__
@@ -91,10 +91,7 @@ class Timer
 
         
 
-        // Made private.
-        // Due to multiton design pattern, it cannot
-        // Be deleted, because it is used in getInstance
-        Timer& operator=(Timer const&) {return *this;};
+        
     public:
 
         // Interrupt handler for timer 0
@@ -105,6 +102,9 @@ class Timer
 
         // Deleted due to multiton design pattern
         Timer(Timer const&)    = delete;
+
+        // Deleted due to multiton design pattern
+        Timer& operator=(Timer const&) = delete;
 
 
 };

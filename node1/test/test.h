@@ -14,3 +14,14 @@ void testTimerStop();
 // Test joystick
 void testJoystick();
 void testJoystickButton() ;
+
+// Test spi
+void testSpi();
+
+// Test can
+void testCanLoopback();
+void testCanTransmit();
+void testCanReceive();
+
+// Test servo over can
+void testControlServoOverCan();

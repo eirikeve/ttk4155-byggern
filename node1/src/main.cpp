@@ -77,66 +77,25 @@
 // 	}
 // }
 
-extern "C" {
 #include <avr/io.h>
 #include "util/delay.h"
 #include <stdio.h>
 // #include "../lib/comm/comm.h"
 #include "../lib/utilities/utilities.h"
-}
+#include "lib/utilities/printf.h"
+
 #include "../lib/CAN/SPI.h"
 #include "../lib/CAN/MCP2515.h"
-#include "lib/CAN/can.h"
+#include "lib/can/can.h"
+#include "lib/spi/spi.h"
 #include "lib/timer/timer.h"
 #include "lib/joystick/joystick.h"
 #include <stdint.h>
 
-// #include "lib/joystick/joystick.h"
 #include "test/test.h"
 
-void toggle_led() {
-	PORTB ^= (1 << PB0);
-}
 
 int main(void)
 {
-
-	testTimer();
-	set_bit(DDRB, 0);
-	set_bit(PORTB, 0);
-	// init_timer(500);
-
-	can_init();
-
-	sei();
-	can_message msg;
-	msg.id = 2;
-	msg.length = 3;
-	// Joystick joystick(10);
-	int8_t x;
-	int8_t y;
-	// }
-	while (1)
-	{
-		// Direction dir = joystick.read(&x, &y);
-		// printf("Node1\n");
-		// PORTB ^= (1 << PB0);
-		// _delay_ms(500);
-		msg.data[0] = x;
-		msg.data[1] = y;
-		// msg.data[2] = dir;
-		// (msg.data[1])++;		
-		can_message_send(&msg);
-	// 	can_message recv = can_data_receive();
-	// 	if (recv.id != NULL)
-	// 	{
-	// 		printf("id: %d, len: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
-	// 	}
-	}
-
-	// while(1) {
-	// 	// printf("Hello world\n");
-	// 	// mcp2515_write(0x36, 0xa5);
-	// 	// printf("Data: %d\n", mcp2515_read(0x36));
-	// }
+	testCanReceive();
 }

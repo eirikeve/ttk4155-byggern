@@ -1,15 +1,18 @@
-    #include <stdio.h>
-    #include <avr/io.h>
-    #include <util/delay.h>
-    #include <stdint.h>
-    
-    #include "test.h"
-    #include "lib/utilities/printf.h"
-    #include "lib/utilities/pin.h"
-    #include "lib/uart/uart.h"
-    #include "lib/adc/adc.h"
-    #include "lib/joystick/joystick.h"
-    #include "lib/timer/timer.h"
+#include <stdio.h>
+#include <avr/io.h>
+#include <util/delay.h>
+#include <stdint.h>
+
+#include "test.h"
+#include "lib/utilities/printf.h"
+#include "lib/pins/pins.h"
+#include "lib/uart/uart.h"
+#include "lib/adc/adc.h"
+#include "lib/joystick/joystick.h"
+#include "lib/timer/timer.h"
+#include "lib/utilities/utilities.h"
+#include "lib/spi/spi.h"
+#include "lib/can/can.h"
 
     
 void testUartTransmit() {
@@ -102,8 +105,6 @@ void testJoystick()
     {
         Direction dir = joystick.read(&x, &y);
         printf("x: %d, y: %d, dir: %d\n", x, y, dir);
-        // x = joystick.readY();
-        // printf("%d\n", x);
     }
 }
 
@@ -111,6 +112,7 @@ void testJoystickButton() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
+
     ADC& adc = ADC::getInstance();
 
     PIN pin(&DDRB, &PORTB, &PINB, PB3);
@@ -121,6 +123,108 @@ void testJoystickButton() {
         if (joystick.buttonPressed()) {
             printf("Button pressed at joystick\n");
         }
-        // printf("%d\n", joystick.buttonPressed());
+    }
+}
+
+void testSpi() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    SPI& spi = SPI::getInstance(0);
+    while (true) {
+        spi.transmit(0xA5);
+    }
+}
+
+void testCanLoopback() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, true);
+
+    CanMessage msg;
+    msg.id = 2;
+    msg.length = 1;
+    msg.data[0] = 0;
+
+    while (true) {
+        can.transmit(&msg);
+        CanMessage recv = can.receive();
+        if (recv.id != NULL) {
+            printf("id: %d, length: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
+        }
+
+        msg.data[0]++;
+    }
+}
+
+void testCanTransmit() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    CanMessage msg;
+    msg.id = 2;
+    msg.length = 1;
+    msg.data[0] = 0;
+
+    while (true) {
+        can.transmit(&msg);
+        msg.data[0]++;
+    }
+}
+
+void testCanReceive() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    while (true) {
+        CanMessage recv = can.receive();
+        if (recv.id != NULL) {
+            printf("id: %d, length: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
+        }
+    }
+}
+
+void testControlServoOverCan() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, NULL);
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    int8_t x;
+    int8_t y;
+
+    CanMessage msg;
+    msg.id = 0;
+    msg.length = 3;
+
+    while (1)
+    {
+        Direction dir = joystick.read(&x, &y);
+        printf("x: %d, y: %d, dir: %d\n", x, y, dir);
+        msg.data[0] = x;
+		msg.data[1] = y;
+        msg.data[2] = dir;
+        can.transmit(&msg);
     }
 }

@@ -20,3 +20,14 @@ void testADC();
 
 // Test the IR detector
 void testIRDetector();
+
+// Test spi
+void testSpi();
+
+// Test can
+void testCanLoopback();
+void testCanTransmit();
+void testCanReceive();
+
+// Test servo over can
+void testControlServoOverCan();
