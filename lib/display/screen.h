@@ -45,7 +45,7 @@ private:
 private:
   void changeBufferTo(uint8_t * buffer);
   void copyVRAMtoCurrentBuffer();
-  void render();
+  
 
 public:
   Screen();
@@ -68,6 +68,7 @@ public:
   void clear();
   void selfTest();
   void flagReadyToRender();
+  void render(uint8_t * buffer);
 
   friend class ScreenHandler;
 

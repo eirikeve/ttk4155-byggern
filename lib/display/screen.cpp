@@ -350,28 +350,22 @@ void Screen::selfTest()
 
 
 
-void Screen::render()
+void Screen::render(uint8_t * buffer)
 {
-    // Read from the memory we're not currently writing to (dual buffer)
-    uint8_t* v = vram;
-    if ((uint8_t*)AVR_VRAM_1 == vram)
+    if ((uint8_t*)AVR_VRAM_1 == buffer || (uint8_t*)AVR_VRAM_2 == buffer)
     {
-        v = (uint8_t*)AVR_VRAM_2;
-    }
-    else
-    {
-        v = (uint8_t*)AVR_VRAM_1;
-    }
-    // Write SRAM data to the screen
-    for (int p = 0; p < 8; ++p)
-    {
-        oled.goToPage(p);
-        oled.goToColumn(0);
-        for (int c = 0; c < 128; ++c)
+        // Write SRAM data to the screen
+        for (int p = 0; p < 8; ++p)
         {
-            oled.write(v[p * 128 + c]);
+            oled.goToPage(p);
+            oled.goToColumn(0);
+            for (int c = 0; c < 128; ++c)
+            {
+                oled.write(buffer[p * 128 + c]);
+            }
         }
     }
+
     
 
 }
