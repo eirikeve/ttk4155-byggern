@@ -1,18 +1,53 @@
-// #ifndef UART_H
-// #define UART_H
+#pragma once
 
-// #include<avr/io.h>
+#include <stdint.h>
+#include <stdio.h>
 
-// #include "../stream/stream.h"
-// class UART : public Stream {
-// public:
+/**
+ * Class for communication over UART for AVR atmega162 and atmega2560
+ * */
+class UART
+{
+    public:
+        static UART& getInstance()
+        {
+            static UART instance;
+            return instance;
+        }
+        /**
+         * Initialize the UART with the given baud rate. 
+         * Frame format: 8data, 2stop bit.
+         * @param baudRate desired baud rate for the transmission.
+         * */
+        void initialize(uint16_t baudRate);
 
-//     void Init(uint16_t baud_rate);
-//     void Write(uint8_t *string, uint16_t size);
-//     void 
+        /**
+         * Transmit the following char over uart.
+         * Frame format: 8data, 2stop bit.
+         * @param byte char to be transmitted over uart
+         * */
+        int transmit(char byte);
 
-//     UART(const UART&) = delete;
-//     void operator=(const UART&) = delete;
-// };
+        /**
+         * Receive the following byte over uart.
+         * Frame format: 8data, 2stop bit.
+         * */
+        uint8_t receive();
 
-// #endif //UART_H
+
+
+    private:
+
+
+        // Private due to singleton design pattern
+        UART() {}
+
+    public:
+
+        // Deleted due to singleton design pattern
+        UART(UART const&)    = delete;
+
+        // Deleted due to singleton design pattern
+        void operator=(UART const&)  = delete;
+
+};

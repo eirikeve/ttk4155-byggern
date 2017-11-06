@@ -1,61 +1,152 @@
-// Joystick class for use in TTK4155
-// Written by Håvard Borge, Eirik Vesterkjær
-// 18/09/2017
+#pragma once
+
+#include <stdint.h>
 
 #include "../adc/adc.h"
-// #include "../utilities/bmath.h"
-#include <stdint.h>
+#include "../utilities/pin.h"
 
 enum Direction
 {
-    NORTH = 0,
-    SOUTH = 1,
-    WEST = 2,
+    NEUTRAL = 0,
+    NORTH = 1,
+    NORTH_EAST = 2,
     EAST = 3,
-    NORTH_WEST = 4,
-    NORTH_EAST = 5,
+    SOUTH_EAST = 4,
+    SOUTH = 5,
     SOUTH_WEST = 6,
-    SOUTH_EAST = 7,
-    NEUTRAL = 8
+    WEST = 7,
+    NORTH_WEST = 8
 };
 
+/**
+ * Class for reading Joystick signals in two directions using an ADC, and single button.
+ * */
 class Joystick
 {
   public:
-    // Value read from ADC at joystick max y position
-    uint8_t x_max;
-    // Value read from ADCadc.h at joystick max x position
-    uint8_t y_max;
-    // Value read from ADC at joystick min y position
-    uint8_t x_min;
-    // Value read from ADC at joystick min x position
-    uint8_t y_min;
-    // Value read from ADC at joystick centre x
-    uint8_t centre_x;
-    // Value read from ADC at joystick centre y
-    uint8_t centre_y;
-    // Value with which the joystick can be away from the centre in a dir before registering as that dir
-    uint8_t threshold;
-    // Scale factor for reading from ADC, multiplied by 100.
+    static Joystick &getInstance()
+    {
+        static Joystick instance;
+        return instance;
+    }
 
-    uint8_t x;
-    uint8_t rawX;
+    /**
+         * Initialize the joystick with a threshold value
+         * around the neutral position.
+         * @param adc which adc to use.
+         * @param threshold threshold for joystick. If
+         *        abs(value - center) < threshold, then
+         *        value = center.
+         * @param buttonPin pin for button.
+         * */
+    void initialize(ADC *adc, uint8_t threshold, PIN *buttonPin);
 
-    uint8_t y;
-    uint8_t rawY;
+    /**
+         * Read joystick signal in both x and y direction. 
+         * Values are formatted to be in range -128 to 127.
+         * @param x pointer to variable for storing value in x direction.
+         * @param y pointer to variable for storing value in y direction.
+         * @return direction of joystick.
+         * */
+    Direction read(int8_t *x, int8_t *y);
 
-    ADC adc;
+    /**
+         * Read joystick signal in x direction.
+         * Values are formatted to be in range -128 to 127.
+         * @return value in x direction.
+         * */
+    int8_t readX();
 
-  public:
-    Joystick(const uint8_t threshold);
-    Direction read(uint8_t *x, uint8_t *y);
-    uint8_t readX();
-    uint8_t readY();
+    /**
+         * Read joystick signal in y direction.
+         * Values are formatted to be in range -128 to 127.
+         * @return value in y direction.
+         * */
+    int8_t readY();
+
+    /**
+         * Read raw value of joystick signal in x direction.
+         * Values are not formatted, and in range 0 to 255.
+         * @return value in x direction.
+         * */
+    uint8_t readRawX();
+
+    /**
+         * Read raw value of joystick signal in y direction.
+         * Values are not formatted, and in range 0 to 255.
+         * @return value in y direction.
+         * */
+    uint8_t readRawY();
+
+    /**
+         * Get direction of last read.
+         * @return last direction of joystick.
+         * 
+         * NOTE: Uncertain behavior if used together with read
+         * in a single direction. Use instead getDirX/y
+         * */
+    Direction getDir();
+
+    /**
+         * Get direction of last read in x direction.
+         * @return last direction of joystick (EAST / WEST).
+         * */
+    Direction getDirX();
+
+    /**
+         * Get direction of last read in y direction.
+         * @return last direction of joystick (SOUTH / NORTH).
+         * */
+    Direction getDirY();
+
+    /**
+         * Check if button is pressed.
+         * @return true if button is pressed down, false else.
+         * */
+    bool buttonPressed();
 
   private:
-    void autoCalibrate();
-    Direction getDir() const;
-    void formatValue(uint8_t *raw, uint8_t *result, uint8_t *center, uint8_t *threshold);
-    uint8_t readRawX();
-    uint8_t readRawY();
+    // Private due to singleton design pattern
+    Joystick(){};
+
+    // Calibrates the joystick with reading
+    // center positions at initialize.
+    void calibrate();
+
+    // Center for joystick in x direction.
+    uint8_t centerX;
+
+    // Center for joystick in y direction.
+    uint8_t centerY;
+
+    // Value with which the joystick can be away from the centre in a dir before registering as that dir
+    uint8_t threshold;
+
+    // Last read value in x direction
+    int8_t x;
+
+    //Last read raw unfiltered value in x direction
+    uint8_t rawX;
+
+    // Last read value in y direction
+    int8_t y;
+
+    //Last read raw unfiltered value in y direction
+    uint8_t rawY;
+
+    // Is button pressed
+    bool buttonPressedDown;
+
+    // ADC for reading joystick signals
+    ADC *adc;
+
+    // Input pin for button
+    PIN *buttonPin;
+
+  public:
+    // Deleted due to singleton design pattern
+    Joystick(Joystick const &) = delete;
+
+    // Deleted due to singleton design pattern
+    void operator=(Joystick const &) = delete;
 };
