@@ -1,13 +1,11 @@
 #ifdef __AVR_ATmega162__
 #include "screen.h"
-extern "C" {
-#include <stdlib.h>
-}
+
 
 Screen::Screen()
 {
     oled = OLED();
-    vram = (uint8_t*)0x1BFF;
+    vram = (uint8_t*)AVR_VRAM_1;
     superScreen = NULL;
     subScreen = NULL;
     page0 = 0;
@@ -19,6 +17,7 @@ Screen::Screen()
     loc_page = 0;
     loc_col = 0;
     has_border_lines = false;
+    ready_to_render = false;
 }
 
 Screen::Screen(Screen *superscreen, uint8_t sz, Orientation o) : Screen()
@@ -59,8 +58,46 @@ Screen::~Screen()
     else
     {
         // No superscreen, so we need to free the vram!
-        free(vram);
+        //free(vram);
     }
+}
+
+void Screen::changeBufferTo(uint8_t * buffer)
+{
+
+    if ((uint8_t*)AVR_VRAM_1 == buffer)
+    {
+        vram = (uint8_t*)AVR_VRAM_1;
+    }
+    else
+    {
+        vram = (uint8_t*)AVR_VRAM_2;
+    }
+}
+
+void Screen::copyVRAMtoCurrentBuffer()
+{
+    uint8_t * source;
+    uint8_t * target;
+    if ((uint8_t*)AVR_VRAM_1 == vram)
+    {
+        source = (uint8_t*)AVR_VRAM_2;
+        target = (uint8_t*)AVR_VRAM_1;
+    }
+    else
+    {
+        source = (uint8_t*)AVR_VRAM_1;
+        target = (uint8_t*)AVR_VRAM_2;
+    }
+
+    for (int p = 0; p < 8; ++p)
+    {
+        for (int c = 0; c < 128; ++c)
+        {
+            target[p * 128 + c] = source[p * 128 + c];
+        }
+    }
+
 }
 
 void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
@@ -127,9 +164,7 @@ void Screen::removeSubScreen()
 {
     if (subScreen)
     {
-        // subScreen.~Screen(); // Also sets page0, page1 etc.
-        // Done by the destructor I thiink?
-
+        // The destructor subScreen.~Screen() sets page0, page1 etc. to their correct values
         subScreen = NULL;
     }
 }
@@ -317,17 +352,32 @@ void Screen::selfTest()
 
 void Screen::render()
 {
+    // Read from the memory we're not currently writing to (dual buffer)
+    uint8_t* v = vram;
+    if ((uint8_t*)AVR_VRAM_1 == vram)
+    {
+        v = (uint8_t*)AVR_VRAM_2;
+    }
+    else
+    {
+        v = (uint8_t*)AVR_VRAM_1;
+    }
+    // Write SRAM data to the screen
     for (int p = 0; p < 8; ++p)
     {
         oled.goToPage(p);
         oled.goToColumn(0);
         for (int c = 0; c < 128; ++c)
         {
-            oled.write(vram[p * 128 + c]);
+            oled.write(v[p * 128 + c]);
         }
     }
-    // Iterate through SRAM memory
-    // Write SRAM memory to the screen
+    
 
+}
+
+void Screen::flagReadyToRender()
+{
+    ready_to_render = true;
 }
 #endif

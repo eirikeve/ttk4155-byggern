@@ -9,4 +9,5 @@
 
 - SRAM
 [0x1800, 0x1FFF] 2kB
-.. of which
+    - VRAM 1: [0x1800, 0x1BFF]
+    - VRAM 2: [0x1C00, 0x1FFF]
