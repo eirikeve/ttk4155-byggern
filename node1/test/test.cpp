@@ -262,7 +262,7 @@ void testSubScreen()
 // Test ScreenHandler
 void testScreenHandler()
 {
-    ScreenHandler h = ScreenHandler::getInstance();
+    ScreenHandler& h = ScreenHandler::getInstance();
     Screen s1 = Screen();
     Screen s2 = Screen();
     s1.clear();

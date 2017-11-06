@@ -97,18 +97,7 @@ void ScreenHandler::_clearRenderFlags()
     }
 }
 
-ScreenHandler ScreenHandler::getInstance()
-{
-    if (handler)
-    {
-        return *handler;
-    }
-    else
-    {
-        ScreenHandler h = ScreenHandler();
-        return h;
-    }
-}
+
 void ScreenHandler::addMainScreen(Screen * s)
 {
     _addScreenToArray(s);
@@ -180,7 +169,7 @@ void ScreenHandler::_interruptHandlerRoutine()
 
 void ScreenHandlerTimerInterrupt()
 {
-    ScreenHandler h = ScreenHandler::getInstance();
+    ScreenHandler& h = ScreenHandler::getInstance();
     h._interruptHandlerRoutine();
 }
 
