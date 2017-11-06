@@ -10,6 +10,7 @@
 #define ADC_ADDR    0x1400
 #define AVR_VRAM_1  0x1800
 #define AVR_VRAM_2  0x1C00
+#define OLED_UPDATE_FPS 20
 
 #define set_bit(reg, bit) (reg |= (1 << (bit)))
 #define set_bit_value(reg, bit, val) (reg |= (val << (bit)))
