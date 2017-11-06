@@ -296,7 +296,21 @@ void Screen::writeString(char *string)
 
 void Screen::write(uint8_t c)
 {
-    vram[loc_page * 128 + loc_col++] = c;
+    if (loc_col + 1 < colsize && loc_page < pagesize)
+    {
+        vram[loc_page * 128 + loc_col++] = c;
+    }
+    else{
+        if !(loc_col + 1 < colsize)
+        {
+            if (loc_page + 1 < pagesize)
+            {
+                ++loc_page;
+                loc_col = 0;
+            }
+        }
+    }
+    
 }
 
 void Screen::fill(uint8_t v)
