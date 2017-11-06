@@ -14,3 +14,5 @@ void testTimerStop();
 // Test joystick
 void testJoystick();
 void testJoystickButton() ;
+
+// Test display

@@ -1,17 +1,19 @@
-    #include <stdio.h>
-    #include <avr/io.h>
-    #include <util/delay.h>
-    #include <stdint.h>
-    
-    #include "test.h"
-    #include "lib/utilities/printf.h"
-    #include "lib/utilities/pin.h"
-    #include "lib/uart/uart.h"
-    #include "lib/adc/adc.h"
-    #include "lib/joystick/joystick.h"
-    #include "lib/timer/timer.h"
+#define DO_TESTS
 
-    
+#include <stdio.h>
+#include <avr/io.h>
+#include <util/delay.h>
+#include <stdint.h>
+
+#include "test.h"
+#include "lib/utilities/printf.h"
+#include "lib/utilities/pin.h"
+#include "lib/uart/uart.h"
+#include "lib/adc/adc.h"
+#include "lib/joystick/joystick.h"
+#include "lib/timer/timer.h"
+
+#ifdef DO_TESTS
 void testUartTransmit() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -124,3 +126,118 @@ void testJoystickButton() {
         // printf("%d\n", joystick.buttonPressed());
     }
 }
+
+
+// Test display
+void testScreen()
+{
+    Screen s1 = Screen();
+    Screen s2 = Screen();
+    s1.changeBufferTo((uint8_t*)AVR_VRAM_1);
+    s2.changeBufferTo((uint8_t*)AVR_VRAM_1);
+
+    s1.goTo(0,0);
+    s1.writeString("Writing to a single display");
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s1.writeString("\nFilling the rest of the display with lines");
+    for (int i = 0; i < 100; ++i)
+    {
+        s1.writeChar('-');
+    }
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s1.clear();
+
+    s1.addSubScreen(&s2, 4, Orientation::LOWER);
+    s1.goTo(0,0);
+    s2.goTO(0,0);
+    s1.writeString("Writing to 2 displays. This is display 1.");
+    s2.writeString("This is display 2.")
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s2.writeString("\nDisplay 1, 2 will be filled with #, !");
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s1.clear();
+    s2.clear();
+    for (int i = 0; i < 100; ++i)
+    {
+        s1.writeChar('#');
+        s2.writeChar('!');
+    }
+    __delay_ms(2000);
+    s1.clear();
+    s1.writeString("Display borders will now be added");
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s1.addBorderLines();
+    s2.addBorderLines();
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+
+
+
+
+}
+void testSubScreen()
+{
+    Screen s1 = Screen();
+    Screen s2 = Screen();
+    Screen s3 = Screen();
+    s1.changeBufferTo((uint8_t*)AVR_VRAM_1);
+    s2.changeBufferTo((uint8_t*)AVR_VRAM_1);
+    s3.changeBufferTo((uint8_t*)AVR_VRAM_1);
+    s1.addSubScreen(&s2, 4, Orientation::LOWER);
+    s1.goTo(0,0);
+    s2.goTO(0,0);
+    s3.goTo(0,0);
+
+    s1.writeString("Writing to 2 displays. This is display 1.");
+    s2.writeString("This is display 2.")
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s2.writeString("\nDisplay 1, 2 will be filled with #, !");
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s1.clear();
+    s2.clear();
+    for (int i = 0; i < 100; ++i)
+    {
+        s1.writeChar('#');
+        s2.writeChar('!');
+    }
+    __delay_ms(2000);
+    s1.clear();
+    s1.writeString("Display borders will now be added");
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s1.addBorderLines();
+    s2.addBorderLines();
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s1.clear();
+    s2.clear();
+    s2.addSubScreen(&s3, 64, Orientation::RIGHT);
+    s1.writeString("A third subscreen has been added.");
+    s3.writeString("Screen 3");
+    s3.addBorderLines();
+    s1.render((uint8_t*)AVR_VRAM_1);
+    __delay_ms(2000);
+    s1.clear();
+    s2.clear();
+    s3.clear();
+    for (int i = 0; i < 100; ++i)
+    {
+        s1.writeChar('1');
+        s2.writeChar('2');
+        s3.writeChar('3');
+    }
+    s1.render((uint8_t*)AVR_VRAM_1);
+}
+
+// Test ScreenHandler
+void testScreenHandler();
+void testScreenHandlerAnimation();
+
+#endif
