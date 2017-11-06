@@ -1,9 +1,13 @@
 #ifdef __AVR_ATmega2560__
 
-#include "servo.h"
 #include <stdio.h>
+#include <avr/interrupt.h>
+
+#include "servo.h"
+#include "../utilities/utilities.h"
 
 Servo::Servo(){
+
     // set PB5 output
     set_bit(DDRB, DDB5);
     // clr at cmp match, set at bottom
@@ -19,6 +23,9 @@ Servo::Servo(){
 
     // TOP
     ICR1 = 39999;
+    
+    sei();
+    this->setAngle(0);
 }
 
 
@@ -28,6 +35,12 @@ void Servo::initialize(uint16_t maxAngle) {
 
 void Servo::setAngle(int16_t angle) {
 
+    if (angle > this->maxAngle) {
+        angle = this->maxAngle;
+    }
+    else if (angle < - this->maxAngle) {
+        angle = - this->maxAngle;
+    }
     // Calculate duty cycle 0 <= D <= 1, with period
     // T = 0.02 sec (50 Hz). Calculates time in ms
     // the pwn signal should be high to get the desired angle.
@@ -52,8 +65,11 @@ void Servo::setAnglePercentage(int8_t percentage) {
 }
 
 void Servo::setDutyCycle(float ms) { 
-    printf("ms: %d\n", (int) (ms * 100));
-    OCR1A = (uint16_t) (ms*ICR1)/20;
+    // printf("ms: %d\n", (int) (ms * 100));
+    if (ms >= 1.0 && ms <= 2.0) {
+        uint16_t foo = (ms*ICR1)/20;
+        OCR1A = foo;
+    }
 }
 
 

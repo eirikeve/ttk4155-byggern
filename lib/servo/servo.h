@@ -1,10 +1,6 @@
 #pragma once
-#include <avr/io.h>
-#include <avr/interrupt.h>
 #include <stdint.h>
-#include <stdio.h>
 
-#include "../utilities/utilities.h"
 
 
 class Servo

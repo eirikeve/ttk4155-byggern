@@ -70,14 +70,14 @@ class CAN
         // Flag that is set in interrupt vector when new message is received
         volatile bool canMessageReceived;
         
-    public:
-
         uint8_t mcp2515Read(uint8_t address);
         void mcp2515Write(uint8_t address, uint8_t data);
         void mcp2515RequestToSend(uint8_t rts);
         void mcp2515BitModify(uint8_t address, uint8_t mask, uint8_t data);
         void mcp2515Reset();
         void mcp2515ReadStatus();
+
+    public:
 
         // Deleted due to singleton design pattern
         CAN(CAN const&)    = delete;

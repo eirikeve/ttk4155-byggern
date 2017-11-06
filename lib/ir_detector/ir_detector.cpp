@@ -1,10 +1,19 @@
+#include <stdio.h>
 #include "ir_detector.h"
 
 void IR_detector::initialize(ADC_internal* adc, uint8_t threshold, uint8_t filterDegree) {
     this->adc = adc;
-    this->threshold = threshold;
     this->filterDegree = filterDegree;
     this->beamBlocked = false;
+
+    if (threshold != NULL) {
+        this->threshold = threshold;
+    }
+    else {
+        uint8_t valueUnblocked = adc->read();
+        printf("Unblocked value: %d\n", valueUnblocked);
+        this->threshold = valueUnblocked / 2.0;
+    }
 }
 
 bool IR_detector::blocked() {

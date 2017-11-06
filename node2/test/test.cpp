@@ -141,7 +141,7 @@ void testIRDetector() {
     ADC_internal& adc = ADC_internal::getInstance();
 
     IR_detector& ir = IR_detector::getInstance();
-    ir.initialize(&adc, 100, 4);
+    ir.initialize(&adc, NULL, 4);
     while (true) {
         if(ir.blocked()) {
             printf("Beam blocked\n");
@@ -231,12 +231,31 @@ void testControlServoOverCan() {
     can.initialize(&spi, false);
 
     Servo& servo = Servo::getInstance();
-    servo.initialize(40);
+    servo.initialize(90);
 
     while (true) {
         CanMessage recv = can.receive();
         if (recv.id != NULL) {
+            printf("id: %d, length: %d, percentage: %d\n", recv.id, recv.length, (int8_t) recv.data[0]);
             servo.setAnglePercentage(recv.data[0]);
         }
     }
+
+    // UART & uart = UART::getInstance();
+    // uart.initialize(9600);
+    // enablePrintfWithUart();
+
+    // SPI& spi = SPI::getInstance(0);
+    // CAN& can = CAN::getInstance();
+    // can.initialize(&spi, false);
+
+    // // Servo& servo = Servo::getInstance();
+    // // servo.initialize(90);
+
+    // while (true) {
+    //     CanMessage recv = can.receive();
+    //     if (recv.id != NULL) {
+    //         printf("id: %d, length: %d, percentage: %d\n", recv.id, recv.length, (int8_t) recv.data[0]);
+    //     }
+    // }
 }

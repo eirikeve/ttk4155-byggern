@@ -19,9 +19,11 @@ extern "C" {
 #include "lib/adc_internal/adc_internal.h"
 #include "lib/servo/servo.h"
 #include "test/test.h"
+#include "lib/uart/uart.h"
+#include "lib/utilities/printf.h"
 
 int main(void)
 {
-
-	testCanTransmit();
+	// testControlServoOverCan();
+	testIRDetector();
 }

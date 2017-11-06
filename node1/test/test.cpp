@@ -203,23 +203,22 @@ void testControlServoOverCan() {
     uart.initialize(9600);
     enablePrintfWithUart();
 
-    ADC& adc = ADC::getInstance();
-    Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 10, NULL);
-
     SPI& spi = SPI::getInstance(0);
     CAN& can = CAN::getInstance();
     can.initialize(&spi, false);
+
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, NULL);
 
     int8_t x;
     int8_t y;
 
     CanMessage msg;
-    msg.id = 0;
+    msg.id = 2;
     msg.length = 3;
 
-    while (1)
-    {
+    while (true) {
         Direction dir = joystick.read(&x, &y);
         printf("x: %d, y: %d, dir: %d\n", x, y, dir);
         msg.data[0] = x;
