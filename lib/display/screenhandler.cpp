@@ -10,11 +10,11 @@ ScreenHandler::ScreenHandler()
     array_size = 5;
     screens = (Screen**)calloc(array_size, sizeof(Screen*));
     currentBuffer = (uint8_t*)AVR_VRAM_1;
-    Timer interruptTimer = Timer::getInstance(1);
-    interruptTimer.initialize((uint16_t)(1000 / OLED_UPDATE_FPS), &_interruptHandlerRoutine, NULL);
+    Timer& interruptTimer = Timer::getInstance(1);
+    interruptTimer.initialize((uint16_t)(1000 / OLED_UPDATE_FPS), &ScreenHandler::_interruptHandlerRoutine, NULL);
     interruptTimer.start();
 }
-void ScreenHandler::render()
+void ScreenHandler::_render()
 {
     if (num_screens > 0)
     {
@@ -22,7 +22,19 @@ void ScreenHandler::render()
     }
 }
 
-void ScreenHandler::increaseArraySize()
+ScreenHandler::~ScreenHandler()
+{
+    for (int i = 0; i < array_size; ++i)
+    {
+        screens[i] = (Screen*)NULL;
+    }
+    free(screens);
+    screens = (Screen**)NULL;
+    handler = (ScreenHandler*)NULL;
+    currentBuffer = (uint8_t*)NULL;
+}
+
+void ScreenHandler::_increaseArraySize()
 {
     int new_size = array_size * 2;
     Screen  ** new_screens = (Screen**)calloc(new_size, sizeof(Screen*));
@@ -37,11 +49,11 @@ void ScreenHandler::increaseArraySize()
     
 }
 
-void ScreenHandler::addScreenToArray(Screen * s)
+void ScreenHandler::_addScreenToArray(Screen * s)
 {
     if (num_screens >= array_size)
     {
-        increaseArraySize();
+        _increaseArraySize();
     }
     screens[num_screens] = s;
     ++num_screens;
@@ -102,41 +114,22 @@ ScreenHandler ScreenHandler::getInstance()
 }
 void ScreenHandler::addMainScreen(Screen * s)
 {
-    addScreenToArray(s);
-}
-Screen ScreenHandler::createMainScreen()
-{
-    Screen s;
-    addScreenToArray(&s);
-    return s;
+    _addScreenToArray(s);
 }
 
-void ScreenHandler::addSubScreen(Screen * superscreen, Screen *subscreen, uint8_t sz, Orientation o)
+
+void ScreenHandler::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
 {
-    // Check if superscreen is in the handler. If not, do nothing!
-    for (uint8_t i = 0; i < num_screens; ++i)
+    Screen* superscreen = screens[num_screens - 1];
+    superscreen->addSubScreen(subscreen, sz, o);
+    if (superscreen->hasSubScreen())
     {
-        if (screens[i] == superscreen)
-        {
-            superscreen->addSubScreen(subscreen, sz, o);
-            addScreenToArray(subscreen);
-            return;
-        }
+        // Only if the addition was successfull (i.e. not too large sz)
+        _addScreenToArray(subscreen);
     }
+    return;
 }
-Screen ScreenHandler::createSubScreen(Screen *superscreen, uint8_t sz, Orientation o)
-{
-        // Check if superscreen is in the handler. If not, do nothing!
-        for (uint8_t i = 0; i < num_screens; ++i)
-        {
-            if (screens[i] == superscreen)
-            {
-                Screen subscreen = Screen(superscreen, sz, o);
-                addScreenToArray(&subscreen);
-                return subscreen;
-            }
-        }
-}
+
 void ScreenHandler::removeScreen(Screen * s)
 {
     if (s->hasSubScreen()){
@@ -182,13 +175,8 @@ Screen * ScreenHandler::getScreenPtr(uint8_t screen_index)
 void ScreenHandler::_interruptHandlerRoutine()
 {
     if (isReadyToRender()){
-        _interruptActionRoutine();
+        _changeVRAMBuffer();
+        _render();
+        _clearRenderFlags();
     }
-}
-
-void ScreenHandler::_interruptActionRoutine()
-{
-    _changeVRAMBuffer();
-    render();
-    _clearRenderFlags();
 }
