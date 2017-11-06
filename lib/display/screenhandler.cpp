@@ -17,10 +17,10 @@ ScreenHandler::ScreenHandler()
 void ScreenHandler::_render()
 {
     if (num_screens > 0)
-    {   uint8_t* otherBuffer = AVR_VRAM_1;
+    {   uint8_t* otherBuffer = (uint8_t*)AVR_VRAM_1;
         if (otherBuffer == currentBuffer)
         {
-            otherBuffer = AVR_VRAM_2
+            otherBuffer = (uint8_t*)AVR_VRAM_2;
         }
         screens[0]->render(otherBuffer); // Renders the whole screen!
     }
@@ -176,6 +176,12 @@ void ScreenHandler::_interruptHandlerRoutine()
         _render();
         _clearRenderFlags(); // Comment out this line (or the if check) to make the display always update when the interrupt is called
     }
+}
+
+void ScreenHandlerTimerInterrupt()
+{
+    ScreenHandler h = ScreenHandler::getInstance();
+    h._interruptHandlerRoutine();
 }
 
 #endif
