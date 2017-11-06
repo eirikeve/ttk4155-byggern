@@ -1,3 +1,4 @@
+#pragma once
 #include "oled.h"
 #include "../fonts/fonts.h"
 #include "../utilities/utilities.h"
@@ -43,10 +44,9 @@ private:
 
 
 private:
-  void changeBufferTo(uint8_t * buffer);
+  void changeBufferTo(uint8_t * buffer = (uint8_t*)AVR_VRAM_1);
   void copyVRAMtoCurrentBuffer();
   
-
 public:
   Screen();
   Screen(Screen *superscreen, uint8_t sz, Orientation o);
@@ -57,7 +57,6 @@ public:
   void updateBorderLines();
   void removeBorderLines();
   bool hasSubScreen() {return (subScreen ? true : false);}
-
   void goToPage(uint8_t page);
   void goToColumn(uint8_t col);
   void goTo(uint8_t page, uint8_t col);
