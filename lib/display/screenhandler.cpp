@@ -10,6 +10,9 @@ ScreenHandler::ScreenHandler()
     array_size = 5;
     screens = (Screen**)calloc(array_size, sizeof(Screen*));
     currentBuffer = (uint8_t*)AVR_VRAM_1;
+    Timer interruptTimer = Timer::getInstance(1);
+    interruptTimer.initialize((uint16_t)(1000 / OLED_UPDATE_FPS), &_interruptHandlerRoutine, NULL);
+    interruptTimer.start();
 }
 void ScreenHandler::render()
 {
@@ -65,7 +68,7 @@ void ScreenHandler::_changeVRAMBuffer()
     
 }
 
-bool ScreenHandler::_isReadyToRender()
+bool ScreenHandler::isReadyToRender()
 {
     for (uint8_t i = 0; i < num_screens; ++i)
     {
@@ -176,11 +179,16 @@ Screen * ScreenHandler::getScreenPtr(uint8_t screen_index)
 }
 
 
-void ScreenHandler::interruptHandlerRoutine()
+void ScreenHandler::_interruptHandlerRoutine()
 {
-    if (_isReadyToRender()){
-        _changeVRAMBuffer();
-        render();
-        _clearRenderFlags();
+    if (isReadyToRender()){
+        _interruptActionRoutine();
     }
+}
+
+void ScreenHandler::_interruptActionRoutine()
+{
+    _changeVRAMBuffer();
+    render();
+    _clearRenderFlags();
 }

@@ -3,6 +3,7 @@
 #ifndef SCREENHANDLER_H
 #define SCREENHANDLER_H
 #include "screen.h"
+#include "../timer/timer.h"
 
 class ScreenHandler
 {
@@ -24,8 +25,9 @@ private:
     void increaseArraySize();
     void addScreenToArray(Screen * s);
     void _changeVRAMBuffer();
-    bool _isReadyToRender();
     void _clearRenderFlags();
+    void _interruptActionRoutine();
+    void _interruptHandlerRoutine();
 
 // Public methods
 public:
@@ -37,8 +39,8 @@ public:
     void removeScreen(Screen * s);
     uint8_t getNumScreens() const;
     Screen* getScreenPtr(uint8_t screen_index);
-
-    void interruptHandlerRoutine();
+    bool isReadyToRender();
+    
 
 };
 
