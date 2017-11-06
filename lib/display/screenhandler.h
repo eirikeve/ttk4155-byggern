@@ -10,7 +10,6 @@ class ScreenHandler
 {
 // Private variables
 private:
-    static ScreenHandler * handler;
     uint8_t num_screens; // Number of screens in handler
     uint8_t array_size;
     uint8_t* currentBuffer;

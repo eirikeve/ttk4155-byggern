@@ -5,7 +5,6 @@
 
 ScreenHandler::ScreenHandler()
 {
-    handler = this; // Flag that an instance exists
     num_screens = 0;
     array_size = 5;
     screens = (Screen**)calloc(array_size, sizeof(Screen*));
