@@ -1,6 +1,6 @@
 // screenhandler.cpp
 // 6/11/2017
-
+#ifdef __AVR_ATmega162__
 #include "screenhandler.h"
 
 ScreenHandler::ScreenHandler()
@@ -11,27 +11,24 @@ ScreenHandler::ScreenHandler()
     screens = (Screen**)calloc(array_size, sizeof(Screen*));
     currentBuffer = (uint8_t*)AVR_VRAM_1;
     Timer& interruptTimer = Timer::getInstance(1);
-    interruptTimer.initialize((uint16_t)(1000 / OLED_UPDATE_FPS), &ScreenHandler::_interruptHandlerRoutine, NULL);
+    interruptTimer.initialize((uint16_t)(1000.0/OLED_UPDATE_FPS), &ScreenHandlerTimerInterrupt, NULL);
     interruptTimer.start();
 }
 void ScreenHandler::_render()
 {
     if (num_screens > 0)
-    {
-        screens[0]->render(); // Renders the whole screen!
+    {   uint8_t* otherBuffer = AVR_VRAM_1;
+        if (otherBuffer == currentBuffer)
+        {
+            otherBuffer = AVR_VRAM_2
+        }
+        screens[0]->render(otherBuffer); // Renders the whole screen!
     }
 }
 
 ScreenHandler::~ScreenHandler()
 {
-    for (int i = 0; i < array_size; ++i)
-    {
-        screens[i] = (Screen*)NULL;
-    }
-    free(screens);
-    screens = (Screen**)NULL;
-    handler = (ScreenHandler*)NULL;
-    currentBuffer = (uint8_t*)NULL;
+    return;
 }
 
 void ScreenHandler::_increaseArraySize()
@@ -180,3 +177,5 @@ void ScreenHandler::_interruptHandlerRoutine()
         _clearRenderFlags();
     }
 }
+
+#endif

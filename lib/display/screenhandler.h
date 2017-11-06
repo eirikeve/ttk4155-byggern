@@ -21,16 +21,16 @@ public:
 // Private methods
 private:
     ScreenHandler();
-    ~ScreenHandler();
+    
     void _render();
     void _increaseArraySize();
     void _addScreenToArray(Screen * s);
     void _changeVRAMBuffer();
     void _clearRenderFlags();
-    void _interruptHandlerRoutine();
 
 // Public methods
 public:
+    ~ScreenHandler();
     static ScreenHandler getInstance();
     void addMainScreen(Screen * s);
     void addSubScreen(Screen *subscreen, uint8_t sz, Orientation o);
@@ -39,7 +39,14 @@ public:
     Screen* getScreenPtr(uint8_t screen_index);
     bool isReadyToRender();
     
-
+    void _interruptHandlerRoutine();
 };
+
+void ScreenHandlerTimerInterrupt()
+{
+    ScreenHandler h = ScreenHandler::getInstance();
+    h._interruptHandlerRoutine();
+}
+
 
 #endif
