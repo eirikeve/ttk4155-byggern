@@ -31,3 +31,7 @@ void testCanReceive();
 
 // Test servo over can
 void testControlServoOverCan();
+
+// Test motor
+void testMotor();
+void testMotorOverCan();

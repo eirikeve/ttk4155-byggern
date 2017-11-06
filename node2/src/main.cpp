@@ -24,6 +24,6 @@ extern "C" {
 
 int main(void)
 {
-	// testControlServoOverCan();
-	testIRDetector();
+	testMotorOverCan();
+	// testMotor();
 }

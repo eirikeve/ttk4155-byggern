@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include <avr/interrupt.h>
+#include <avr/io.h>
 
 #include "test.h"
 #include "lib/utilities/printf.h"
+#include "lib/utilities/utilities.h"
 #include "lib/pins/pins.h"
 #include "lib/servo/servo.h"
 #include "lib/uart/uart.h"
@@ -10,7 +13,13 @@
 #include "lib/ir_detector/ir_detector.h"
 #include "lib/spi/spi.h"
 #include "lib/can/can.h"
+#include "lib/motor/motor.h"
+#include "lib/dac/dac.h"
 
+extern "C" {
+    #include "lib/twi/twi.h"
+    
+}
 
 void testUartTransmit() {
     UART & uart = UART::getInstance();
@@ -240,22 +249,48 @@ void testControlServoOverCan() {
             servo.setAnglePercentage(recv.data[0]);
         }
     }
+}
 
-    // UART & uart = UART::getInstance();
-    // uart.initialize(9600);
-    // enablePrintfWithUart();
+void testMotor() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    TWI_Master_Initialise();
+    sei();
 
-    // SPI& spi = SPI::getInstance(0);
-    // CAN& can = CAN::getInstance();
-    // can.initialize(&spi, false);
+    // printf("%x\n", 0b0101 << 4 | 0);
+    Motor& motor = Motor::getInstance();
+    unsigned char foo[1] = {0xa5};
+    while (true) {
+        motor.run(127);
+        // TWI_Start_Transceiver_With_Data(foo, 1);
+    }
+}
 
-    // // Servo& servo = Servo::getInstance();
-    // // servo.initialize(90);
+void testMotorOverCan() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
 
-    // while (true) {
-    //     CanMessage recv = can.receive();
-    //     if (recv.id != NULL) {
-    //         printf("id: %d, length: %d, percentage: %d\n", recv.id, recv.length, (int8_t) recv.data[0]);
-    //     }
-    // }
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    TWI_Master_Initialise();
+    sei();
+    
+    DAC& dac = DAC::getInstance();
+    dac.initialize(0x00);
+
+    Motor& motor = Motor::getInstance();
+    motor.initialize(&dac, 0,0,0);
+    
+
+    while (true) {
+        CanMessage recv = can.receive();
+        if (recv.id != NULL) {
+            printf("id: %d, length: %d, percentage: %d\n", recv.id, recv.length, (int8_t) recv.data[0]);
+            motor.run(recv.data[0]);
+        }
+    }
 }
