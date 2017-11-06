@@ -174,7 +174,7 @@ void ScreenHandler::_interruptHandlerRoutine()
     if (isReadyToRender()){
         _changeVRAMBuffer();
         _render();
-        _clearRenderFlags();
+        _clearRenderFlags(); // Comment out this line (or the if check) to make the display always update when the interrupt is called
     }
 }
 
