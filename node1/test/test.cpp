@@ -135,7 +135,6 @@ void testScreen()
 {
     // Screen init
     Screen s1 = Screen();
-    s1.changeBufferTo((uint8_t*)AVR_VRAM_1);
 
     // Animated apple logo
     const unsigned char appleLogo[8] =
@@ -205,16 +204,13 @@ void testSubScreen()
     Screen s1 = Screen();
     Screen s2 = Screen();
     Screen s3 = Screen();
-    s1.changeBufferTo((uint8_t*)AVR_VRAM_1);
-    s2.changeBufferTo((uint8_t*)AVR_VRAM_1);
-    s3.changeBufferTo((uint8_t*)AVR_VRAM_1);
     s1.addSubScreen(&s2, 4, Orientation::LOWER);
     s1.goTo(0,0);
-    s2.goTO(0,0);
+    s2.goTo(0,0);
     s3.goTo(0,0);
 
     s1.writeString("Writing to 2 displays. This is display 1.");
-    s2.writeString("This is display 2.")
+    s2.writeString("This is display 2.");
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(2000);
     s2.writeString("\nDisplay 1, 2 will be filled with #, !");
@@ -258,8 +254,8 @@ void testSubScreen()
     s2.removeSubScreen();
     s1.clear();
     s2.clear();
-    s1.write("Removed Subscreen 3");
-    s2.Write("Only these two subscreens are currently in use");
+    s1.writeString("Removed Subscreen 3");
+    s2.writeString("Only these two subscreens are currently in use");
     s1.render((uint8_t*)AVR_VRAM_1);
 }
 
