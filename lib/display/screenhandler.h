@@ -1,3 +1,4 @@
+
 // screenhandler.h
 // 6/11/2017
 #ifndef SCREENHANDLER_H
@@ -42,11 +43,8 @@ public:
     void _interruptHandlerRoutine();
 };
 
-void ScreenHandlerTimerInterrupt()
-{
-    ScreenHandler h = ScreenHandler::getInstance();
-    h._interruptHandlerRoutine();
-}
+void ScreenHandlerTimerInterrupt();
+
 
 
 #endif
