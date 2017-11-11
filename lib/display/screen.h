@@ -67,7 +67,6 @@ public:
   void write(uint8_t c);
   void fill(uint8_t v);
   void clear();
-  void selfTest();
   void flagReadyToRender();
   void render(uint8_t * buffer);
 

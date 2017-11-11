@@ -318,37 +318,6 @@ void Screen::clear()
     goTo(0, 1);
 }
 
-void Screen::selfTest()
-{
-    clear();
-    goTo(0, 0);
-    // addBorderLines();
-    writeString("Screen Test. supSc:");
-    char buffer[5];
-    itoa((int)(superScreen != nullptr), buffer, 10);
-    writeString(buffer);
-    writeString(" subScr:");
-    itoa((int)(subScreen != nullptr), buffer, 10);
-    writeString(buffer);
-    writeString(" page0:");
-    itoa(page0, buffer, 10);
-    writeString(buffer);
-    writeString(" page1:");
-    itoa(page1, buffer, 10);
-    writeString(buffer);
-    writeString(" col0:");
-    itoa(col0, buffer, 10);
-    writeString(buffer);
-    writeString(" col1:");
-    itoa(col1, buffer, 10);
-    writeString(buffer);
-    char dots[160];
-    for (int i = 0; i < 160; i++)
-    {
-        dots[i] = '.';
-    }
-    writeString(dots);
-}
 
 
 
