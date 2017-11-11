@@ -187,6 +187,8 @@ void Screen::removeSubScreen()
         subScreen->page1 = 0;
         subScreen->col0 = 0;
         subScreen->col1 = 0;
+        subScreen->colsize = 0;
+        subScreen->pagesize = 0;
         subScreen = NULL;
     }
 }
