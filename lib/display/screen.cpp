@@ -164,19 +164,19 @@ void Screen::removeSubScreen()
         // Set this screen's dimensions
         if (subScreen->page0 != page0)
         {
-             page0 = superScreen->page0;
+             page0 = subScreen->page0;
         }
         if (subScreen->page1 != page1)
         {
-            page1 = superScreen->page1;
+            page1 = subScreen->page1;
         }
         if (superScreen->col0 != col0)
         {
-             col0 = superScreen->col0;
+             col0 = subScreen->col0;
         }
         if (superScreen->col1 != col1)
         {
-             col1 = superScreen->col0;
+             col1 = subScreen->col0;
         }
         // Set subScreen's dimensions to 0. Making it a new screen's subScreen will set its dimensions accordingly
         subScreen->superScreen = NULL;
