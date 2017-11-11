@@ -272,15 +272,21 @@ void testSubScreen()
     }
     s1.render((uint8_t*)AVR_VRAM_1);
 
+    //
+
+    printf("Before removing S3\n");
+    printf("S2 page0: %d\n", s2.page0);
+    printf("S2 page1: %d\n", s2.page1);
+    printf("S2 col0: %d\n", s2.col0);
+    printf("S2 col1: %d\n", s2.col1);
+
+
+    //
     s2.removeSubScreen();
     s1.clear();
     s2.clear();
     //
     printf("Removed S3\n");
-    printf("S1 page0: %d\n", s1.page0);
-    printf("S1 page1: %d\n", s1.page1);
-    printf("S1 col0: %d\n", s1.col0);
-    printf("S1 col1: %d\n", s1.col1);
 
     printf("S2 page0: %d\n", s2.page0);
     printf("S2 page1: %d\n", s2.page1);
