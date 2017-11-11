@@ -226,12 +226,20 @@ void Screen::updateBorderLines()
     }
     else
     {
+        // Remove vertical borders
         if (col0 != 0)
         {
             for (uint8_t p = 0; p < pagesize; ++p)
             {
                 vram[(page0 + p)*128] = 0b11111111;
                 
+            }
+        }
+        // Remove horizontal borders
+        if (page0 != 0)
+        {
+            for (uint8_t c = 0; c < colsize; ++c)
+            {
                 uint8_t val = vram[page0*128 + c];
                 vram[page0*128 + c] = val & (0b01111111); // Top pixel in page
             }
