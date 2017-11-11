@@ -108,6 +108,8 @@ int main(void)
 
 	can_init();
 	testScreen();
+	testSubScreen();
+	testScreenHandler();
 	
 	sei();
 	can_message msg;
