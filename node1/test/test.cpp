@@ -289,17 +289,6 @@ void testSubScreen()
     s1.clear();
     s2.clear();
     //
-    printf("Removed S3\n");
-
-    printf("S2 page0: %d\n", s2.page0);
-    printf("S2 page1: %d\n", s2.page1);
-    printf("S2 col0: %d\n", s2.col0);
-    printf("S2 col1: %d\n", s2.col1);
-    printf("S2 pagesize: %d\n", s2.pagesize);
-    printf("S2 colsize: %d\n", s2.colsize);
-
-
-    //
     s1.writeString("Removed Subscreen 3");
     s2.writeString("Only these two subscreens are currently in use");
     s1.render((uint8_t*)AVR_VRAM_1);
