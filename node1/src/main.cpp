@@ -107,36 +107,6 @@ int main(void)
 
 	can_init();
 	testSubScreen();
-	
 	sei();
-	can_message msg;
-	msg.id = 2;
-	msg.length = 3;
-	// Joystick joystick(10);
-	int8_t x;
-	int8_t y;
-	// }
-	while (1)
-	{
-		// Direction dir = joystick.read(&x, &y);
-		// printf("Node1\n");
-		// PORTB ^= (1 << PB0);
-		// _delay_ms(500);
-		msg.data[0] = x;
-		msg.data[1] = y;
-		// msg.data[2] = dir;
-		// (msg.data[1])++;		
-		can_message_send(&msg);
-	// 	can_message recv = can_data_receive();
-	// 	if (recv.id != NULL)
-	// 	{
-	// 		printf("id: %d, len: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
-	// 	}
-	}
-
-	// while(1) {
-	// 	// printf("Hello world\n");
-	// 	// mcp2515_write(0x36, 0xa5);
-	// 	// printf("Data: %d\n", mcp2515_read(0x36));
-	// }
+	
 }
