@@ -170,11 +170,11 @@ void Screen::removeSubScreen()
         {
             page1 = subScreen->page1;
         }
-        if (superScreen->col0 != col0)
+        if (subScreen->col0 != col0)
         {
              col0 = subScreen->col0;
         }
-        if (superScreen->col1 != col1)
+        if (subScreen->col1 != col1)
         {
              col1 = subScreen->col0;
         }
