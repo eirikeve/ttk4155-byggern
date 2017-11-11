@@ -297,7 +297,7 @@ void Screen::writeString(char *string)
 void Screen::write(uint8_t c)
 {
 
-    vram[loc_page * 128 + loc_col++] = c;
+    vram[page0 + loc_page * 128 + col0 + loc_col++] = c;
 
 }
 
