@@ -259,6 +259,9 @@ void testSubScreen()
     s1.writeString("A third subscreen has been added.");
     s3.writeString("Screen 3");
     s3.addBorderLines();
+    s1.updateBorderLines();
+    s2.updateBorderLines();
+    s3.updateBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
     s1.clear();
