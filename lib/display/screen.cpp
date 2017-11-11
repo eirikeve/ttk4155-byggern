@@ -201,33 +201,43 @@ void Screen::addBorderLines()
 
 void Screen::updateBorderLines()
 {
-    // @todo horizontal border lines. Must know what is written to the screen...
-
-    uint8_t old_loc_col = loc_col;
-    uint8_t old_loc_page = loc_page;
-
     // Only draw if we currently have border lines for this screen.
     if (has_border_lines)
     {
-        for (uint8_t p = 0; p < pagesize; ++p)
+        // Vertical borders
+        if (col0 != 0)
         {
-            goTo(p, 0);
-            Screen::write(0b01010101);
-            goTo(p, colsize - 1);
-            Screen::write(0b10101010);
+            for (uint8_t p = 0; p < pagesize; ++p)
+            {
+                // Write the whole page.
+                vram[(page0 + p)*128] = 0b11111111;
+            }
+        }
+        // Horizontal borders
+        if (page0 != 0)
+        {
+            for (uint8_t c = 0; c < colsize; ++c)
+            {
+                // Here, we only write one pixel per page. So we need to ensure that we don't erase anything already written
+                uint8_t val = vram[page0*128 + c];
+                vram[page0*128 + c] = val | (0b10000000); // Top pixel in page
+            }
         }
     }
     else
     {
-        for (uint8_t p = 0; p < pagesize; ++p)
+        if (col0 != 0)
         {
-            goTo(p, 0);
-            Screen::write(0x00);
-            goTo(p, colsize - 1);
-            Screen::write(0x00);
+            for (uint8_t p = 0; p < pagesize; ++p)
+            {
+                vram[(page0 + p)*128] = 0b11111111;
+                
+                uint8_t val = vram[page0*128 + c];
+                vram[page0*128 + c] = val & (0b01111111); // Top pixel in page
+            }
         }
+
     }
-    goTo(old_loc_page, old_loc_col);
 }
 
 void Screen::removeBorderLines()
