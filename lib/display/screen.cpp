@@ -39,26 +39,23 @@ Screen::~Screen()
     {
         if (superScreen->page0 != page0)
         {
-            page0 = superScreen->page0;
+            superScreen->page0 = page0;
         }
         if (superScreen->page1 != page1)
         {
-            page1 = superScreen->page1;
+            superScreen->page1 = page1;
         }
         if (superScreen->col0 != col0)
         {
-            col0 = superScreen->col0;
+            superScreen->col0 = col0;
         }
         if (superScreen->col1 != col1)
         {
-            col1 = superScreen->col1;
+            superScreen->col0 = col1;
         }
         superScreen->subScreen = NULL;
-    }
-    else
-    {
-        // No superscreen, so we need to free the vram!
-        //free(vram);
+        superScreen->pagesize = superScreen->page1 - superScreen->page0;
+        superScreen->colsize = superScreen->col1 - superScreen->col0;
     }
 }
 
@@ -164,7 +161,29 @@ void Screen::removeSubScreen()
 {
     if (subScreen)
     {
-        // The destructor subScreen.~Screen() sets page0, page1 etc. to their correct values
+        // Set this screen's dimensions
+        if (subScreen->page0 != page0)
+        {
+             page0 = superScreen->page0;
+        }
+        if (subScreen->page1 != page1)
+        {
+            page1 = superScreen->page1;
+        }
+        if (superScreen->col0 != col0)
+        {
+             col0 = superScreen->col0;
+        }
+        if (superScreen->col1 != col1)
+        {
+             col1 = superScreen->col0;
+            }
+        // Set subScreen's dimensions to 0. Making it a new screen's subScreen will set its dimensions accordingly
+        subScreen->superScreen = NULL;
+        subScreen->page0 = 0;
+        subScreen->page1 = 0;
+        subScreen->col0 = 0;
+        subScreen->col1 = 0;
         subScreen = NULL;
     }
 }
