@@ -38,8 +38,7 @@ public:
     }
 
     ~ScreenHandler();
-    void addMainScreen(Screen * s);
-
+    void addcreen(Screen * s);
     void removeScreen(Screen * s);
     uint8_t getNumScreens() const;
     Screen* getScreenPtr(uint8_t screen_index);
