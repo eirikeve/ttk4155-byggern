@@ -263,6 +263,7 @@ void testSubScreen()
     s2.updateBorderLines();
     s3.updateBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
+    /*
     _delay_ms(3000);
     s1.clear();
     s2.clear();
@@ -276,6 +277,7 @@ void testSubScreen()
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
     //
+    */
 
     printf("Before removing S3\n");
     printf("S3 page0: %d\n", s3.page0);
@@ -283,7 +285,7 @@ void testSubScreen()
     printf("S3 col0: %d\n", s3.col0);
     printf("S3 col1: %d\n", s3.col1);
 
-
+/*
     //
     s2.removeSubScreen();
     s1.clear();
@@ -295,6 +297,7 @@ void testSubScreen()
     _delay_ms(3000);
     s2.clear();
     s1.clear();
+    */
 }
 
 // Test ScreenHandler
