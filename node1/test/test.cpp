@@ -267,7 +267,8 @@ void testScreenHandler()
     Screen s2 = Screen();
     s1.clear();
     s2.clear();
-    h.addMainScreen(&s1);
+    h.addScreen(&s1);
+    h.addScreen(&s2);
 
     const unsigned char appleLogo[8] =
 	{0b00000000, 0b01111000, 0b11111100, 0b11111110, 0b11001101, 0b01001000,0b00000000,0b00000000};
@@ -316,8 +317,9 @@ void testScreenHandler()
     s1.clear();
     s1.flagReadyToRender();
 
-    h.addSubScreen(&s2, 64, Orientation::RIGHT); // Added as a subscreen of the previously added screen
-    s1.writeString("This is display 1");
+    h.addScreen(&s2);
+    s1.addSubScreen(&s2, 64, Orientation::RIGHT);
+    s1.writeString("Testing ScreenHandler. This is display 1.");
     s2.writeString("This is display 2");
     s1.flagReadyToRender();
     _delay_ms(2000);
@@ -333,7 +335,8 @@ void testScreenHandler()
     s2.clear();
     s1.flagReadyToRender();
     h.removeScreen(&s2);
-    s1.writeString("Now, there is only one display again.");
+    s1.removeSubScreen();
+    s1.writeString("Now, there is only one display again. \nNewline\nIt works!");
     s1.flagReadyToRender();
     _delay_ms(3000);
     s1.fill(0b01010101);
