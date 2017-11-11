@@ -275,9 +275,26 @@ void testSubScreen()
     s2.removeSubScreen();
     s1.clear();
     s2.clear();
+    //
+    printf("Removed S3\n");
+    printf("S1 page0: %d\n", s1.page0);
+    printf("S1 page1: %d\n", s1.page1);
+    printf("S1 col0: %d\n", s1.col0);
+    printf("S1 col1: %d\n", s1.col1);
+
+    printf("S2 page0: %d\n", s2.page0);
+    printf("S2 page1: %d\n", s2.page1);
+    printf("S2 col0: %d\n", s2.col0);
+    printf("S2 col1: %d\n", s2.col1);
+
+
+    //
     s1.writeString("Removed Subscreen 3");
     s2.writeString("Only these two subscreens are currently in use");
     s1.render((uint8_t*)AVR_VRAM_1);
+    _delay_ms(3000);
+    s2.clear();
+    s1.clear();
 }
 
 // Test ScreenHandler
