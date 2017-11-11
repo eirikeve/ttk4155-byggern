@@ -212,10 +212,10 @@ void testSubScreen()
     s1.writeString("Writing to 2 displays. This is display 1.");
     s2.writeString("This is display 2.");
     s1.render((uint8_t*)AVR_VRAM_1);
-    _delay_ms(2000);
+    _delay_ms(3000);
     s2.writeString("\nDisplay 1, 2 will be filled with #, !");
     s1.render((uint8_t*)AVR_VRAM_1);
-    _delay_ms(2000);
+    _delay_ms(3000);
     s1.clear();
     s2.clear();
     for (int i = 0; i < 100; ++i)
@@ -223,7 +223,7 @@ void testSubScreen()
         s1.writeChar('#');
         s2.writeChar('!');
     }
-    _delay_ms(2000);
+    _delay_ms(3000);
     s1.clear();
     s1.writeString("Display borders will now be added");
     s1.render((uint8_t*)AVR_VRAM_1);
@@ -231,7 +231,7 @@ void testSubScreen()
     s1.addBorderLines();
     s2.addBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
-    _delay_ms(2000);
+    _delay_ms(3000);
     s1.clear();
     s2.clear();
     s2.addSubScreen(&s3, 64, Orientation::RIGHT);
@@ -239,7 +239,7 @@ void testSubScreen()
     s3.writeString("Screen 3");
     s3.addBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
-    _delay_ms(2000);
+    _delay_ms(3000);
     s1.clear();
     s2.clear();
     s3.clear();
@@ -345,4 +345,4 @@ void testScreenHandler()
 }
 void testScreenHandlerAnimation();
 
-#endif
+#endif // DO_TESTS not defined
