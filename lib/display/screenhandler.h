@@ -39,7 +39,7 @@ public:
 
     ~ScreenHandler();
     void addMainScreen(Screen * s);
-    void addSubScreen(Screen *subscreen, uint8_t sz, Orientation o);
+
     void removeScreen(Screen * s);
     uint8_t getNumScreens() const;
     Screen* getScreenPtr(uint8_t screen_index);

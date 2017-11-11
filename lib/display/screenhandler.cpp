@@ -97,35 +97,18 @@ void ScreenHandler::_clearRenderFlags()
 }
 
 
-void ScreenHandler::addMainScreen(Screen * s)
+void ScreenHandler::addScreen(Screen * s)
 {
     _addScreenToArray(s);
 }
 
 
-void ScreenHandler::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
-{
-    Screen* superscreen = screens[num_screens - 1];
-    superscreen->addSubScreen(subscreen, sz, o);
-    if (superscreen->hasSubScreen())
-    {
-        // Only if the addition was successfull (i.e. not too large sz)
-        _addScreenToArray(subscreen);
-    }
-    return;
-}
-
 void ScreenHandler::removeScreen(Screen * s)
 {
-    if (s->hasSubScreen()){
-        removeScreen(s->subScreen);
-    }
-
     for (uint8_t i = 0; i < num_screens; ++i)
     {
         if (screens[i] == s)
         {
-            s->~Screen();
             for (int k = i; k < num_screens; ++k)
             {
                 if (k == num_screens - 1)
