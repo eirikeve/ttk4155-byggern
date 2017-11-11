@@ -212,6 +212,10 @@ void testSubScreen()
     //
 
 
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
     printf("S1 page0: %d\n", s1.page0);
     printf("S1 page1: %d\n", s1.page1);
     printf("S1 col0: %d\n", s1.col0);
