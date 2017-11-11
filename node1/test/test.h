@@ -20,5 +20,5 @@ void testScreen();
 void testSubScreen();
 
 // Test ScreenHandler
-void testScreenHandler();
-void testScreenHandlerAnimation();
+void testScreen();
+void testSubScreen();

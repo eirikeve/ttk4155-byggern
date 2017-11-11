@@ -107,6 +107,7 @@ int main(void)
 	// init_timer(500);
 
 	can_init();
+	testScreen();
 
 	sei();
 	can_message msg;
