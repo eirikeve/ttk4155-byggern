@@ -209,6 +209,23 @@ void testSubScreen()
     s2.goTo(0,0);
     s3.goTo(0,0);
 
+    //
+
+
+    printf("S1 page0: %d\n", s1.page0);
+    printf("S1 page1: %d\n", s1.page1);
+    printf("S1 col0: %d\n", s1.col0);
+    printf("S1 col1: %d\n", s1.col1);
+
+    printf("S1 page0: %d\n", s2.page0);
+    printf("S1 page1: %d\n", s2.page1);
+    printf("S1 col0: %d\n", s2.col0);
+    printf("S1 col1: %d\n", s2.col1);
+
+
+    //
+
+
     s1.writeString("Writing to 2 displays. This is display 1.");
     s2.writeString("This is display 2.");
     s1.render((uint8_t*)AVR_VRAM_1);
