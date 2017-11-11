@@ -101,7 +101,6 @@ void toggle_led() {
 int main(void)
 {
 
-	testTimer();
 	set_bit(DDRB, 0);
 	set_bit(PORTB, 0);
 	// init_timer(500);
