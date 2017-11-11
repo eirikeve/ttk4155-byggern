@@ -22,7 +22,7 @@ class Solenoid
     private:
 
         // Private due to singleton design pattern
-        Solenoid() {};
+        Solenoid();
         
     public:
         // Deleted due to singleton design pattern
