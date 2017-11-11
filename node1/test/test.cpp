@@ -292,6 +292,8 @@ void testSubScreen()
     printf("S2 page1: %d\n", s2.page1);
     printf("S2 col0: %d\n", s2.col0);
     printf("S2 col1: %d\n", s2.col1);
+    printf("S2 pagesize: %d\n", s2.pagesize);
+    printf("S2 colsize: %d\n", s2.colsize);
 
 
     //
