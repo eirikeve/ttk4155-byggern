@@ -16,3 +16,9 @@ void testJoystick();
 void testJoystickButton() ;
 
 // Test display
+void testScreen();
+void testSubScreen();
+
+// Test ScreenHandler
+void testScreenHandler();
+void testScreenHandlerAnimation();
