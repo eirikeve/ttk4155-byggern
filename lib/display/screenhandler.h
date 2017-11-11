@@ -37,7 +37,6 @@ public:
         return instance;
     }
 
-    ~ScreenHandler();
     void addScreen(Screen * s);
     void removeScreen(Screen * s);
     uint8_t getNumScreens() const;

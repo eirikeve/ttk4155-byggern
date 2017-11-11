@@ -25,10 +25,6 @@ void ScreenHandler::_render()
     }
 }
 
-ScreenHandler::~ScreenHandler()
-{
-    return;
-}
 
 void ScreenHandler::_increaseArraySize()
 {
