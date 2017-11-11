@@ -19,7 +19,7 @@ class Screen
 {
 
 private:
-  static OLED oled;
+  OLED oled;
   static uint8_t *vram;
   static bool ready_to_render;
 
@@ -49,7 +49,7 @@ public:
 
   uint8_t pagesize;
   uint8_t colsize;
-  
+
   Screen();
   Screen(Screen *superscreen, uint8_t sz, Orientation o);
   ~Screen();
