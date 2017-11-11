@@ -108,7 +108,7 @@ int main(void)
 
 	can_init();
 	testScreen();
-
+	
 	sei();
 	can_message msg;
 	msg.id = 2;
