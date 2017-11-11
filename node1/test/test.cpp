@@ -274,14 +274,14 @@ void testSubScreen()
         s3.writeChar('3');
     }
     s1.render((uint8_t*)AVR_VRAM_1);
-
+    _delay_ms(3000);
     //
 
     printf("Before removing S3\n");
-    printf("S2 page0: %d\n", s2.page0);
-    printf("S2 page1: %d\n", s2.page1);
-    printf("S2 col0: %d\n", s2.col0);
-    printf("S2 col1: %d\n", s2.col1);
+    printf("S3 page0: %d\n", s3.page0);
+    printf("S3 page1: %d\n", s3.page1);
+    printf("S3 col0: %d\n", s3.col0);
+    printf("S3 col1: %d\n", s3.col1);
 
 
     //
