@@ -234,15 +234,15 @@ void testSubScreen()
     s2.writeString("This is display 2.");
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
-    s2.writeString("\nDisplay 1, 2 will be filled with #, !");
+    s2.writeString("\nDisplay 1, 2 will be filled with x, y");
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
     s1.clear();
     s2.clear();
     for (int i = 0; i < 100; ++i)
     {
-        s1.writeChar('#');
-        s2.writeChar('!');
+        s1.writeChar('x');
+        s2.writeChar('y');
     }
     _delay_ms(3000);
     s1.clear();
