@@ -10,7 +10,6 @@ class ScreenHandler
 {
 // Private variables
 private:
-    static ScreenHandler * handler;
     uint8_t num_screens; // Number of screens in handler
     uint8_t array_size;
     uint8_t* currentBuffer;
@@ -31,8 +30,14 @@ private:
 
 // Public methods
 public:
+
+    static ScreenHandler& getInstance()
+    {
+        static ScreenHandler instance;
+        return instance;
+    }
+
     ~ScreenHandler();
-    static ScreenHandler getInstance();
     void addMainScreen(Screen * s);
     void addSubScreen(Screen *subscreen, uint8_t sz, Orientation o);
     void removeScreen(Screen * s);
@@ -41,6 +46,12 @@ public:
     bool isReadyToRender();
     
     void _interruptHandlerRoutine();
+
+    // Deleted due to singleton design pattern
+    ScreenHandler(ScreenHandler const&)    = delete;
+    
+    // Deleted due to singleton design pattern
+    void operator=(ScreenHandler const&)  = delete;
 };
 
 void ScreenHandlerTimerInterrupt();

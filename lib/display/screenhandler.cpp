@@ -5,7 +5,6 @@
 
 ScreenHandler::ScreenHandler()
 {
-    handler = this; // Flag that an instance exists
     num_screens = 0;
     array_size = 5;
     screens = (Screen**)calloc(array_size, sizeof(Screen*));
@@ -97,18 +96,7 @@ void ScreenHandler::_clearRenderFlags()
     }
 }
 
-ScreenHandler ScreenHandler::getInstance()
-{
-    if (handler)
-    {
-        return *handler;
-    }
-    else
-    {
-        ScreenHandler h = ScreenHandler();
-        return h;
-    }
-}
+
 void ScreenHandler::addMainScreen(Screen * s)
 {
     _addScreenToArray(s);
@@ -180,7 +168,7 @@ void ScreenHandler::_interruptHandlerRoutine()
 
 void ScreenHandlerTimerInterrupt()
 {
-    ScreenHandler h = ScreenHandler::getInstance();
+    ScreenHandler& h = ScreenHandler::getInstance();
     h._interruptHandlerRoutine();
 }
 
