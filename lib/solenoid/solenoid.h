@@ -18,6 +18,7 @@ class Solenoid
          * @return true if beam is blocked since last check, false else
          * */
         void shoot();
+		void test();
 
     private:
 

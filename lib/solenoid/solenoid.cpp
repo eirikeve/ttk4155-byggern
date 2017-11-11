@@ -9,10 +9,17 @@ Solenoid::Solenoid() {
 	set_bit(PINB, DDB4);
 }
 
-void Solenoid::Shoot(){
+void Solenoid::shoot(){
 	//Set low to activate solenoid
 	clr_bit(PINB, DDB4);
-	_delay_ms(0.02);
+	_delay_ms(200);
 	// sit high to deactivate solenoid
 	set_bit(PINB, DDB4);
+}
+
+void Solenoid::test(){
+	while(1){
+		this->shoot();
+		delay(500);
+	}
 }
