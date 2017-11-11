@@ -17,9 +17,38 @@
 #define RST_PIN ph6
 
 
-void Motor::initialize(DAC* dac, uint8_t Kp, uint8_t Ki, uint8_t Kd, uint8_t T) {
+
+
+
+
+void PID() {
+    Motor& motor = Motor::getInstance();
+    int16_t val = 0;
+    
+    int8_t u = (int8_t) motor.pidController(val);
+    printf("Input: %d\n", u);
+
+    motor.setDirection(u);
+    if (u & (1 << 8)) {
+        u = ((~u) + 1);
+    }
+    motor.setSpeed((uint8_t) u);
+
+    if (u == 0) {
+        clr_bit(*EN_PIN.port, EN_PIN.nr);
+    }
+    else {
+        set_bit(*EN_PIN.port, EN_PIN.nr);
+    }
+}
+
+
+void Motor::initialize(DAC* dac, Timer* timer, int16_t Kp, int16_t Ki, int16_t Kd, uint8_t T) {
     this->dac = dac;
+    this->timer = timer;
     this->T = T;
+    this->pid = PID_DATA(Kp, Ki, Kd);
+    this->ref = 0;
 
     set_bit(*DIR_PIN.ddr, DIR_PIN.nr); // Pin for motor direction
     set_bit(*SEL_PIN.ddr, SEL_PIN.nr); // Pin for motor enable
@@ -29,14 +58,17 @@ void Motor::initialize(DAC* dac, uint8_t Kp, uint8_t Ki, uint8_t Kd, uint8_t T) 
     set_bit(PORTD, PD0); // Move to I2C when ready
     set_bit(PORTD, PD1); // Move to I2C when ready
 
-    this->setPIDparameters(Kp, Ki, Kd);
+
     this->encoderReset();
+
+    this->timer->initialize(this->T, PID, NULL);
+    this->timer->start();
 }
 
-void setPIDparameters(uint8_t Kp, uint8_t Ki, uint8_t Kd) {
-    this->Kp = Kp;
-    this->Ki = Ki;
-    this->Kd = Kd;
+void Motor::setPIDparameters(int16_t Kp, int16_t Ki, int16_t Kd) {
+    this->pid.P_Factor = Kp;
+    this->pid.I_Factor = Ki;
+    this->pid.D_Factor = Kd;
 }
 
 void Motor::setSpeed(uint8_t speed) {
@@ -55,45 +87,81 @@ void Motor::setDirection(int8_t dir) {
 }
 
 void Motor::run(int8_t speed) {
-    if (abs(speed) > 100) {
+    if (speed > 100 || speed < -100) {
         printf("Motor error: Max value in motor::run is 100, got %d\n", speed);
         return;
     }
-    if (speed & (1 << 8)) {
-        speed = ((~speed) + 1);
-    }
-    this->setSpeed((uint8_t) speed * 2.55);
 
-    this->setDirection(speed);
-
-    if (speed == 0) {
-        clr_bit(*EN_PIN.port, EN_PIN.nr);
-    }
-    else {
-        set_bit(*EN_PIN.port, EN_PIN.nr);
-    }
-}
-uint8_t Motor::controller(int8_t ref) {
-    int16_t encoderValue = this->getEncoderValue();
-
-    int16_t error = ref - encoderValue;
+    this->ref = speed;
 }
 
 int16_t Motor::getEncoderValue() {
     int16_t value = 0;
-    clr_bit(*EN_PIN.port, EN_PIN.nr);
-    clr_bit(*SEL_BIT.port, SEL_BIT.nr);
-    _delay_ms(0.02);
+    clr_bit(*OE_PIN.port, OE_PIN.nr);
+    clr_bit(*SEL_PIN.port, SEL_PIN.nr);
+    _delay_us(20);
     value |= (PINK) << 8;
-    set_bit(*SEL_BIT.port, SEL_BIT.nr);
-    _delay_ms(0.02);
+    set_bit(*SEL_PIN.port, SEL_PIN.nr);
+    _delay_us(20);
     value |= PINK;
     this->encoderReset();
-    set_bit(*EN_PIN.port, EN_PIN.nr);
+    set_bit(*OE_PIN.port, OE_PIN.nr);
     return value;
 }
 
 void Motor::encoderReset() {
-    clr_bit(*RST_BIT.port, RST_BIT.nr);
+    clr_bit(*RST_PIN.port, RST_PIN.nr);
+    _delay_us(20);
+    set_bit(*RST_PIN.port, RST_PIN.nr);
+}
+
+
+int16_t Motor::pidController(int16_t processValue) {
+    int16_t errors, p_term, d_term;
+	int32_t i_term, ret, temp;
+
+    errors = this->ref - processValue;
+
+    // Calculate Pterm and limit error overflow
+    if (errors > this->pid.maxError) {
+        p_term = MAX_INT;
+    }
+    else if (errors < - this->pid.maxError) {
+        p_term = - MAX_INT;
+    }
+    else {
+        p_term = this->pid.P_Factor * errors;
+    }
+
+    // Calculate Iterm and limit integral runaway
+    temp = this->pid.sumError + errors;
+    if (temp > this->pid.sumError) {
+        i_term = MAX_I_TERM;
+        this->pid.sumError = this->pid.maxSumError;
+    }
+    else if (temp < - this->pid.maxSumError) {
+        i_term = -MAX_I_TERM;
+        this->pid.sumError = -this->pid.maxSumError;
+    }
+    else {
+        this->pid.sumError = temp;
+        i_term = this->pid.I_Factor * this->pid.sumError;
+    }
+
+    // Calculate Dterm
+	d_term = this->pid.D_Factor * (this->pid.lastProcessValue - processValue);
+
+	this->pid.lastProcessValue = processValue;
+
+	ret = (p_term + i_term + d_term);
+	if (ret > MAX_INT) {
+		ret = MAX_INT;
+	} else if (ret < -MAX_INT) {
+		ret = -MAX_INT;
+	}
+
+	return ((int16_t)ret);
+
+
 }
 #endif

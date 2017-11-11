@@ -35,3 +35,8 @@ void testControlServoOverCan();
 // Test motor
 void testMotor();
 void testMotorOverCan();
+void testMotorEncoder();
+
+// Test solenoid
+
+void testSolenoid();

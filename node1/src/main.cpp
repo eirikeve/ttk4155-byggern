@@ -84,8 +84,6 @@
 #include "../lib/utilities/utilities.h"
 #include "lib/utilities/printf.h"
 
-#include "../lib/CAN/SPI.h"
-#include "../lib/CAN/MCP2515.h"
 #include "lib/can/can.h"
 #include "lib/spi/spi.h"
 #include "lib/timer/timer.h"

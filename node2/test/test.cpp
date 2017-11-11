@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <avr/interrupt.h>
 #include <avr/io.h>
+#include <util/delay.h>
 
 #include "test.h"
 #include "lib/utilities/printf.h"
@@ -15,6 +16,7 @@
 #include "lib/can/can.h"
 #include "lib/motor/motor.h"
 #include "lib/dac/dac.h"
+#include "lib/solenoid/solenoid.h"
 
 extern "C" {
     #include "lib/twi/twi.h"
@@ -282,8 +284,10 @@ void testMotorOverCan() {
     DAC& dac = DAC::getInstance();
     dac.initialize(0x00);
 
+    Timer& timer = Timer::getInstance(0);
+
     Motor& motor = Motor::getInstance();
-    motor.initialize(&dac, 0,0,0);
+    motor.initialize(&dac, &timer, 100,0,0, 10);
     
 
     while (true) {
@@ -293,4 +297,35 @@ void testMotorOverCan() {
             motor.run(recv.data[0]);
         }
     }
+}
+
+void testMotorEncoder() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    TWI_Master_Initialise();
+    sei();
+    
+    DAC& dac = DAC::getInstance();
+    dac.initialize(0x00);
+
+    Timer& timer = Timer::getInstance(0);
+
+    Motor& motor = Motor::getInstance();
+    motor.initialize(&dac, &timer, 100,0,0, 10);
+    
+
+    while (true) {
+        printf("Encoder value: %d\n", motor.getEncoderValue());
+    }
+}
+
+void testSolenoid() {
+    Solenoid & solenoid = Solenoid::getInstance();
+
+    while(1){
+		solenoid.shoot();
+		_delay_ms(500);
+	}
 }

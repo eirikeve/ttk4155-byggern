@@ -22,7 +22,7 @@
 *
 *
 ****************************************************************************/
-
+#ifdef __AVR_ATmega2560__
 #include <avr/io.h>              
 #include <avr/interrupt.h>
 #include "twi.h"
@@ -213,3 +213,4 @@ ISR(TWI_vect)
              (0<<TWWC);                                 //
   }
 }
+#endif

@@ -1,5 +1,8 @@
 #include <stdio.h>
+#include <util/delay.h>
 #include "solenoid.h"
+
+#include "lib/utilities/utilities.h"
 
 Solenoid::Solenoid() {
 	// set PB4 output
@@ -15,11 +18,4 @@ void Solenoid::shoot(){
 	_delay_ms(200);
 	// sit high to deactivate solenoid
 	set_bit(PINB, DDB4);
-}
-
-void Solenoid::test(){
-	while(1){
-		this->shoot();
-		delay(500);
-	}
 }
