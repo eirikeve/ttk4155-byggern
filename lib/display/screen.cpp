@@ -294,6 +294,10 @@ void Screen::writeChar(unsigned char c)
             for (int i = 0; i < 5; i++)
             {
                 // write auto-increments loc_col by 1 each call.
+                if (loc_col >= 127)
+                {
+                    printf("LOC COL = 127! Trying to write char: %c\n", c);
+                }
                 this->write(pgm_read_word(&font5[c - ' '][i]));
             }
             loc_col += (1); // Extra padding / space
@@ -336,9 +340,7 @@ void Screen::writeString(char *string)
 
 void Screen::write(uint8_t c)
 {
-
     vram[(page0 + loc_page) * 128 + (col0 + loc_col++)] = c;
-
 }
 
 void Screen::fill(uint8_t v)
