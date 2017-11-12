@@ -210,7 +210,7 @@ void Screen::updateBorderLines()
             for (uint8_t p = 0; p < pagesize; ++p)
             {
                 // Write the whole page.
-                vram[(page0 + p)*128] = 0b11111111;
+                vram[(page0 + p)*128+ col0] = 0b11111111;
             }
         }
         // Horizontal borders
@@ -231,8 +231,7 @@ void Screen::updateBorderLines()
         {
             for (uint8_t p = 0; p < pagesize; ++p)
             {
-                vram[(page0 + p)*128] = 0b11111111;
-                
+                vram[(page0 + p)*128 + col0] = 0b00000000;
             }
         }
         // Remove horizontal borders
