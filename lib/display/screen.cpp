@@ -372,7 +372,7 @@ void Screen::render(uint8_t * buffer)
             oled.goToColumn(0);
             for (int c = 0; c < 128; ++c)
             {
-                if (c > 125)
+                if (c > 126 && buffer[p*128+c] != 0)
                 {
                     printf("Writing this to the OLED: %d\n", buffer[p*128+c]);
                 }
