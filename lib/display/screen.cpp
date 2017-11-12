@@ -226,6 +226,7 @@ void Screen::updateBorderLines()
     }
     else
     {
+        /*
         // Remove vertical borders
         if (col0 != 0)
         {
@@ -242,8 +243,9 @@ void Screen::updateBorderLines()
                 vram[page0*128 + (col0 + c)] &= (0b11111110); // Top pixel in page
             }
         }
-
+*/
     }
+    
 }
 
 void Screen::removeBorderLines()
@@ -336,10 +338,6 @@ void Screen::writeString(char *string)
 
 void Screen::write(uint8_t c)
 {
-    if (loc_col > 120)
-    {
-        printf("Loc col > 121: %d\n", loc_col);
-    }
     vram[(page0 + loc_page) * 128 + (col0 + loc_col++)] = c;
 }
 
