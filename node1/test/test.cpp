@@ -193,6 +193,8 @@ void testScreen()
     for (int i = 0; i < 100; ++i)
     {
         s1.writeChar('-');
+        s1.render();
+        _delay_ms(500);
     }
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(2000);
