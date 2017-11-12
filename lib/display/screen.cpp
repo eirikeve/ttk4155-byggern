@@ -205,14 +205,14 @@ void Screen::updateBorderLines()
     if (has_border_lines)
     {
         // Vertical borders
-        /*if (col0 != 0)
+        if (col0 != 0)
         {
             for (uint8_t p = 0; p < pagesize; ++p)
             {
                 // Write the whole page.
                 vram[(page0 + p)*128+ col0] = 0b11111111;
             }
-        }*/
+        }
         // Horizontal borders
         
         if (page0 != 0)
