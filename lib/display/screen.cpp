@@ -206,7 +206,7 @@ void Screen::updateBorderLines()
             for (uint8_t p = 0; p < pagesize; ++p)
             {
                 // Write the whole page.
-                vram[(page0 + p)*128+ col1] = 0b11111111;
+                vram[(page0 + p)*128 + col1-1] = 0b11111111;
             }
         }
         // Horizontal borders
@@ -216,7 +216,7 @@ void Screen::updateBorderLines()
             for (uint8_t c = 0; c < colsize; ++c)
             {
                 // Here, we only write one pixel per page. So we need to ensure that we don't erase anything already written
-                vram[page1*128 + (col0 + c)] |= (0b00000001); // Top pixel in page
+                vram[(page1-1)*128 + (col0 + c)] |= (0b10000000); // Top pixel in page
             }
         }
     }
@@ -228,7 +228,7 @@ void Screen::updateBorderLines()
         {
             for (uint8_t p = 0; p < pagesize; ++p)
             {
-                vram[(page0 + p)*128 + col1] = 0b00000000;
+                vram[(page0 + p)*128 + col1-1] = 0b00000000;
             }
         }
         // Remove horizontal borders
@@ -236,7 +236,7 @@ void Screen::updateBorderLines()
         {
             for (uint8_t c = 0; c < colsize; ++c)
             {
-                vram[page1*128 + (col0 + c)] &= (0b11111110); // Top pixel in page
+                vram[(page1-1)*128 + (col0 + c)] &= (0b01111111); // Top pixel in page
             }
         }
     }
