@@ -106,7 +106,8 @@ int main(void)
 	// init_timer(500);
 
 	can_init();
-	testSubScreen();
+	//testSubScreen();
+	testScreen();
 	sei();
-	
+
 }
