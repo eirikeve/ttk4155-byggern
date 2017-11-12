@@ -95,5 +95,6 @@
 
 int main(void)
 {
-	testControlServoOverCan();
+	// testControlServoOverCan();
+	testSliderButton();
 }

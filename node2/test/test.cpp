@@ -17,6 +17,7 @@
 #include "lib/motor/motor.h"
 #include "lib/dac/dac.h"
 #include "lib/solenoid/solenoid.h"
+#include "lib/encoder/encoder.h"
 
 extern "C" {
     #include "lib/twi/twi.h"
@@ -253,6 +254,19 @@ void testControlServoOverCan() {
     }
 }
 
+void testServo() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    Servo& servo = Servo::getInstance();
+    servo.initialize(90);
+
+    while (true) {
+        servo.setAnglePercentage(100);
+    }
+}
+
 void testMotor() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -287,7 +301,7 @@ void testMotorOverCan() {
     Timer& timer = Timer::getInstance(0);
 
     Motor& motor = Motor::getInstance();
-    motor.initialize(&dac, &timer, 100,0,0, 10);
+    motor.initialize(&dac, &timer, NULL, 100,0,0, 10);
     
 
     while (true) {
@@ -299,25 +313,15 @@ void testMotorOverCan() {
     }
 }
 
-void testMotorEncoder() {
+void testEncoder() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
 
-    TWI_Master_Initialise();
-    sei();
+    Encoder& encoder = Encoder::getInstance();
     
-    DAC& dac = DAC::getInstance();
-    dac.initialize(0x00);
-
-    Timer& timer = Timer::getInstance(0);
-
-    Motor& motor = Motor::getInstance();
-    motor.initialize(&dac, &timer, 100,0,0, 10);
-    
-
     while (true) {
-        printf("Encoder value: %d\n", motor.getEncoderValue());
+        printf("Encoder value: %d\n", encoder.read());
     }
 }
 
@@ -328,4 +332,57 @@ void testSolenoid() {
 		solenoid.shoot();
 		_delay_ms(500);
 	}
+}
+
+void testTuneMotor() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    TWI_Master_Initialise();
+    sei();
+    
+    DAC& dac = DAC::getInstance();
+    dac.initialize(0x00);
+
+    Timer& timer = Timer::getInstance(0);
+    Encoder& encoder = Encoder::getInstance();
+
+    Motor& motor = Motor::getInstance();
+
+    int16_t Kp = 0;
+    int16_t Ti = 1;
+    int16_t Td = 0;
+
+    uint8_t lastdir = 0;
+    motor.initialize(&dac, &timer, &encoder, 0,Ti,Td, 10);
+    
+    
+    while (true) {
+        printf("Val: %d\n", motor.processValue);
+        CanMessage recv = can.receive();
+        if (recv.id != NULL) {
+            printf("Kp: %d, encoder: %d, input: %d, val: %d, ", Kp, motor.enc, motor.pid.debug, motor.processValue);
+            motor.pid.print();
+            // printf("id: %d, length: %d, percentage: %d\n", recv.id, recv.length, (int8_t) recv.data[0]);
+            // printf("y: %d\n", recv.data[1]);
+            if (lastdir == 0) {
+                switch (recv.data[2]) {
+                    case 1:
+                        motor.setPIDparameters(++Kp, Ti, Td);
+                        break;
+                    case 5:
+                        Kp > 0 ? --Kp: 0;
+                        motor.setPIDparameters(Kp, Ti, Td);
+                        break;
+                }
+            }
+            lastdir = recv.data[2];
+            motor.run((int8_t) recv.data[0]);
+        }
+    }
 }
