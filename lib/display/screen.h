@@ -20,7 +20,7 @@ class Screen
 
 private:
   OLED oled;
-  uint8_t *vram;
+  volatile uint8_t *vram;
   bool ready_to_render;
 
   Screen *superScreen;
