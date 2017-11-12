@@ -293,10 +293,10 @@ void Screen::writeChar(unsigned char c)
             // Enough space to write one more char
             for (int i = 0; i < 5; i++)
             {
+                // write auto-increments loc_col by 1 each call.
                 this->write(pgm_read_word(&font5[c - ' '][i]));
-                // printf("%d\n", font8[33][i]);
             }
-            loc_col += (1);
+            loc_col += (1); // Extra padding / space
             if (loc_col >= colsize)
             {
                 loc_col = 1;
