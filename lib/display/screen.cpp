@@ -108,10 +108,6 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
             (sz < (colsize) && (o == LEFT || o == RIGHT)) ||
             (sz < (pagesize) && (o == UPPER || o == LOWER))))
     {
-        if (subScreen->vram != NULL)
-        {
-            free(subScreen->vram);
-        }
 
         subScreen = subscreen;
         subScreen->superScreen = this;
