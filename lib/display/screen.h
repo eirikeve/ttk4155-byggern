@@ -62,6 +62,7 @@ public:
   void goToPage(uint8_t page);
   void goToColumn(uint8_t col);
   void goTo(uint8_t page, uint8_t col);
+  inline void goToStart() {goTo(0,1);}
   void writeChar(unsigned char c);
   void writeString(char *string);
   void write(uint8_t c);
