@@ -201,6 +201,13 @@ void testScreen()
     }
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(2000);
+    goToStart();
+    s1.write("Now Only calling render!");
+    for (int i = 0; i < 100; ++i)
+    {
+        s1.render();
+        _delay_ms(500);
+    }
 
 
 }
@@ -422,7 +429,7 @@ void SRAM_test()
     // Write phase: Immediately check that the correct value was stored
     srand(seed);
     for (uint16_t i = 0; i < ext_ram_size; i++) {
-        printf("SRAM[%4d] = %02X\n", i, ext_ram[i]);
+        //printf("SRAM[%4d] = %02X\n", i, ext_ram[i]);
     }
     for (uint16_t i = 0; i < ext_ram_size; i++) {
         uint8_t some_value = rand();
