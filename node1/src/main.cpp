@@ -107,7 +107,7 @@ int main(void)
 
 	can_init();
 	//testSubScreen();
-	//testScreen();
+	testScreen();
 	SRAM_test();
 	sei();
 
