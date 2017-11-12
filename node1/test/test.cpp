@@ -261,6 +261,8 @@ void testSubScreen()
     s3.addBorderLines();
     s1.updateBorderLines();
     s2.updateBorderLines();
+    s1.render();
+    _delay_ms(3000);
     s3.updateBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
     /*
