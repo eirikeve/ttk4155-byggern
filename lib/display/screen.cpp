@@ -336,6 +336,10 @@ void Screen::writeString(char *string)
 
 void Screen::write(uint8_t c)
 {
+    if (loc_col > 122)
+    {
+        printf("Loc col > 121: %d\n", loc_col);
+    }
     vram[(page0 + loc_page) * 128 + (col0 + loc_col++)] = c;
 }
 
