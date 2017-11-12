@@ -201,6 +201,10 @@ void testScreen()
 }
 void testSubScreen()
 {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
     Screen s1 = Screen();
     Screen s2 = Screen();
     Screen s3 = Screen();
@@ -260,7 +264,7 @@ void testSubScreen()
         s1.writeChar('1');
         s2.writeChar('2');
         s3.writeChar('3');
-        s3.updateBorderLines();
+        //s3.updateBorderLines();
         s1.render((uint8_t*)AVR_VRAM_1);
         _delay_ms(500);
     }
@@ -269,9 +273,6 @@ void testSubScreen()
     _delay_ms(3000);
     //
     
-    UART & uart = UART::getInstance();
-    uart.initialize(9600);
-    enablePrintfWithUart();
 
     printf("S1 page0: %d\n", s1.page0);
     printf("S1 page1: %d\n", s1.page1);
