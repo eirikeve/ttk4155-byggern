@@ -276,6 +276,10 @@ void Screen::goTo(uint8_t page, uint8_t col)
 
 void Screen::writeChar(unsigned char c)
 {
+    if !(c == '1' || c == '2' || c == '3' || c == ' ')
+    {
+        printf("Trying to write char: %c", c);
+    }
     if (loc_col + character_size <= colsize && loc_page < pagesize)
     {
         if (c == '\n')
@@ -294,10 +298,6 @@ void Screen::writeChar(unsigned char c)
             for (int i = 0; i < 5; i++)
             {
                 // write auto-increments loc_col by 1 each call.
-                if (loc_col >= 120)
-                {
-                    printf("LOC COL >= 120! Trying to write char: %c\n", c);
-                }
                 this->write(pgm_read_word(&font5[c - ' '][i]));
             }
             loc_col += (1); // Extra padding / space
