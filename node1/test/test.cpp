@@ -237,7 +237,7 @@ void testSubScreen()
     _delay_ms(2000);
     */
     //s1.addBorderLines();
-    s2.addBorderLines();
+    //s2.addBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
     s1.clear();
