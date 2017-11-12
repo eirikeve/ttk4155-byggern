@@ -236,17 +236,18 @@ void testSubScreen()
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(2000);
     */
-    s1.addBorderLines();
-    s2.addBorderLines();
+    //s1.addBorderLines();
+    //s2.addBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
     s1.clear();
     s2.clear();
     s2.addSubScreen(&s3, 64, Orientation::RIGHT);
     s3.addBorderLines();
-    s1.updateBorderLines();
-    s2.updateBorderLines();
-    s3.updateBorderLines();
+    //s1.updateBorderLines();
+    //s2.updateBorderLines();
+    //s3.updateBorderLines();
+    s1.writeString("Done.");
     s1.render();
     /*
     s1.writeString("A third subscreen has been added.");
