@@ -24,10 +24,16 @@ void controller() {
     motor.u = u;
     motor.enc = value;
 
-    motor.setDirection(u);
     if (u & (1 << 8)) {
+        motor.goLeft();
+
+        // Take absolute value of input signal
         u = ((~u) + 1);
     }
+    else {
+        motor.goRight();
+    }
+
     motor.setSpeed((uint8_t) u);
 
     if (u == 0) {
@@ -39,7 +45,7 @@ void controller() {
 }
 
 
-void Motor::initialize(DAC* dac, Timer* timer, Encoder* encoder, int16_t Kp, int16_t Ti, int16_t Td, uint8_t T) {
+void Motor::initialize(DAC* dac, Timer* timer, Encoder* encoder, float Kp, float Ti, float Td, uint8_t T) {
     this->dac = dac;
     this->timer = timer;
     this->encoder = encoder;
@@ -60,23 +66,20 @@ void Motor::initialize(DAC* dac, Timer* timer, Encoder* encoder, int16_t Kp, int
     this->timer->start();
 }
 
-void Motor::setPIDparameters(int16_t Kp, int16_t Ti, int16_t Td) {
+void Motor::setPIDparameters(float Kp, float Ti, float Td) {
     this->pid.setParameters(Kp, Kp * this->T / (float) Ti, Kp * Td / (float) this->T);
 }
 
 void Motor::setSpeed(uint8_t speed) {
-    this->dac->convert(speed* 2);
+    this->dac->convert(speed);
 }
 
-void Motor::setDirection(int8_t dir) {
+void Motor::goRight() {
+    set_bit(*DIR_PIN.port, DIR_PIN.nr);
+}
 
-    if (dir & (1 << 8)) {
-        clr_bit(*DIR_PIN.port, DIR_PIN.nr);
-    }
-    else {
-        set_bit(*DIR_PIN.port, DIR_PIN.nr);
-    }
-    
+void Motor::goLeft() {
+    clr_bit(*DIR_PIN.port, DIR_PIN.nr);
 }
 
 void Motor::run(int8_t speed) {

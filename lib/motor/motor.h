@@ -18,11 +18,11 @@ class Motor
             return instance;
         }
 
-        void initialize(DAC* dac, Timer* timer, Encoder* encoder, int16_t Kp, int16_t Ki, int16_t Kd, uint8_t T);
+        void initialize(DAC* dac, Timer* timer, Encoder* encoder, float Kp, float Ki, float Kd, uint8_t T);
 
-        void setPIDparameters(int16_t Kp, int16_t Ti, int16_t Td);
+        void setPIDparameters(float Kp, float Ti, float Td);
 
-        int16_t getEncoderValue();
+        float getEncoderValue();
 
         void run(int8_t speed);
 
@@ -45,12 +45,14 @@ class Motor
         uint8_t T;
 
         // Reference point
-        int16_t ref;
+        float ref;
 
-        int16_t processValue;
+        float processValue;
 
-        int16_t u;
-        int16_t enc;
+        
+
+        float u;
+        float enc;
 
         PID pid;
 
@@ -60,7 +62,9 @@ class Motor
          * > 0: right
          * < 0: left
          * */
-        void setDirection(int8_t dir);
+        void goRight();
+
+        void goLeft()
         
     public:
         // Deleted due to singleton design pattern

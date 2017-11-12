@@ -25,7 +25,12 @@ void Slider::initialize(ADC *adc, PIN *buttonPin) {
 }
 
 
-uint8_t Slider::read()
+int8_t Slider::read()
+{
+    return this->readRaw() - 127;
+}
+
+uint8_t Slider::readRaw()
 {
     if (this->id == 0) {
         return this->adc->read(CHANNEL::CH3);

@@ -354,12 +354,12 @@ void testTuneMotor() {
 
     Motor& motor = Motor::getInstance();
 
-    int16_t Kp = 0;
-    int16_t Ti = 1;
-    int16_t Td = 0;
+    float Kp = 1.2;
+    float Ti = 100;
+    float Td = 0;
 
     uint8_t lastdir = 0;
-    motor.initialize(&dac, &timer, &encoder, 0,Ti,Td, 10);
+    motor.initialize(&dac, &timer, &encoder, 0,Ti,Td, 5);
     
     
     while (true) {

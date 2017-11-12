@@ -28,7 +28,9 @@ class Slider
         }
         void initialize(ADC *adc, PIN *buttonPin);
 
-        uint8_t read();
+        int8_t read();
+
+        uint8_t readRaw();
         bool buttonPressed();
 
     private:
