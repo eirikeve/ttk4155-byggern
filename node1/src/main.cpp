@@ -106,8 +106,8 @@ int main(void)
 	// init_timer(500);
 
 	can_init();
-	//testSubScreen();
-	testScreen();
+	testSubScreen();
+	//testScreen();
 	//SRAM_test();
 	sei();
 
