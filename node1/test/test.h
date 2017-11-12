@@ -1,4 +1,5 @@
 #pragma once
+#include <stdlib.h>
 
 //Test the UART
 void testUartTransmit();
@@ -22,3 +23,5 @@ void testSubScreen();
 // Test ScreenHandler
 void testScreenHandler();
 void testScreenHandlerAnimation();
+
+void SRAM_test();
