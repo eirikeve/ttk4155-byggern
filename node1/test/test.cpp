@@ -205,9 +205,9 @@ void testSubScreen()
     Screen s2 = Screen();
     Screen s3 = Screen();
     s1.addSubScreen(&s2, 4, Orientation::LOWER);
-    s1.goTo(0,0);
-    s2.goTo(0,0);
-    s3.goTo(0,0);
+    s1.goTo(0,1);
+    s2.goTo(0,1);
+    s3.goTo(0,1);
 
     //
 
@@ -255,15 +255,13 @@ void testSubScreen()
     s1.clear();
     s2.clear();
     s3.clear();
-    s1.goTo(0,0);
-    s2.goTo(0,0);
-    s3.goTo(0,0);
     for (int i = 0; i < 100; ++i)
     {
         s1.writeChar('1');
         s2.writeChar('2');
         s3.writeChar('3');
     }
+    s3.updateBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
     //
