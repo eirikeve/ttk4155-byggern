@@ -201,7 +201,7 @@ void testScreen()
     }
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(2000);
-    goToStart();
+    s1.goToStart();
     s1.write("Now Only calling render!");
     for (int i = 0; i < 100; ++i)
     {
