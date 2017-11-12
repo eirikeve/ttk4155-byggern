@@ -369,7 +369,6 @@ void Screen::render(uint8_t * buffer)
             for (int c = 0; c < 128; ++c)
             {
                 oled.write(buffer[p * 128 + c]);
-                _delay_ms(0.0001);
             }
         }
     }
