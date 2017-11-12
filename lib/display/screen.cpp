@@ -273,7 +273,7 @@ void Screen::goTo(uint8_t page, uint8_t col)
 
 void Screen::writeChar(unsigned char c)
 {
-    if (loc_col + character_size <= colsize && loc_page < pagesize)
+    if (loc_col + character_size < colsize && loc_page < pagesize)
     {
         if (c == '\n')
         {
