@@ -408,6 +408,8 @@ void SRAM_test()
     uart.initialize(9600);
     enablePrintfWithUart();
 
+    set_bit(DDRE, DDE1);
+
     volatile char *ext_ram = (char *) AVR_VRAM_1; // Start address for the SRAM
     uint16_t ext_ram_size = 0x800;
     uint16_t write_errors = 0;
