@@ -230,7 +230,7 @@ void testSubScreen()
         s1.writeChar('x');
         s2.writeChar('y');
     }
-    render();
+    s1.render();
     _delay_ms(3000);
     s1.clear();
     s2.clear();
