@@ -212,20 +212,6 @@ void testSubScreen()
     //
 
 
-    UART & uart = UART::getInstance();
-    uart.initialize(9600);
-    enablePrintfWithUart();
-
-    printf("S1 page0: %d\n", s1.page0);
-    printf("S1 page1: %d\n", s1.page1);
-    printf("S1 col0: %d\n", s1.col0);
-    printf("S1 col1: %d\n", s1.col1);
-
-    printf("S2 page0: %d\n", s2.page0);
-    printf("S2 page1: %d\n", s2.page1);
-    printf("S2 col0: %d\n", s2.col0);
-    printf("S2 col1: %d\n", s2.col1);
-
 
     //
 
@@ -280,8 +266,20 @@ void testSubScreen()
     _delay_ms(3000);
     //
     */
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
 
-    printf("Before removing S3\n");
+    printf("S1 page0: %d\n", s1.page0);
+    printf("S1 page1: %d\n", s1.page1);
+    printf("S1 col0: %d\n", s1.col0);
+    printf("S1 col1: %d\n", s1.col1);
+
+    printf("S2 page0: %d\n", s2.page0);
+    printf("S2 page1: %d\n", s2.page1);
+    printf("S2 col0: %d\n", s2.col0);
+    printf("S2 col1: %d\n", s2.col1);
+
     printf("S3 page0: %d\n", s3.page0);
     printf("S3 page1: %d\n", s3.page1);
     printf("S3 col0: %d\n", s3.col0);
