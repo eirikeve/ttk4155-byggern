@@ -356,6 +356,7 @@ void Screen::fill(uint8_t v)
 void Screen::clear()
 {
     fill(0x00);
+    updateBorderLines();
     goTo(0, 1);
 }
 
