@@ -422,7 +422,7 @@ void SRAM_test()
     // Write phase: Immediately check that the correct value was stored
     srand(seed);
     for (uint16_t i = 0; i < ext_ram_size; i++) {
-        printf("SRAM[%d] = %d\n", i, ext_ram[i]);
+        printf("SRAM[%4d] = %02X\n", i, ext_ram[i]);
     }
     for (uint16_t i = 0; i < ext_ram_size; i++) {
         uint8_t some_value = rand();
