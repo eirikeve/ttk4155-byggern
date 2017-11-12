@@ -219,7 +219,7 @@ void Screen::updateBorderLines()
             for (uint8_t c = 0; c < colsize; ++c)
             {
                 // Here, we only write one pixel per page. So we need to ensure that we don't erase anything already written
-                uint8_t val = vram[page0*128 + c];
+                uint8_t val = vram[page0*128 + col0 + c];
                 vram[page0*128 + (col0 + c)] = val | (0b00000001); // Top pixel in page
             }
         }
@@ -239,7 +239,7 @@ void Screen::updateBorderLines()
         {
             for (uint8_t c = 0; c < colsize; ++c)
             {
-                uint8_t val = vram[page0*128 + c];
+                uint8_t val = vram[page0*128 + col0 + c];
                 vram[page0*128 + col0 + c] = val & (0b11111110); // Top pixel in page
             }
         }
