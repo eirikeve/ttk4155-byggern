@@ -366,7 +366,7 @@ void Screen::render(uint8_t * buffer)
         {
             oled.goToPage(p);
             oled.goToColumn(0);
-            for (int c = 0; c < 128; ++c)
+            for (int c = 0; c < 127; ++c)
             {
                 oled.write(buffer[p * 128 + c]);
             }
