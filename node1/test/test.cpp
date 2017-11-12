@@ -274,9 +274,9 @@ void testSubScreen()
         s1.writeChar('1');
         s2.writeChar('2');
         s3.writeChar('3');
-        //s3.updateBorderLines();
+        s3.updateBorderLines();
         s1.render((uint8_t*)AVR_VRAM_1);
-        _delay_ms(500);
+        _delay_ms(200);
     }
     s3.updateBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
