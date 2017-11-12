@@ -286,6 +286,9 @@ void testSubScreen()
     printf("S3 page1: %d\n", s3.page1);
     printf("S3 col0: %d\n", s3.col0);
     printf("S3 col1: %d\n", s3.col1);
+    printf("S3 pagesize: %d\n", s3.pagesize);
+    printf("S3 colsize: %d\n", s3.colsize);
+
 
 /*
     //
