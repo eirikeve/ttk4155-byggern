@@ -84,11 +84,8 @@ extern "C" {
 // #include "../lib/comm/comm.h"
 #include "../lib/utilities/utilities.h"
 }
-#include "../lib/CAN/SPI.h"
-#include "../lib/CAN/MCP2515.h"
-#include "lib/CAN/can.h"
-#include "lib/timer/timer.h"
-#include "lib/joystick/joystick.h"
+//#include "lib/timer/timer.h"
+//#include "lib/joystick/joystick.h"
 #include <stdint.h>
 
 // #include "lib/joystick/joystick.h"
@@ -105,7 +102,6 @@ int main(void)
 	set_bit(PORTB, 0);
 	// init_timer(500);
 
-	can_init();
 	testSubScreen();
 	sei();
 	
