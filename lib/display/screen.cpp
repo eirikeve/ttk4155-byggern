@@ -294,9 +294,9 @@ void Screen::writeChar(unsigned char c)
             for (int i = 0; i < 5; i++)
             {
                 // write auto-increments loc_col by 1 each call.
-                if (loc_col >= 127)
+                if (loc_col >= 120)
                 {
-                    printf("LOC COL = 127! Trying to write char: %c\n", c);
+                    printf("LOC COL >= 120! Trying to write char: %c\n", c);
                 }
                 this->write(pgm_read_word(&font5[c - ' '][i]));
             }
