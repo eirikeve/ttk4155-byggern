@@ -205,16 +205,16 @@ void Screen::updateBorderLines()
     if (has_border_lines)
     {
         // Vertical borders
-        if (col0 != 0)
+        /*if (col0 != 0)
         {
             for (uint8_t p = 0; p < pagesize; ++p)
             {
                 // Write the whole page.
                 vram[(page0 + p)*128+ col0] = 0b11111111;
             }
-        }
+        }*/
         // Horizontal borders
-        /*
+        
         if (page0 != 0)
         {
             for (uint8_t c = 0; c < colsize; ++c)
@@ -222,7 +222,7 @@ void Screen::updateBorderLines()
                 // Here, we only write one pixel per page. So we need to ensure that we don't erase anything already written
                 vram[page0*128 + (col0 + c)] |= (0b00000001); // Top pixel in page
             }
-        }*/
+        }
     }
     else
     {
