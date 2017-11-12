@@ -336,7 +336,7 @@ void Screen::writeString(char *string)
 
 void Screen::write(uint8_t c)
 {
-    if (loc_col > 122)
+    if (loc_col > 120)
     {
         printf("Loc col > 121: %d\n", loc_col);
     }
