@@ -2,9 +2,9 @@
 #include "oled.h"
 #include "../fonts/fonts.h"
 #include "../utilities/utilities.h"
-extern "C" {
-  #include <stdlib.h>
-  }
+#include <stdlib.h>
+#include <stdio.h>
+
 
 
 enum Orientation
