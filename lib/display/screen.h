@@ -68,7 +68,7 @@ public:
   void fill(uint8_t v);
   void clear();
   void flagReadyToRender();
-  void render(uint8_t * buffer);
+  void render(uint8_t * buffer = (uint8_t*)AVR_VRAM_1);
 
   friend class ScreenHandler;
 
