@@ -407,8 +407,8 @@ void SRAM_test()
     UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
-
-    //set_bit(DDRE, DDE1);
+    set_bit(MCUCR, SRE);
+    clr_bit(DDRE, 0);
 
     uint8_t *ext_ram = (uint8_t *) AVR_VRAM_1; // Start address for the SRAM
     uint16_t ext_ram_size = 0x800;
