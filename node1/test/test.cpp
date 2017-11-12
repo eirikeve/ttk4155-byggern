@@ -220,7 +220,7 @@ void testSubScreen()
     //
 
 
-    s1.writeString("Writing to 2 displays. This is display 1.");
+    /*s1.writeString("Writing to 2 displays. This is display 1.");
     s2.writeString("This is display 2.");
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
@@ -241,7 +241,7 @@ void testSubScreen()
     s1.writeString("Display borders will now be added");
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(2000);
-    
+    */
     s1.addBorderLines();
     s2.addBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
@@ -250,11 +250,11 @@ void testSubScreen()
     s2.clear();
     s2.addSubScreen(&s3, 64, Orientation::RIGHT);
     s3.addBorderLines();
-    s1.writeString("A third subscreen has been added.");
-    s3.writeString("Screen 3");
+    //s1.writeString("A third subscreen has been added.");
+    //s3.writeString("Screen 3");
     s3.updateBorderLines();
     s1.render();
-    _delay_ms(3000);
+    //_delay_ms(3000);
 
     s1.clear();
     s2.clear();
