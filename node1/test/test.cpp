@@ -133,6 +133,9 @@ void testJoystickButton() {
 // Test display
 void testScreen()
 {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
     // Screen init
     Screen s1 = Screen();
 
