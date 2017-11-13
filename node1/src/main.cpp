@@ -106,9 +106,10 @@ int main(void)
 	// init_timer(500);
 
 	can_init();
-	testSubScreen();
+	//testSubScreen();
 	//testScreen();
 	//SRAM_test();
+	testScreenHandler();
 	sei();
 
 }
