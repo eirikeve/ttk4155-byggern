@@ -10,7 +10,7 @@ private:
 	int direction = 2;
 	
 	// Map dimensions
-	const int mapwidth = 16;
+	const int mapwidth = 21;
 	const int mapheight = 7;
 	const int size = mapwidth * mapheight;
 	
@@ -20,6 +20,7 @@ private:
 	//others
 	bool running;
 	int difficulty;
+	Screen s1 = Screen();
 	
 public:
 	void run();
@@ -31,4 +32,5 @@ public:
 	int getMapValue(int value);
 	int xytomapIndex(x,y);
 	void getJoystick()
+	void printMap();
 };

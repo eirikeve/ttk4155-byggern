@@ -1,6 +1,10 @@
 #ifdef __AVR_ATmega162__
 #include "snake.h"
 #include <util/delay.h>
+#include "lib/uart/uart.h"
+#include "lib/adc/adc.h"
+#include "lib/joystick/joystick.h"
+#include "lib/display/screen.h"
 
 void Snake::run(){
 	//Test
@@ -14,7 +18,7 @@ void Snake::run(){
 		this->update();
 		
 		//Send map to screen
-		//INSERT CODE
+		this->printMap();
 		
 		//wait for length of difficulty
 		_delay_ms(difficulty);
@@ -43,11 +47,8 @@ void Snake::changeDirection(){
 void getJoystick(){
 	// Initilize things needed to read joystick
 	UART & uart = UART::getInstance();
-    uart.initialize(9600);
-    enablePrintfWithUart();
     ADC& adc = ADC::getInstance();
     Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 10, NULL);
 
     int8_t x;
     int8_t y;
@@ -208,12 +209,25 @@ char Snake::getMapValue(int value)
 {
     // Returns a part of snake body
     if (value > 0) return 'o';
-
-    switch (value) {
-        // Return food
-    case -1: return '+';
-    }
+	// Returns food
+    if (value == -1) return '+';
+	// Returns empty space
+	if (value == 0) return ' ';
 }
 
+void Snake::printMap(){
+	// Screen init
+	s1.clear();
+    s1.goToStart();
+	
+	int pmap[size];
+	// numbers to icons
+	for (i = 0; i < size; i++){
+		pmap[i] = getMapValue(map[i])
+	}
+	
+	sl->writeString(pmap);
+	sl->render();
+}
 
 #endif
