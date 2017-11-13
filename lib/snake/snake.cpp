@@ -1,23 +1,27 @@
 #ifdef __AVR_ATmega162__
 #pragma once
 #include "snake.h"
+#include <stdlib.h>
 
 void Snake::run(){
 	//Test
-	this->initmap();
+	this->initMap();
 	running = true;
 	while(running){
 		//change direction
 		this->changeDirection();
-		
+		printf("%d\n", direction);
 		//update map
 		this->update();
 		
 		//Send map to screen
 		this->printMap();
-		
+
 		//wait for length of difficulty
-		_delay_ms(difficulty);
+		_delay_ms(100);
+	}
+	while(!running){
+		this->printScore();
 	}
 	
 }
@@ -32,18 +36,16 @@ void Snake::changeDirection(){
     4 + 2
       3
     */
-	int joystick;
-	joystick = this->getJoystick();
-	if(joystick == 1 && direction != 3) direction = 1
-	else if(joystick == 2 && direction != 4) direction = 2
-	else if(joystick == 3 && direction != 1) direction = 3
-	else if(joystick == 4 && direction != 2) direction = 4
+	int newDir;
+	newDir = this->getJoystick();
+	if(newDir == 1 && this->direction != 3) this->direction = 1;
+	else if(newDir == 2 && this->direction != 4) this->direction = 2;
+	else if(newDir == 3 && this->direction != 1) this->direction = 3;
+	else if(newDir == 4 && this->direction != 2) this->direction = 4;
 }
 
-void getJoystick(){
+int Snake::getJoystick(){
 	// Initilize things needed to read joystick
-	UART & uart = UART::getInstance();
-    ADC& adc = ADC::getInstance();
     Joystick & joystick = Joystick::getInstance();
 
     int8_t x;
@@ -51,97 +53,43 @@ void getJoystick(){
 
 	// If joystick returns up, right, down or left
     Direction dir = joystick.read(&x, &y);
-    printf("x: %d, y: %d, dir: %d\n", x, y, dir);
-	if (dir == 1 || dir == 3 || dir == 5 || dir == 7){
-		joystick = (dir-1)/2 + 1;
-	}
-	// If joystick returns anything else, we need to change it to one of the four directions
-	else{
-		// changes north-east to right or up
-		if (dir == 2){
-			if (direction == 1){
-				return 2;
-			}
-			if (direction == 2){
-				return 1;
-			}
-			if (direction == 3){
-				return 2;
-			}
-			if (direction == 4){
-				return 1;
-			}
-		}
-		// chanes south-east to right or down
-		if (dir == 4){
-			if (direction == 1){
-				return 2;
-			}
-			if (direction == 2){
-				return 3;
-			}
-			if (direction == 3){
-				return 2;
-			}
-			if (direction == 4){
-				return 3;
-			}
-		}
-		// changes south-west to left or down
-		if (dir == 6){
-			if (direction == 1){
-				return 4;
-			}
-			if (direction == 2){
-				return 3;
-			}
-			if (direction == 3){
-				return 4;
-			}
-			if (direction == 4){
-				return 3;
-			}
-		}
-		//changes north-west to left or up
-		if (dir == 8){
-			if (direction == 1){
-				return 4;
-			}
-			if (direction == 2){
-				return 1;
-			}
-			if (direction == 3){
-				return 4;
-			}
-			if (direction == 4){
-				return 1;
-			}
-		}
-	}
+	int nx = joystick.readX();
+	int ny = joystick.readY();
+	int threshold = 90;
+	if (nx > threshold) return 2;
+	if (nx < -threshold) return 4;
+	if (ny > threshold) return 1;
+	if (ny < -threshold) return 3;
+
+
 }
 
-int Snake::update(){
+void Snake::update(){
 	// move snake head
-	switch (direction) {
+	switch (this->direction) {
 	case 0:
 		break;
     case 1: this->move(0, -1);
+		printf("Dette er case 1");
         break;
     case 2: this->move(1, 0);
+		printf("dette er case 2");
         break;
     case 3: this->move(0, 1);
+		printf("dette er case 3");
         break;
     case 4: this->move(-1, 0);
+		printf("dette er case 4");
         break;
     }
 	
 	// Reduce snake values on map by 1
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < s; i++) {
         if (map[i] > 0) map[i]--;
     }
 }
 
-int Snake::move(dx,dy){
+void Snake::move(int dx,int dy){
 	 // determine new head position
     int newx = headxpos + dx;
     int newy = headypos + dy;
@@ -155,9 +103,17 @@ int Snake::move(dx,dy){
         this->generateFood();
     }
 	
-	// Game over if snake is outside map
-	if (newx>mapheight || newy>mapwidth || newx < 0 || newy < 0){
+	printf("%d\n", newx);
+	//Game over if snake is outside map
+	if (newx>mapwidth-1 || newy>mapheight-1 || newx < 0 || newy < 0){
 		running = false;
+		return;
+	}
+
+	// Game over if crashing into snake
+	if (map[this->xytomapIndex(newx,newy)] > 0){
+		running = false;
+		return;
 	}
 
     // Move head to new location
@@ -182,15 +138,17 @@ void Snake::generateFood() {
     map[this->xytomapIndex(x,y)] = -1;
 }
 
-int Snake::xytomapIndex(x,y){
+int Snake::xytomapIndex(int x,int y){
 	return x + y * mapwidth;
 }
 
 // Initializes map
 void Snake::initMap()
 {	// sets difficulty
-	int difficulty = 500;
-	
+	difficulty = 500;
+	for (int i = 0;i<s;i++){
+		map[i] = 0;
+	}
     // Places the initual head location in middle of map
     headxpos = mapwidth / 2;
     headypos = mapheight / 2;
@@ -206,7 +164,7 @@ char Snake::getMapValue(int value)
     // Returns a part of snake body
     if (value > 0) return 'o';
 	// Returns food
-    if (value == -1) return '+';
+    if (value == -1) return 95 + ' '; //Apple
 	// Returns empty space
 	if (value == 0) return ' ';
 }
@@ -216,14 +174,32 @@ void Snake::printMap(){
 	s1.clear();
     s1.goToStart();
 	
-	int pmap[size];
+	char pmap[s+1];
 	// numbers to icons
-	for (i = 0; i < size; i++){
-		pmap[i] = getMapValue(map[i])
+	for (int i = 0; i < s; i++){
+		pmap[i] = getMapValue(map[i]);
 	}
-	
-	sl->writeString(pmap);
-	sl->render();
+	pmap[s] = '\0';
+	// printf(pmap);
+	// printf("\n");
+	s1.writeString(pmap);
+	s1.render();
+}
+
+void Snake::printScore(){
+	s1.clear();
+    s1.goTo(3,32);
+	// printf(pmap);
+	// printf("\n");
+	s1.writeString("GAME OVER");
+	s1.goTo(4,32);
+	char score[3];
+	s1.writeString("SCORE: ");
+	itoa(snakeLength-3, score, 10);
+	s1.writeString(score);
+	// s1.writeString('\0');
+	s1.render();
+
 }
 
 #endif

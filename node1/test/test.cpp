@@ -322,8 +322,16 @@ void testSubScreen()
 
 //Test snake
 void testSnake(){
+
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, NULL);
+    
 	Snake sn;
-	sn->run();
+	sn.run();
 }
 
 // Test ScreenHandler

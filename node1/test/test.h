@@ -25,3 +25,6 @@ void testScreenHandler();
 void testScreenHandlerAnimation();
 
 void SRAM_test();
+
+// Test snake
+void testSnake();

@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 #include "lib/display/screen.h"
 #include <util/delay.h>
 #include "lib/uart/uart.h"
@@ -16,11 +17,11 @@ private:
 	
 	// Map dimensions
 	const int mapwidth = 21;
-	const int mapheight = 7;
-	const int size = mapwidth * mapheight;
+	const int mapheight = 8;
+	static const int s = 168;
 	
 	// Tile values on map
-	int map[size];
+	int map[s];
 	
 	//others
 	bool running;
@@ -34,8 +35,9 @@ public:
 	void update();
 	void changeDirection();
 	void generateFood();
-	int getMapValue(int value);
-	int xytomapIndex(x,y);
-	void getJoystick()
+	char getMapValue(int value);
+	int xytomapIndex(int x,int y);
+	int getJoystick();
 	void printMap();
+	void printScore();
 };
