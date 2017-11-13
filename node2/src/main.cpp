@@ -11,9 +11,6 @@ extern "C" {
 // #include "../lib/comm/comm.h"
 #include "../lib/utilities/utilities.h"
 }
-#include "../lib/CAN/SPI.h"
-#include "../lib/CAN/MCP2515.h"
-#include "lib/CAN/can.h"
 #include <stdint.h>
 #include "lib/timer/timer.h"
 #include "lib/adc_internal/adc_internal.h"
@@ -24,6 +21,8 @@ extern "C" {
 
 int main(void)
 {
-	// testControlServoOverCan();
-	testIRDetector();
+	// testSolenoid();
+	testTuneMotor();
+	// testMotorOverCan();
+	// testMotor();
 }

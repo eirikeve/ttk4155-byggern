@@ -13,6 +13,7 @@
 #include "lib/utilities/utilities.h"
 #include "lib/spi/spi.h"
 #include "lib/can/can.h"
+#include "lib/slider/slider.h"
 
     
 void testUartTransmit() {
@@ -225,5 +226,46 @@ void testControlServoOverCan() {
 		msg.data[1] = y;
         msg.data[2] = dir;
         can.transmit(&msg);
+    }
+}
+
+void testSlider(){
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    ADC& adc = ADC::getInstance();
+
+    Slider & slider0 = Slider::getInstance(0);
+    slider0.initialize(&adc, NULL);
+
+    Slider & slider1 = Slider::getInstance(1);
+    slider1.initialize(&adc, NULL);
+
+    while (true) {
+        printf("Slider0 position: %d, Slider1 position: %d\n", slider0.read(), slider1.read());
+    }
+}
+
+void testSliderButton() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    ADC& adc = ADC::getInstance();
+
+    Slider & slider0 = Slider::getInstance(0);
+    slider0.initialize(&adc, &pb2);
+
+    Slider & slider1 = Slider::getInstance(1);
+    slider1.initialize(&adc, &pb1);
+
+    while (true) {
+        if (slider0.buttonPressed()) {
+            printf("Slider0 pressed\n");
+        }
+        if (slider1.buttonPressed()) {
+            printf("Slider1 pressed\n");
+        }
     }
 }

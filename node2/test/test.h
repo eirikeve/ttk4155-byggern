@@ -29,5 +29,19 @@ void testCanLoopback();
 void testCanTransmit();
 void testCanReceive();
 
-// Test servo over can
+// Test servo
+void testServo();
 void testControlServoOverCan();
+
+// Test encoder
+void testEncoder();
+
+// Test motor
+void testTuneMotor();
+void testMotor();
+void testMotorOverCan();
+
+
+// Test solenoid
+
+void testSolenoid();

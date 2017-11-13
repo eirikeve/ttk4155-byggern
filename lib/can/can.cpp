@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 #include "can.h"
-#include "../CAN/SPI.h"
-#include "../CAN/MCP2515.h"
+// #include "../CAN/SPI.h"
+// #include "../CAN/MCP2515.h"
 
 ISR(MCP2515_vect) {
     // printf("Recieved\n");

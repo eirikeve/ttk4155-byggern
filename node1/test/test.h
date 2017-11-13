@@ -15,6 +15,10 @@ void testTimerStop();
 void testJoystick();
 void testJoystickButton() ;
 
+// Test slider
+void testSlider();
+void testSliderButton();
+
 // Test spi
 void testSpi();
 
