@@ -6,21 +6,15 @@
 ScreenHandler::ScreenHandler()
 {
     num_screens = 0;
+    max_num_screens = 5;
     array_size = 5;
-    screens = (Screen**)calloc(array_size, sizeof(Screen*));
+    screens = (Screen*)[5];
     currentBuffer = (uint8_t*)AVR_VRAM_1;
     Timer& interruptTimer = Timer::getInstance(1);
     interruptTimer.initialize((uint16_t)(1000.0/OLED_UPDATE_FPS), &ScreenHandlerTimerInterrupt, NULL);
     interruptTimer.start();
 }
-ScreenHandler::~ScreenHandler()
-{
-    for (uint8_t i = 0; i < num_screens; ++i)
-    {
-        screens[i] = NULL;
-    }
-    free(screens);
-}
+
 void ScreenHandler::_render()
 {
     if (num_screens > 0)
@@ -34,20 +28,6 @@ void ScreenHandler::_render()
 }
 
 
-void ScreenHandler::_increaseArraySize()
-{
-    int new_size = array_size * 2;
-    Screen  ** new_screens = (Screen**)calloc(new_size, sizeof(Screen*));
-    for (uint8_t i = 0; i < num_screens; ++i)
-    {
-        new_screens[i] = screens[i];
-    }
-    // Might be a bug here! Need to check.
-    free(screens);
-    screens = new_screens;
-    array_size = new_size;
-    
-}
 
 void ScreenHandler::_addScreenToArray(Screen * s)
 {
@@ -59,9 +39,10 @@ void ScreenHandler::_addScreenToArray(Screen * s)
             return;
         }
     }
-    if (num_screens >= array_size)
+    if (num_screens >= max_num_screens)
     {
-        _increaseArraySize();
+        // Not room for more screens
+        return; 
     }
     screens[num_screens] = s;
     ++num_screens;
