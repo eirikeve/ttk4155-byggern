@@ -20,8 +20,10 @@ void Snake::run(){
 		//wait for length of difficulty
 		_delay_ms(100);
 	}
+	this->printScore();
+	_delay_ms(2000);
 	while(!running){
-		this->printScore();
+		if (getJoystick())this->run();
 	}
 	
 }
@@ -60,7 +62,7 @@ int Snake::getJoystick(){
 	if (nx < -threshold) return 4;
 	if (ny > threshold) return 1;
 	if (ny < -threshold) return 3;
-
+	return 0;
 
 }
 
@@ -144,11 +146,12 @@ int Snake::xytomapIndex(int x,int y){
 
 // Initializes map
 void Snake::initMap()
-{	// sets difficulty
-	difficulty = 500;
+{	// clears map
+	snakeLength = 3;
 	for (int i = 0;i<s;i++){
 		map[i] = 0;
 	}
+	this->printMap();
     // Places the initual head location in middle of map
     headxpos = mapwidth / 2;
     headypos = mapheight / 2;
@@ -156,6 +159,13 @@ void Snake::initMap()
 
     // Generates first food
     this->generateFood();
+
+	// Wait for first input
+	while(getJoystick() == 0){
+		s1.goTo(3,10);
+		s1.writeString("Press any direction");
+		s1.render();
+	}
 }
 
 // Returns graphical character for display from map value
