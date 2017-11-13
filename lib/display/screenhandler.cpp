@@ -43,6 +43,14 @@ void ScreenHandler::_increaseArraySize()
 
 void ScreenHandler::_addScreenToArray(Screen * s)
 {
+    for (uint8_t i = 0; i < num_screens; ++i)
+    {
+        if (screens[i] == s)
+        {
+            // Screen already added to handler, don't add again
+            return;
+        }
+    }
     if (num_screens >= array_size)
     {
         _increaseArraySize();
