@@ -332,7 +332,6 @@ void testScreenHandler()
     s1.clear();
     s2.clear();
     h.addScreen(&s1);
-    h.addScreen(&s2);
 
     const unsigned char appleLogo[8] =
 	{0b00000000, 0b01111000, 0b11111100, 0b11111110, 0b11001101, 0b01001000,0b00000000,0b00000000};
@@ -377,7 +376,6 @@ void testScreenHandler()
     s1.writeString("Initializing *");
     s1.flagReadyToRender();
     _delay_ms(350);
-
     s1.clear();
     s1.flagReadyToRender();
 
