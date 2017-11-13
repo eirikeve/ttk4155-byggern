@@ -14,8 +14,7 @@ Screen::Screen()
     col1 = 128;
     pagesize = page1 - page0;
     colsize = col1 - col0;
-    loc_page = 0;
-    loc_col = 0;
+    goToStart();
     has_border_lines = false;
     ready_to_render = false;
 }
@@ -351,7 +350,7 @@ void Screen::clear()
 {
     fill(0x00);
     updateBorderLines();
-    goTo(0, 1);
+    goToStart();
 }
 
 
