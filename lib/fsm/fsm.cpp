@@ -27,7 +27,7 @@ FSM::FSM()
         {GAME_OVER,     EV_EXIT_GAME,       IDLE,           NULL,       NULL}
     };
     #endif
-    this->stateTransMatrix  = stateTransMx;
+    stateTransMatrix  = stateTransMx;
 }
 
 void FSM::initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void))
@@ -37,4 +37,38 @@ void FSM::initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void))
         stateTransMatrix[i  ].onEnterFunc = FnPointers[2 * i];
         stateTransMatrix[i+1].onStateFunc = FnPointers[2 * i + 1];
     }
+    current_state = state_t::STARTUP;
 }
+
+stateTrans_t const FSM::lookUpNextTransition(event_t event)
+{
+    for (int i = 0; i < STATE_TRANS_MATRIX_SIZE; ++i)
+    {
+        if (stateTransMatrix[i].state == current_state &&
+            stateTransMatrix[i].event == event)
+            {
+                return stateTransMatrix[i];
+            }
+    }
+    return currentTransition;
+}
+
+void FSM::handleEvent(event_t event)
+{
+    stateTrans_t const transition = lookUpNextTransition(event);
+    if (!(transition.next_state == currentTransition.next_state))
+    {
+        current_state = transition.next_state;
+        onStateFunc   = transition.onStateFunc;
+        transition.onEnterFunc();
+    }
+}
+
+
+void FSM::runOnState()
+{
+    onStateFunc();
+}
+
+
+

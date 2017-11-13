@@ -17,6 +17,7 @@ enum state_t {
     IN_NRF
 };
 enum event_t {
+    EV_DUMMY,
     EV_GOTO_MENU,
     EV_START_GAME,
     EV_GAME_OVER,
@@ -36,6 +37,7 @@ enum state_t {
     GAME_OVER
 };
 enum event_t {
+    EV_DUMMY,
     EV_GOTO_IDLE,
     EV_START_GAME,
     EV_GAME_OVER,
@@ -58,6 +60,8 @@ class FSM
 private:
     state_t  current_state;
     static stateTrans_t *stateTransMatrix;
+    stateTrans_t currentTransition;
+    void (*onStateFunc)(void);
 
 
 
@@ -71,15 +75,18 @@ public:
 private:
     // Private due to singleton design pattern
     FSM();
-    
+    static void nothingHappens(void) {}
+
 public:
     // Deleted due to singleton design pattern
     FSM(FSM const&)    = delete;
     // Deleted due to singleton design pattern
     void operator=(FSM const&)  = delete;
 
-    void initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void));
-
+    void  initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void));
+    stateTrans_t const lookUpNextTransition(event_t event);
+    void handleEvent(event_t event);
+    void  runOnState();
 
 
 };
