@@ -354,7 +354,7 @@ void testTuneMotor() {
 
     Motor& motor = Motor::getInstance();
 
-    float Kp = 0.005;
+    float Kp = 0.008;
     float Ti = 100000;
     float Td = 0;
 
