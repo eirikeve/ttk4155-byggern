@@ -395,12 +395,16 @@ void testScreenHandler()
     _delay_ms(1000);
     s1.clear();
     s2.clear();
+    Screen s3 = Screen();
+    s3.addSubScreen(&s3, 4, Orientation::LOWER);
+    s3.addBorderLines();
     s1.flagReadyToRender();
     h.removeScreen(&s2);
+    h.removeScreen(&s3);
     s1.removeSubScreen();
     s1.writeString("Now, there is only one display again. \nNewline\nIt works!");
     s1.flagReadyToRender();
-    _delay_ms(3000);
+    _delay_ms(3000);    
     s1.fill(0b01010101);
 
 
