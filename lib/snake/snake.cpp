@@ -1,10 +1,6 @@
 #ifdef __AVR_ATmega162__
+#pragma once
 #include "snake.h"
-#include <util/delay.h>
-#include "lib/uart/uart.h"
-#include "lib/adc/adc.h"
-#include "lib/joystick/joystick.h"
-#include "lib/display/screen.h"
 
 void Snake::run(){
 	//Test

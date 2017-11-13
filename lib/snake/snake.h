@@ -1,4 +1,9 @@
-
+#pragma once
+#include "lib/display/screen.h"
+#include <util/delay.h>
+#include "lib/uart/uart.h"
+#include "lib/adc/adc.h"
+#include "lib/joystick/joystick.h"
 
 class Snake
 {
