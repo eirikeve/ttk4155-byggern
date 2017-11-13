@@ -30,7 +30,7 @@ private:
 
 // Public methods
 public:
-    ScreenHandler();
+    ~ScreenHandler();
     static ScreenHandler& getInstance()
     {
         static ScreenHandler instance;
