@@ -187,6 +187,7 @@ void Screen::removeSubScreen()
         subScreen->pagesize = 0;
         subScreen = NULL;
     }
+    clear();
 }
 
 void Screen::addBorderLines()
