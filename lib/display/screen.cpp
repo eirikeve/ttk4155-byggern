@@ -201,7 +201,7 @@ void Screen::updateBorderLines()
     if (has_border_lines)
     {
         // Vertical borders
-        if (col0 != 128)
+        if (col1 != OLED_PIXELS_WIDTH)
         {
             for (uint8_t p = 0; p < pagesize; ++p)
             {
@@ -210,8 +210,7 @@ void Screen::updateBorderLines()
             }
         }
         // Horizontal borders
-        
-        if (page1 != 8)
+        if (page1 != OLED_PAGES_HEIGHT)
         {
             for (uint8_t c = 0; c < colsize; ++c)
             {
@@ -224,7 +223,7 @@ void Screen::updateBorderLines()
     {
         
         // Remove vertical borders
-        if (col1 != 128)
+        if (col1 != OLED_PIXELS_WIDTH)
         {
             for (uint8_t p = 0; p < pagesize; ++p)
             {
@@ -232,11 +231,11 @@ void Screen::updateBorderLines()
             }
         }
         // Remove horizontal borders
-        if (page1 != 8)
+        if (page1 != OLED_PAGES_HEIGHT)
         {
             for (uint8_t c = 0; c < colsize; ++c)
             {
-                vram[(page1-1)*128 + (col0 + c)] &= (0b01111111); // Top pixel in page
+                vram[(page1-1)*128 + (col0 + c)] &= (0b01111111); // Bottom pixel
             }
         }
     }
