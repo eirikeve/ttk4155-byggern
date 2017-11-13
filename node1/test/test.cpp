@@ -285,7 +285,7 @@ void testSubScreen()
     _delay_ms(3000);
     //
     
-
+/*
     printf("S1 page0: %d\n", s1.page0);
     printf("S1 page1: %d\n", s1.page1);
     printf("S1 col0: %d\n", s1.col0);
@@ -302,7 +302,7 @@ void testSubScreen()
     printf("S3 col1: %d\n", s3.col1);
     printf("S3 pagesize: %d\n", s3.pagesize);
     printf("S3 colsize: %d\n", s3.colsize);
-
+*/
 
 /*
     //
