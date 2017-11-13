@@ -13,6 +13,14 @@ ScreenHandler::ScreenHandler()
     interruptTimer.initialize((uint16_t)(1000.0/OLED_UPDATE_FPS), &ScreenHandlerTimerInterrupt, NULL);
     interruptTimer.start();
 }
+ScreenHandler::~ScreenHandler()
+{
+    for (uint8_t i = 0; i < num_screens; ++i)
+    {
+        screens[i] = NULL;
+    }
+    free(screens);
+}
 void ScreenHandler::_render()
 {
     if (num_screens > 0)

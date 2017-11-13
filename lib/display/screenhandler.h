@@ -30,12 +30,13 @@ private:
 
 // Public methods
 public:
-
+    ScreenHandler();
     static ScreenHandler& getInstance()
     {
         static ScreenHandler instance;
         return instance;
     }
+    
 
     void addScreen(Screen * s);
     void removeScreen(Screen * s);
