@@ -11,6 +11,9 @@
 #define AVR_VRAM_1  0x1800
 #define AVR_VRAM_2  0x1C00
 #define OLED_UPDATE_FPS 20
+#define OLED_PIXELS_WIDTH 128
+#define OLED_PIXELS_HEIGHT 64
+#define OLED_PAGES_HEIGHT 8
 
 #define set_bit(reg, bit) (reg |= (1 << (bit)))
 #define set_bit_value(reg, bit, val) (reg |= (val << (bit)))
