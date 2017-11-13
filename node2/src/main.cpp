@@ -23,6 +23,7 @@ int main(void)
 {
 	// testSolenoid();
 	testTuneMotor();
+	// testEncoder();
 	// testMotorOverCan();
 	// testMotor();
 }

@@ -71,11 +71,13 @@ int8_t PID::controller(float reference, float processValue) {
 	// return ((int16_t)ret);
     float p_term, i_term, d_term;
     float error = reference - processValue;
+    // this->debug = (int16_t) processValue;
     
     p_term = this->P_Factor * error;
 
     this->sumError += error;
     i_term = this->I_Factor * this->sumError;
+    // i_term = 0;
 
     d_term = this->D_Factor * (this->lastProcessValue - processValue);
 
@@ -87,6 +89,6 @@ int8_t PID::controller(float reference, float processValue) {
     else if (input < -1.0) {
         input = - 1.0;        
     }
-    this->debug = input;
+    this->debug = (int16_t) (input * 127);
     return input * 127;
 }
