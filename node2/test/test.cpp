@@ -406,11 +406,12 @@ void testLab8() {
         // printf("Hello\n");
         CanMessage recv = can.receive();
         if (recv.id != NULL) {
+            printf("x: %d, button: %d\n", recv.data[0], recv.data[1]);
             motor.run((int8_t) recv.data[0]);
 
             if (recv.data[1]) {
                 solenoid.shoot();
-                // servo.setAngle(0);
+                servo.setAngle(0);
             }
         }
     }
