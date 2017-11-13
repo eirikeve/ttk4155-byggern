@@ -369,6 +369,7 @@ void Screen::render(uint8_t * buffer)
             {
                 oled.write(buffer[p * 128 + c]);
             }
+            oled.write(0x00);
         }
     }
 
