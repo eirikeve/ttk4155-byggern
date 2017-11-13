@@ -14,6 +14,8 @@
 #define OLED_PIXELS_WIDTH 128
 #define OLED_PIXELS_HEIGHT 64
 #define OLED_PAGES_HEIGHT 8
+#define INDEX_APPLE 95
+#define INDEX_SQUARE 96
 
 #define set_bit(reg, bit) (reg |= (1 << (bit)))
 #define set_bit_value(reg, bit, val) (reg |= (val << (bit)))
