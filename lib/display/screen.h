@@ -2,9 +2,10 @@
 #include "oled.h"
 #include "../fonts/fonts.h"
 #include "../utilities/utilities.h"
-extern "C" {
-  #include <stdlib.h>
-  }
+#include <stdlib.h>
+#include <stdio.h>
+#include <util/delay.h>
+
 
 
 enum Orientation
@@ -20,7 +21,7 @@ class Screen
 
 private:
   OLED oled;
-  uint8_t *vram;
+  volatile uint8_t *vram;
   bool ready_to_render;
 
   Screen *superScreen;
@@ -62,6 +63,7 @@ public:
   void goToPage(uint8_t page);
   void goToColumn(uint8_t col);
   void goTo(uint8_t page, uint8_t col);
+  inline void goToStart() {goTo(0,1);}
   void writeChar(unsigned char c);
   void writeString(char *string);
   void write(uint8_t c);

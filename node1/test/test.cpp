@@ -133,6 +133,9 @@ void testJoystickButton() {
 // Test display
 void testScreen()
 {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
     // Screen init
     Screen s1 = Screen();
 
@@ -196,18 +199,29 @@ void testScreen()
     }
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(2000);
+    s1.goToStart();
+    s1.writeString("Now Only calling render!");
+    for (int i = 0; i < 100; ++i)
+    {
+        s1.render();
+        _delay_ms(500);
+    }
 
 
 }
 void testSubScreen()
 {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
     Screen s1 = Screen();
     Screen s2 = Screen();
     Screen s3 = Screen();
     s1.addSubScreen(&s2, 4, Orientation::LOWER);
-    s1.goTo(0,0);
-    s2.goTo(0,0);
-    s3.goTo(0,0);
+    s1.goToStart();
+    s2.goToStart();
+    s3.goToStart();
 
     //
 
@@ -216,7 +230,7 @@ void testSubScreen()
     //
 
 
-    s1.writeString("Writing to 2 displays. This is display 1.");
+    /*s1.writeString("Writing to 2 displays. This is display 1.");
     s2.writeString("This is display 2.");
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
@@ -230,11 +244,14 @@ void testSubScreen()
         s1.writeChar('x');
         s2.writeChar('y');
     }
+    s1.render();
     _delay_ms(3000);
     s1.clear();
+    s2.clear();
     s1.writeString("Display borders will now be added");
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(2000);
+    */
     s1.addBorderLines();
     s2.addBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
@@ -242,17 +259,13 @@ void testSubScreen()
     s1.clear();
     s2.clear();
     s2.addSubScreen(&s3, 64, Orientation::RIGHT);
-    s1.writeString("A third subscreen has been added.");
-    s3.writeString("Screen 3");
     s3.addBorderLines();
-    s1.updateBorderLines();
-    s2.updateBorderLines();
-    s1.render();
-    _delay_ms(3000);
+    //s1.writeString("A third subscreen has been added.");
+    //s3.writeString("Screen 3");
     s3.updateBorderLines();
-    s1.render((uint8_t*)AVR_VRAM_1);
-    /*
-    _delay_ms(3000);
+    s1.render();
+    //_delay_ms(3000);
+
     s1.clear();
     s2.clear();
     s3.clear();
@@ -261,15 +274,18 @@ void testSubScreen()
         s1.writeChar('1');
         s2.writeChar('2');
         s3.writeChar('3');
+        s1.updateBorderLines();
+        s2.updateBorderLines();
+        s3.updateBorderLines();
+        s1.render();
+        _delay_ms(200);
     }
+    s3.updateBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
     //
-    */
-    UART & uart = UART::getInstance();
-    uart.initialize(9600);
-    enablePrintfWithUart();
-
+    
+/*
     printf("S1 page0: %d\n", s1.page0);
     printf("S1 page1: %d\n", s1.page1);
     printf("S1 col0: %d\n", s1.col0);
@@ -286,7 +302,7 @@ void testSubScreen()
     printf("S3 col1: %d\n", s3.col1);
     printf("S3 pagesize: %d\n", s3.pagesize);
     printf("S3 colsize: %d\n", s3.colsize);
-
+*/
 
 /*
     //
@@ -306,13 +322,16 @@ void testSubScreen()
 // Test ScreenHandler
 void testScreenHandler()
 {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
     ScreenHandler& h = ScreenHandler::getInstance();
     Screen s1 = Screen();
     Screen s2 = Screen();
     s1.clear();
     s2.clear();
     h.addScreen(&s1);
-    h.addScreen(&s2);
 
     const unsigned char appleLogo[8] =
 	{0b00000000, 0b01111000, 0b11111100, 0b11111110, 0b11001101, 0b01001000,0b00000000,0b00000000};
@@ -357,7 +376,6 @@ void testScreenHandler()
     s1.writeString("Initializing *");
     s1.flagReadyToRender();
     _delay_ms(350);
-
     s1.clear();
     s1.flagReadyToRender();
 
@@ -377,16 +395,65 @@ void testScreenHandler()
     _delay_ms(1000);
     s1.clear();
     s2.clear();
+    Screen s3 = Screen();
+    s3.addSubScreen(&s3, 4, Orientation::LOWER);
+    s3.addBorderLines();
     s1.flagReadyToRender();
     h.removeScreen(&s2);
+    h.removeScreen(&s3);
     s1.removeSubScreen();
     s1.writeString("Now, there is only one display again. \nNewline\nIt works!");
     s1.flagReadyToRender();
-    _delay_ms(3000);
+    _delay_ms(3000);    
     s1.fill(0b01010101);
 
 
 }
 void testScreenHandlerAnimation();
+
+void SRAM_test()
+{
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    set_bit(MCUCR, SRE);
+    clr_bit(DDRE, 0);
+
+    uint8_t *ext_ram = (uint8_t *) AVR_VRAM_1; // Start address for the SRAM
+    uint16_t ext_ram_size = 0x800;
+    uint16_t write_errors = 0;
+    uint16_t retrieval_errors = 0;
+    printf("Starting SRAM test...\n");
+    // rand() stores some internal state, so calling this function in a loop will
+    // yield different seeds each time (unless srand() is called before this
+    //function)
+    uint16_t seed = rand();
+    // Write phase: Immediately check that the correct value was stored
+    srand(seed);
+    for (uint16_t i = 0; i < ext_ram_size; i++) {
+        //printf("SRAM[%4d] = %02X\n", i, ext_ram[i]);
+    }
+    for (uint16_t i = 0; i < ext_ram_size; i++) {
+        uint8_t some_value = rand();
+        ext_ram[i] = some_value;
+        uint8_t retreived_value = ext_ram[i];
+        if (retreived_value != some_value) {
+            printf("Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i,retreived_value, some_value);
+            write_errors++;
+        }
+}
+    // Retrieval phase: Check that no values were changed during or after the write
+    //phase
+    srand(seed);    // reset the PRNG to the state it had before the write phase
+    for (uint16_t i = 0; i < ext_ram_size; i++) {
+        uint8_t some_value = rand();
+        uint8_t retreived_value = ext_ram[i];
+        if (retreived_value != some_value) {
+            printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n",i, retreived_value, some_value);
+            retrieval_errors++;
+        }
+}
+    printf("SRAM test completed with \n%4d errors in write phase and \n%4d errors in retrieval phase\n\n", write_errors, retrieval_errors);
+}
 
 #endif // DO_TESTS not defined

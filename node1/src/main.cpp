@@ -102,7 +102,11 @@ int main(void)
 	set_bit(PORTB, 0);
 	// init_timer(500);
 
-	testSubScreen();
+	can_init();
+	//testSubScreen();
+	//testScreen();
+	//SRAM_test();
+	testScreenHandler();
 	sei();
-	
+
 }

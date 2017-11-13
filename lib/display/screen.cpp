@@ -108,10 +108,6 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
             (sz < (colsize) && (o == LEFT || o == RIGHT)) ||
             (sz < (pagesize) && (o == UPPER || o == LOWER))))
     {
-        if (subScreen->vram != NULL)
-        {
-            free(subScreen->vram);
-        }
 
         subScreen = subscreen;
         subScreen->superScreen = this;
@@ -205,46 +201,45 @@ void Screen::updateBorderLines()
     if (has_border_lines)
     {
         // Vertical borders
-        /*if (col0 != 0)
+        if (col1 != OLED_PIXELS_WIDTH)
         {
             for (uint8_t p = 0; p < pagesize; ++p)
             {
                 // Write the whole page.
-                vram[(page0 + p)*128+ col0] = 0b11111111;
+                vram[(page0 + p)*128 + col1-1] = 0b11111111;
             }
-        }*/
+        }
         // Horizontal borders
-        if (page0 != 0)
+        if (page1 != OLED_PAGES_HEIGHT)
         {
             for (uint8_t c = 0; c < colsize; ++c)
             {
                 // Here, we only write one pixel per page. So we need to ensure that we don't erase anything already written
-                uint8_t val = vram[page0*128 + c];
-                vram[page0*128 + (col0 + c)] = val | (0b00000001); // Top pixel in page
+                vram[(page1-1)*128 + (col0 + c)] |= (0b10000000); // Top pixel in page
             }
         }
     }
     else
     {
+        
         // Remove vertical borders
-        if (col0 != 0)
+        if (col1 != OLED_PIXELS_WIDTH)
         {
             for (uint8_t p = 0; p < pagesize; ++p)
             {
-                vram[(page0 + p)*128 + col0] = 0b00000000;
+                vram[(page0 + p)*128 + col1-1] = 0b00000000;
             }
         }
         // Remove horizontal borders
-        if (page0 != 0)
+        if (page1 != OLED_PAGES_HEIGHT)
         {
             for (uint8_t c = 0; c < colsize; ++c)
             {
-                uint8_t val = vram[page0*128 + c];
-                vram[page0*128 + col0 + c] = val & (0b11111110); // Top pixel in page
+                vram[(page1-1)*128 + (col0 + c)] &= (0b01111111); // Bottom pixel
             }
         }
-
     }
+    
 }
 
 void Screen::removeBorderLines()
@@ -277,7 +272,7 @@ void Screen::goTo(uint8_t page, uint8_t col)
 
 void Screen::writeChar(unsigned char c)
 {
-    if (loc_col + character_size <= colsize && loc_page < pagesize)
+    if (loc_col + character_size < colsize && loc_page < pagesize)
     {
         if (c == '\n')
         {
@@ -294,10 +289,10 @@ void Screen::writeChar(unsigned char c)
             // Enough space to write one more char
             for (int i = 0; i < 5; i++)
             {
+                // write auto-increments loc_col by 1 each call.
                 this->write(pgm_read_word(&font5[c - ' '][i]));
-                // printf("%d\n", font8[33][i]);
             }
-            loc_col += (1);
+            loc_col += (1); // Extra padding / space
             if (loc_col >= colsize)
             {
                 loc_col = 1;
@@ -337,9 +332,7 @@ void Screen::writeString(char *string)
 
 void Screen::write(uint8_t c)
 {
-
     vram[(page0 + loc_page) * 128 + (col0 + loc_col++)] = c;
-
 }
 
 void Screen::fill(uint8_t v)
@@ -372,7 +365,7 @@ void Screen::render(uint8_t * buffer)
         {
             oled.goToPage(p);
             oled.goToColumn(0);
-            for (int c = 0; c < 128; ++c)
+            for (int c = 0; c < 127; ++c)
             {
                 oled.write(buffer[p * 128 + c]);
             }
