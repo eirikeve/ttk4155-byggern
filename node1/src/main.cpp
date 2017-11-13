@@ -110,6 +110,7 @@ int main(void)
 	
 	//SRAM_test();
 	testScreenHandler();
+	printf("Test....");
 	//testScreen();
 
 	sei();
