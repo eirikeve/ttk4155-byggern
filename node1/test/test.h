@@ -29,3 +29,5 @@ void testCanReceive();
 
 // Test servo over can
 void testControlServoOverCan();
+
+void testLab8();

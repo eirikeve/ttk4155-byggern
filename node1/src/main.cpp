@@ -95,6 +95,6 @@
 
 int main(void)
 {
-	// testControlServoOverCan();
-	testSliderButton();
+	testLab8();
+	// testCanLoopback();
 }

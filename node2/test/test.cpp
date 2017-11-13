@@ -228,7 +228,7 @@ void testCanReceive() {
     while (true) {
         CanMessage recv = can.receive();
         if (recv.id != NULL) {
-            printf("id: %d, length: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
+            printf("id: %d, length: %d, data: %d\n", recv.id, recv.length, (uint8_t) recv.data[0]);
         }
     }
 }
@@ -365,6 +365,53 @@ void testTuneMotor() {
         CanMessage recv = can.receive();
         if (recv.id != NULL) {
             motor.run((int8_t) recv.data[0]);
+        }
+    }
+}
+
+
+void testLab8() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    Servo& servo = Servo::getInstance();
+    servo.initialize(90);
+
+    TWI_Master_Initialise();
+    sei();
+    
+    DAC& dac = DAC::getInstance();
+    dac.initialize(0x00);
+
+    Timer& timer = Timer::getInstance(0);
+    Encoder& encoder = Encoder::getInstance();
+
+    Motor& motor = Motor::getInstance();
+
+    Solenoid & solenoid = Solenoid::getInstance();
+
+    
+
+    float Kp = 0.008;
+    float Ti = 100000;
+    float Td = 0;
+    motor.initialize(&dac, &timer, &encoder, Kp,Ti,Td, 5);
+
+    while (true) {
+        // printf("Hello\n");
+        CanMessage recv = can.receive();
+        if (recv.id != NULL) {
+            motor.run((int8_t) recv.data[0]);
+
+            if (recv.data[1]) {
+                solenoid.shoot();
+                // servo.setAngle(0);
+            }
         }
     }
 }

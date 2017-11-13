@@ -269,3 +269,34 @@ void testSliderButton() {
         }
     }
 }
+
+void testLab8() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);
+
+    int8_t x;
+    int8_t y;
+    bool button;
+
+    CanMessage msg;
+    msg.id = 2;
+    msg.length = 2;
+
+    while (true) {
+        Direction dir = joystick.read(&x, &y);
+        msg.data[0] = x;
+        msg.data[1] = (uint8_t) joystick.buttonPressed();
+        printf("x: %d, button: %d\n", x, msg.data[1]);
+        can.transmit(&msg);
+        _delay_ms(100);
+    }
+}

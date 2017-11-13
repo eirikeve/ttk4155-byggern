@@ -45,3 +45,5 @@ void testMotorOverCan();
 // Test solenoid
 
 void testSolenoid();
+
+void testLab8();
