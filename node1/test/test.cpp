@@ -325,7 +325,7 @@ void testScreenHandler()
     UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
-
+    printf("Test1..\n");
     ScreenHandler& h = ScreenHandler::getInstance();
     Screen s1 = Screen();
     Screen s2 = Screen();
@@ -406,7 +406,9 @@ void testScreenHandler()
     s1.writeString("Now, there is only one display again. \nNewline\nIt works!");
     s1.flagReadyToRender();
     _delay_ms(3000);    
+    printf("Test2...\n");
     s1.fill(0b01010101);
+    printf("Test3...\n");
 
 }
 void testScreenHandlerAnimation();

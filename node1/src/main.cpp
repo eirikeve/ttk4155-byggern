@@ -109,8 +109,9 @@ int main(void)
 	//testSubScreen();
 	
 	//SRAM_test();
+
 	testScreenHandler();
-	printf("Test....");
+	printf("Test4....");
 	//testScreen();
 
 	sei();
