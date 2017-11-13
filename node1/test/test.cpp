@@ -402,11 +402,11 @@ void testScreenHandler()
     h.removeScreen(&s2);
     h.removeScreen(&s3);
     s1.removeSubScreen();
+    s1.clear();
     s1.writeString("Now, there is only one display again. \nNewline\nIt works!");
     s1.flagReadyToRender();
     _delay_ms(3000);    
     s1.fill(0b01010101);
-
 
 }
 void testScreenHandlerAnimation();
