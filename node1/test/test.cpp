@@ -14,6 +14,7 @@
 #include "lib/timer/timer.h"
 #include "../lib/display/screen.h"
 #include "../lib/display/screenhandler.h"
+#include "lib/snake/snake.h"
 
 #ifdef DO_TESTS
 void testUartTransmit() {
@@ -317,6 +318,12 @@ void testSubScreen()
     s2.clear();
     s1.clear();
     */
+}
+
+//Test snake
+void testSnake(){
+	Snake sn;
+	sn->run();
 }
 
 // Test ScreenHandler
