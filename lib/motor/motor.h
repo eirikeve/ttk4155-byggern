@@ -45,14 +45,14 @@ class Motor
         uint8_t T;
 
         // Reference point
-        float ref;
+        int16_t ref;
 
         float processValue;
 
         
 
         float u;
-        float enc;
+        int16_t enc;
 
         PID pid;
 
@@ -64,7 +64,7 @@ class Motor
          * */
         void goRight();
 
-        void goLeft()
+        void goLeft();
         
     public:
         // Deleted due to singleton design pattern

@@ -354,34 +354,16 @@ void testTuneMotor() {
 
     Motor& motor = Motor::getInstance();
 
-    float Kp = 1.2;
-    float Ti = 100;
+    float Kp = 0.008;
+    float Ti = 100000;
     float Td = 0;
 
-    uint8_t lastdir = 0;
-    motor.initialize(&dac, &timer, &encoder, 0,Ti,Td, 5);
+    motor.initialize(&dac, &timer, &encoder, Kp,Ti,Td, 5);
     
     
     while (true) {
-        printf("Val: %d\n", motor.processValue);
         CanMessage recv = can.receive();
         if (recv.id != NULL) {
-            printf("Kp: %d, encoder: %d, input: %d, val: %d, ", Kp, motor.enc, motor.pid.debug, motor.processValue);
-            motor.pid.print();
-            // printf("id: %d, length: %d, percentage: %d\n", recv.id, recv.length, (int8_t) recv.data[0]);
-            // printf("y: %d\n", recv.data[1]);
-            if (lastdir == 0) {
-                switch (recv.data[2]) {
-                    case 1:
-                        motor.setPIDparameters(++Kp, Ti, Td);
-                        break;
-                    case 5:
-                        Kp > 0 ? --Kp: 0;
-                        motor.setPIDparameters(Kp, Ti, Td);
-                        break;
-                }
-            }
-            lastdir = recv.data[2];
             motor.run((int8_t) recv.data[0]);
         }
     }

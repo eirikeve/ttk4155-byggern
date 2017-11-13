@@ -17,9 +17,9 @@
 void controller() {
     Motor& motor = Motor::getInstance();
     int16_t value = motor.encoder->read();
-    motor.processValue += value;
+    // motor.processValue += value;
     
-    int8_t u = motor.pid.controller(motor.ref, motor.processValue);
+    int8_t u = motor.pid.controller(motor.ref, value);
     // printf("Input: %d\n", u);
     motor.u = u;
     motor.enc = value;
