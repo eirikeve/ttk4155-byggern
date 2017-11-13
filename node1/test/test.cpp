@@ -378,6 +378,7 @@ void testScreenHandler()
     _delay_ms(350);
     s1.clear();
     s1.flagReadyToRender();
+    s2.clear();
 
     h.addScreen(&s2);
     s1.addSubScreen(&s2, 64, Orientation::RIGHT);
