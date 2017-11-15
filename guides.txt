@@ -1,0 +1,20 @@
+To install toolchain, run: 
+$ sudo sh install_toolchain.sh
+in an arbitrary folder.
+
+To open serial monitor, run:
+$ sudo minicom -s
+and enter "Serial port setup" nd make sure the settings are:
+    For node 1: Serial device = /dev/ttyS0
+    For node 2: Serial device = /dev/ttyACM0
+
+    Both nodes: Bps/Par/Bits = 9600 8N2
+Then hit ENTER, and navigate to EXIT, which brings up the serial monitor.
+
+When flashing node2, the serial monitor must be closed because both the programmer and the serial monitor uses the same serial line.
+To exit minicom, ender Ctrl + A, Z. Then enter Q for exit, and hit ENTER.
+
+After node2 is flashed, the serial monitor can be opened again, and the same steps must be followed to enter the correct settings.
+
+If using another computer and getting an error saying that you don't have access to the serial port, enter the command
+$ sudo chmod 777 /dev/ttyACM0
