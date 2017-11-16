@@ -45,7 +45,7 @@ enum event_t {
 };
 #endif //__AVR_ATmega162__
 
-static void nothingHappens(void) {}
+void nothingHappens(void) {}
 
 
 struct stateTrans_t {
