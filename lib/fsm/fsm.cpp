@@ -22,7 +22,7 @@ void FSM::handleEventATmega162(uint8_t event)
     {
             case EV_GOTO_MENU:
             {
-                if (current_state != STATE_MENU)
+                if (current_state == STATE_STARTUP)
                 {
                     transitionTo(STATE_MENU);
                 }
@@ -39,6 +39,10 @@ void FSM::handleEventATmega162(uint8_t event)
             }
             case EV_GAME_OVER:
             {
+                if (current_state == STATE_GAME)
+                {
+                    transitionTo(STATE_MENU);
+                }
                 break;
             }
             case EV_START_SNAKE:
@@ -51,6 +55,11 @@ void FSM::handleEventATmega162(uint8_t event)
             }
             case EV_SNAKE_OVER:
             {
+                if (current_state ==  STATE_SNAKE)
+                {
+                    transitionTo(STATE_MENU);
+                }
+                
                 break;
             }
             case EV_START_DISPLAY:
@@ -63,6 +72,10 @@ void FSM::handleEventATmega162(uint8_t event)
             }
             case EV_DISPLAY_END:
             {
+                if (current_state == STATE_DISPLAY)
+                {
+                    transitionTo(STATE_MENU);
+                }
                 break;
             }
             case EV_START_NRF:
@@ -75,6 +88,10 @@ void FSM::handleEventATmega162(uint8_t event)
             }
             case EV_NRF_END:
             {
+                if (current_state == STATE_NRF)
+                {
+                    transitionTo(STATE_MENU);
+                }
                 break;
             }
             default:
@@ -88,7 +105,7 @@ void FSM::handleEventATmega2560(uint8_t event)
     {
         case EV_GOTO_IDLE:
         {
-            if (current_state != STATE_IDLE)
+            if (current_state == STATE_STARTUP)
             {
                 transitionTo(STATE_IDLE);
             }

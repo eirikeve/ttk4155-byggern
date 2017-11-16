@@ -9,7 +9,7 @@
 //#ifdef __AVR_ATmega162__
 #define     STATE_STARTUP   0
 #define     STATE_MENU      1
-# define    STATE_GAME      2
+#define     STATE_GAME      2
 #define     STATE_SNAKE     3
 #define     STATE_DISPLAY   4
 #define     STATE_NRF       5
