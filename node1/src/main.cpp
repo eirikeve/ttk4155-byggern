@@ -95,6 +95,7 @@
 
 int main(void)
 {
-	testLab8();
+	//testLab8();
+	testFSM();
 	// testCanLoopback();
 }
