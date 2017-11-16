@@ -276,6 +276,9 @@ void testSliderButton() {
 
 void testFSM()
 {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
 
     FSM& fsm = fsm.getInstance();
     #ifdef __AVR_ATmega162__
