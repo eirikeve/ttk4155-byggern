@@ -2,6 +2,8 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "test.h"
 #include "lib/utilities/printf.h"
@@ -14,6 +16,7 @@
 #include "lib/spi/spi.h"
 #include "lib/can/can.h"
 #include "lib/slider/slider.h"
+#include "../lib/fsm/fsm.h"
 
     
 void testUartTransmit() {
@@ -268,4 +271,40 @@ void testSliderButton() {
             printf("Slider1 pressed\n");
         }
     }
+}
+
+void testFSM()
+{
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    FSM& fsm = fsm.getInstance();
+    #ifdef __AVR_ATmega162__
+    void (*fnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void) = 
+    {
+        nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens,
+        nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens,
+        nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens
+    };
+    fsm.initialize(fnPointers);
+
+    printf("States: Startup %d, Menu %d, Snake %d, Game %d, Display %d, NRF %d\n", 
+                    (int)STARTUP, (int)IN_MENU, (int)IN_SNAKE, (int)IN_DISPLAY, (int)IN_NRF);
+    printf("Events: GoToMenu %d, StartGame %d, GameOver %d, StartSnake %d, SnakeOver %d\nStartDisplay %d, DisplayEnd %d, StartNrf %d, NrfEnd %d\n",
+        (int)EV_GOTO_MENU, (int)EV_START_GAME, (int)EV_GAME_OVER, (int)EV_START_SNAKE, (int)EV_SNAKE_OVER,
+        (int)EV_START_DISPLAY, (int)EV_DISPLAY_END, (int)EV_START_NRF, (int)EV_NRF_END);
+    int i = 0;
+    event_t event = event_t::EV_GOTO_MENU;
+    srand(1);
+    while (i < 100)
+    {
+        ++i;
+        printf("i: %4d \tOld state %2d \tEvent %2d \t", i, (int)fsm.getCurrentState(), (int)event);
+        fsm.handleEvent(event);
+        event = (event_t)(rand() % (EV_NRF_END+1));
+        printf("New state %2d\n", (int)fsm.getCurrentState());
+    }
+
+    #endif
 }
