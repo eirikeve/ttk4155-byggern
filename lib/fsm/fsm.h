@@ -8,7 +8,7 @@
 
 #ifdef __AVR_ATmega162__
 enum state_t {
-    STARTUP = 0,
+    STARTUP_NODE1 = 0,
     IN_MENU,
     IN_GAME,
     IN_SNAKE,
@@ -29,7 +29,7 @@ enum event_t {
 };
 #elif __AVR_ATmega2560__
 enum state_t {
-    STARTUP,
+    STARTUP_NODE2,
     IDLE,
     GAME_RUNNING,
     GAME_OVER
@@ -60,9 +60,12 @@ public:
         return instance;
     }
     static void nothingHappens(void) {}
+    void transitionTo(state_t s);
 private:
     // Private due to singleton design pattern
     FSM();
+    void handleEventATmega162(event_t event);
+    void handleEventATmega2560(event_t event);
     
 
 public:
