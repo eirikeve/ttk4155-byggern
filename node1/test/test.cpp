@@ -281,9 +281,9 @@ void testFSM()
     #ifdef __AVR_ATmega162__
     void (*fnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void) = 
     {
-        nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens,
-        nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens,
-        nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens, nothingHappens
+        FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens,
+        FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens,
+        FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens, FSM::nothingHappens
     };
     fsm.initialize(fnPointers);
 

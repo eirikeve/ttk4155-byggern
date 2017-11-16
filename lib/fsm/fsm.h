@@ -1,7 +1,7 @@
 // fsm.h
 // 13/11/2017
-#ifndef FSM_H
-#define FSM_H
+
+#pragma once
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -45,7 +45,7 @@ enum event_t {
 };
 #endif //__AVR_ATmega162__
 
-void nothingHappens(void) {}
+
 
 
 struct stateTrans_t {
@@ -62,7 +62,7 @@ class FSM
 private:
     bool initialized = false;
     state_t  current_state;
-    static stateTrans_t *stateTransMatrix;
+    stateTrans_t *stateTransMatrix;
     stateTrans_t currentTransition;
     void (*onStateFunc)(void);
 
@@ -74,6 +74,7 @@ public:
         static FSM instance;
         return instance;
     }
+    static void nothingHappens(void) {}
 private:
     // Private due to singleton design pattern
     FSM();
@@ -86,7 +87,7 @@ public:
     void operator=(FSM const&)  = delete;
 
     void  initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void));
-    stateTrans_t const lookUpNextTransition(event_t event);
+    stateTrans_t const * lookUpNextTransition(event_t event);
     void handleEvent(event_t event);
     void  runOnState();
     inline state_t getCurrentState() {return this->current_state;}
@@ -94,6 +95,3 @@ public:
 
 };
 
-
-
-#endif

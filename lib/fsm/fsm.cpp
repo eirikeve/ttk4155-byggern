@@ -42,27 +42,27 @@ void FSM::initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void))
     initialized = true;
 }
 
-stateTrans_t const FSM::lookUpNextTransition(event_t event)
+stateTrans_t const* FSM::lookUpNextTransition(event_t event)
 {
     for (int i = 0; i < STATE_TRANS_MATRIX_SIZE; ++i)
     {
         if (stateTransMatrix[i].state == current_state &&
             stateTransMatrix[i].event == event)
             {
-                return stateTransMatrix[i];
+                return &stateTransMatrix[i];
             }
     }
-    return currentTransition;
+    return NULL;
 }
 
 void FSM::handleEvent(event_t event)
 {
-    stateTrans_t const transition = lookUpNextTransition(event);
-    if (!(transition.next_state == currentTransition.next_state))
+    stateTrans_t const *transition = lookUpNextTransition(event);
+    if (transition != NULL)
     {
-        current_state = transition.next_state;
-        onStateFunc   = transition.onStateFunc;
-        transition.onEnterFunc();
+        current_state = transition->next_state;
+        onStateFunc   = transition->onStateFunc;
+        transition->onEnterFunc();
     }
 }
 
