@@ -38,6 +38,7 @@ void FSM::initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void))
         stateTransMatrix[i+1].onStateFunc = FnPointers[2 * i + 1];
     }
     current_state = state_t::STARTUP;
+    initialized = true;
 }
 
 stateTrans_t const FSM::lookUpNextTransition(event_t event)
