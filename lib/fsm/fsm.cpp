@@ -19,7 +19,7 @@ FSM::FSM()
         {IN_NRF,    EV_GOTO_MENU,       IN_MENU,        NULL,       NULL}
     };
     #elif __AVR_ATmega2560__
-    stateTransMx[STATE_TRANS_MATRIX_SIZE] = {
+    stateTrans_t stateTransMx[STATE_TRANS_MATRIX_SIZE] = {
         //STATE         EVENT               NEXT_STATE      ON_ENTER_F  ON_STATE_F
         {STARTUP,       EV_GOTO_IDLE,       IDLE,           NULL,       NULL},
         {IDLE,          EV_START_GAME,      GAME_RUNNING,   NULL,       NULL},
@@ -28,6 +28,7 @@ FSM::FSM()
     };
     #endif
     stateTransMatrix  = stateTransMx;
+    onStateFunc = &nothingHappens;
 }
 
 void FSM::initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void))
