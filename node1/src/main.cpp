@@ -96,6 +96,7 @@
 int main(void)
 {
 	//testLab8();
+	//testPrintfWithUart();
 	testFSM();
 	// testCanLoopback();
 }
