@@ -5,6 +5,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #ifdef __AVR_ATmega162__
 #define STATE_TRANS_MATRIX_SIZE 9
@@ -46,13 +47,12 @@ enum event_t {
 #endif //__AVR_ATmega162__
 
 
-
+typedef void (*function_pointer)(void);
 
 struct stateTrans_t {
     state_t state;
     event_t event;
     state_t next_state;
-
     void (*onEnterFunc)(void);
     void (*onStateFunc)(void);
 };
@@ -62,9 +62,10 @@ class FSM
 private:
     bool initialized = false;
     state_t  current_state;
-    stateTrans_t *stateTransMatrix;
+    stateTrans_t stateTransMatrix[STATE_TRANS_MATRIX_SIZE];
     stateTrans_t currentTransition;
     void (*onStateFunc)(void);
+    
 
 
 
@@ -86,11 +87,12 @@ public:
     // Deleted due to singleton design pattern
     void operator=(FSM const&)  = delete;
 
-    void  initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void));
+    void  initialize(function_pointer functions[2 * STATE_TRANS_MATRIX_SIZE]);
     stateTrans_t const * lookUpNextTransition(event_t event);
     void handleEvent(event_t event);
     void  runOnState();
     inline state_t getCurrentState() {return this->current_state;}
+    void printMx();
 
 
 };
