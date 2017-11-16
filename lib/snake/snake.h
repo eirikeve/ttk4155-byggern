@@ -25,10 +25,15 @@ private:
 	
 	//others
 	bool running;
-	int difficulty;
+	int difficulty = 1;
+	int highscore = 0;
 	Screen s1 = Screen();
 	
+	//menu
+	int currentOption = 0;
+	
 public:
+	void start();
 	void run();
 	void initMap();
 	void move(int dx, int dy);
@@ -38,6 +43,8 @@ public:
 	char getMapValue(int value);
 	int xytomapIndex(int x,int y);
 	int getJoystick();
+	int getJoystickButton()
 	void printMap();
 	void printScore();
+	void printMenu();
 };

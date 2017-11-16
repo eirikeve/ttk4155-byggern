@@ -3,6 +3,26 @@
 #include "snake.h"
 #include <stdlib.h>
 
+void Snake::start(){
+	this->printMenu();
+	while(1){
+		while(getJoystick == 0){
+			// go up
+			if(getJoystick() == 1 && currentOption >0)currentOption = currentOption-1;
+			// go down
+			if(getJoystick() == 3 && currentOption <2)currentOption = currentOption+1;
+			// change difficulty
+			if(getJoystick() == 2&& currentOption == 2&&difficulty <3)currentOption = currentOption+1;
+			if(getJoystick() == 4&& currentOption == 2 && difficulty >1)currentOption = currentOption-1;
+			//chose option
+			if(getJoystickButton){
+				if (currentOption == 0) this->run;
+				if (currentOption == 2) return;
+			}
+		}
+		this->printMenu();
+	}
+}
 void Snake::run(){
 	//Test
 	this->initMap();
@@ -10,7 +30,7 @@ void Snake::run(){
 	while(running){
 		//change direction
 		this->changeDirection();
-		printf("%d\n", direction);
+		
 		//update map
 		this->update();
 		
@@ -23,7 +43,7 @@ void Snake::run(){
 	this->printScore();
 	_delay_ms(2000);
 	while(!running){
-		if (getJoystick())this->run();
+		return;
 	}
 	
 }
@@ -64,6 +84,13 @@ int Snake::getJoystick(){
 	if (ny < -threshold) return 3;
 	return 0;
 
+}
+
+int Snake::getJoystickButton(){
+	// Initilize things needed to read joystick
+    Joystick & joystick = Joystick::getInstance();
+	
+	return joystick.buttonPressed();
 }
 
 void Snake::update(){
@@ -207,9 +234,45 @@ void Snake::printScore(){
 	s1.writeString("SCORE: ");
 	itoa(snakeLength-3, score, 10);
 	s1.writeString(score);
+	if (snakeLength -3 > highscore) highscore = snakeLength -3;
 	// s1.writeString('\0');
 	s1.render();
+}
 
+void Snake::printMenu(){
+	s1.clear();
+    s1.go(30,2);
+	s1.writeString("SNAKE");
+	
+	if (currentOption == 0){
+		s1.go(8,4);
+		s1.writeString("->PLAY GAME");
+		s1.go(20,5);
+		s1.writeString("DIFFICULTY: %d ", difficulty);
+		s1.go(20,6);
+		s1.writeString("END GAME");
+	}
+	
+	if (currentOption == 1){
+		s1.go(20,4);
+		s1.writeString("PLAY GAME");
+		s1.go(8,5);
+		s1.writeString("->DIFFICULTY: %d ", difficulty);
+		s1.go(20,6);
+		s1.writeString("END GAME");
+	}
+	
+	if (currentOption == 2){
+		s1.go(20,4);
+		s1.writeString("PLAY GAME");
+		s1.go(20,5);
+		s1.writeString("DIFFICULTY: %d ", difficulty);
+		s1.go(8,6);
+		s1.writeString("->END GAME");
+	}
+	
+	s1.go(20,8);
+	s1.writeString("HIGHSCORE: %d ", highscore);
 }
 
 #endif
