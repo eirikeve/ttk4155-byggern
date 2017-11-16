@@ -327,3 +327,9 @@ void testLab8() {
         _delay_ms(100);
     }
 }
+
+void testMainLoop()
+{
+    FSM& fsm = FSM::getInstance();
+
+}
