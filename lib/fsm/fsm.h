@@ -9,7 +9,7 @@
 #ifdef __AVR_ATmega162__
 #define STATE_TRANS_MATRIX_SIZE 9
 enum state_t {
-    STARTUP,
+    STARTUP = 0,
     IN_MENU,
     IN_GAME,
     IN_SNAKE,
@@ -17,7 +17,7 @@ enum state_t {
     IN_NRF
 };
 enum event_t {
-    EV_DUMMY,
+    EV_DUMMY = 0,
     EV_GOTO_MENU,
     EV_START_GAME,
     EV_GAME_OVER,
@@ -60,6 +60,7 @@ struct stateTrans_t {
 class FSM
 {
 private:
+    bool initialized = false;
     state_t  current_state;
     static stateTrans_t *stateTransMatrix;
     stateTrans_t currentTransition;
@@ -73,7 +74,6 @@ public:
         static FSM instance;
         return instance;
     }
-    uint16_t read();
 private:
     // Private due to singleton design pattern
     FSM();
@@ -89,6 +89,7 @@ public:
     stateTrans_t const lookUpNextTransition(event_t event);
     void handleEvent(event_t event);
     void  runOnState();
+    inline state_t getCurrentState() {return this->current_state;}
 
 
 };
