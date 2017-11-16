@@ -2,37 +2,38 @@
 // 13/11/2017
 
 #include "fsm.h"
+void nothingHappens(void) {}
 
 FSM::FSM()
 {
-    onStateFunc = &nothingHappens;
+    onStateFunc = nothingHappens;
 }
 
-void FSM::transitionTo(state_t s)
+void FSM::transitionTo(uint8_t s)
 {
     // Change state, perform transition function, set onState function
     current_state = s;
     return;
 }
 
-void FSM::handleEventATmega162(event_t event)
+void FSM::handleEventATmega162(uint8_t event)
 {
     switch(event)
     {
             case EV_GOTO_MENU:
             {
-                if (current_state != IN_MENU)
+                if (current_state != STATE_MENU)
                 {
-                    transitionTo(IN_MENU);
+                    transitionTo(STATE_MENU);
                 }
                 
                 break;
             }
             case EV_START_GAME:
             {
-                if (current_state == IN_MENU)
+                if (current_state == STATE_MENU)
                 {
-                    transitionTo(IN_GAME);
+                    transitionTo(STATE_GAME);
                 }
                 break;
             }
@@ -42,9 +43,9 @@ void FSM::handleEventATmega162(event_t event)
             }
             case EV_START_SNAKE:
             {
-                if (current_state == IN_MENU)
+                if (current_state == STATE_MENU)
                 {
-                    transitionTo(IN_SNAKE);
+                    transitionTo(STATE_SNAKE);
                 }
                 break;
             }
@@ -54,9 +55,9 @@ void FSM::handleEventATmega162(event_t event)
             }
             case EV_START_DISPLAY:
             {
-                if (current_state == IN_MENU)
+                if (current_state == STATE_MENU)
                 {
-                    transitionTo(IN_DISPLAY);
+                    transitionTo(STATE_DISPLAY);
                 }
                 break;
             }
@@ -66,9 +67,9 @@ void FSM::handleEventATmega162(event_t event)
             }
             case EV_START_NRF:
             {
-                if (current_state == IN_MENU)
+                if (current_state == STATE_MENU)
                 {
-                    transitionTo(IN_NRF);
+                    transitionTo(STATE_NRF);
                 }
                 break;
             }
@@ -81,39 +82,39 @@ void FSM::handleEventATmega162(event_t event)
     }
 
 }
-void FSM::handleEventATmega2560(event_t event)
+void FSM::handleEventATmega2560(uint8_t event)
 {
     switch(event)
     {
         case EV_GOTO_IDLE:
         {
-            if (current_state == STARTUP_NODE2)
+            if (current_state != STATE_IDLE)
             {
-                transitionTo(IDLE);
+                transitionTo(STATE_IDLE);
             }
             break;
         }
         case EV_START_GAME:
         {
-            if (current_state == IDLE)
+            if (current_state == STATE_IDLE)
             {
-                transitionTo(GAME_RUNNING);
+                transitionTo(STATE_GAME_RUNNING);
             }
             break;
         }
         case EV_GAME_OVER:
         {
-            if (current_state == GAME_RUNNING)
+            if (current_state == STATE_GAME_RUNNING)
             {
-                transitionTo(GAME_OVER);
+                transitionTo(STATE_GAME_OVER);
             }
             break;
         }
         case EV_EXIT_GAME:
         {
-            if (current_state == GAME_OVER)
+            if (current_state == STATE_GAME_OVER)
             {
-                transitionTo(IDLE);
+                transitionTo(STATE_IDLE);
             }
             break;
         }
@@ -122,7 +123,7 @@ void FSM::handleEventATmega2560(event_t event)
     }
 }
 
-void FSM::handleEvent(event_t event)
+void FSM::handleEvent(uint8_t event)
 {
     #ifdef __AVR_ATmega162__
     handleEventATmega162(event);
