@@ -22,8 +22,10 @@ extern "C" {
 int main(void)
 {
 	// testSolenoid();
-	testTuneMotor();
+	// testLab8();
 	// testEncoder();
 	// testMotorOverCan();
 	// testMotor();
+
+	testLab8();
 }
