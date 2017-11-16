@@ -5,6 +5,8 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <tuple>
+typedef void (*callback_function)(void);
 
 //#ifdef __AVR_ATmega162__
 enum state_node1_t =
@@ -77,11 +79,23 @@ enum ev_node2_t =
 
 //#endif //__AVR_ATmega162__
 
+struct transitionFunction{
+    uint8_t state;
+    callback_function transition_function;
+
+    transitionFunction(uint8_t s, callback_function fun_ptr)
+    {
+        state = s;
+        transition_function = fun_ptr;
+    }
+}
 
 class FSM
 {
 private:
-    int  current_state;
+    uint8_t  current_state;
+    transitionFunction *transFnArray;
+    uint 8_t transFnArraySize = 0;
     void (*onStateFunc)(void);
 
 
@@ -109,7 +123,10 @@ public:
 
     void handleEvent(uint8_t event);
     void  runOnState();
+    void addTransitionFunction(int state, void *fun(void));
     inline int getCurrentState() {return this->current_state;}
+    void addToTransFnArray(transitionFunction tf);
+
 
 
 };

@@ -158,4 +158,23 @@ void FSM::runOnState()
 }
 
 
+void addToTransFnArray(transitionFunction tf)
+{
+    #ifdef __AVR_ATmega162__
+    if (tf.state == (int)(state_node1_t)tf.state) // State is defined in node1 state enum
+    {
+        if (transFnArraySize == 0)
+        {
+            transFnArray = calloc(1, sizeof(transitionFunction));
+            transFnArray[0] = tf;
+        }
+        else{
+            // Check if state is already in the array, if so, replace it instead of re-adding
+        }
+    }
 
+    #elif __AVR_ATmega2560__
+    // Same as above, but with state_node2_t instead
+
+    #endif //__AVR_ATmega162__
+}
