@@ -29,3 +29,6 @@ void testCanReceive();
 
 // Test servo over can
 void testControlServoOverCan();
+
+// Test FSM
+void testFSM();
