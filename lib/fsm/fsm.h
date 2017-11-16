@@ -7,7 +7,29 @@
 #include <stdlib.h>
 
 //#ifdef __AVR_ATmega162__
-#define     STATE_STARTUP1  0
+enum state_node1_t =
+{
+    STATE_STARTUP1,
+    STATE_MENU,
+    STATE_GAME,
+    STATE_SNAKE,
+    STATE_DISPLAY,
+    STATE_NRF
+};
+
+enum ev_node1_t =
+{
+    EV_GOTO_MENU,
+    EV_START_GAME,
+    EV_GAME_OVER,
+    EV_START_SNAKE,
+    EV_SNAKE_OVER,
+    EV_START_DISPLAY,
+    EV_DISPLAY_END,
+    EV_START_NRF,
+    EV_NRF_END
+};
+/*#define     STATE_STARTUP1  0
 #define     STATE_MENU      1
 #define     STATE_GAME      2
 #define     STATE_SNAKE     3
@@ -22,9 +44,26 @@
 #define EV_START_DISPLAY    5
 #define EV_DISPLAY_END      6
 #define EV_START_NRF        7
-#define EV_NRF_END          8
+#define EV_NRF_END          8*/
+
 
 //#elif __AVR_ATmega2560__
+enum state_node2_t =
+{
+    STATE_STARTUP2,
+    STATE_IDLE,
+    STATE_GAME_RUNNING,
+    STATE_GAME_OVER
+};
+
+enum ev_node2_t =
+{
+    EV_GOTO_IDLE,
+    EV_START_GAME,
+    EV_GAME_OVER,
+    EV_EXIT_GAME
+};
+/*
 #define STATE_STARTUP2      20
 #define STATE_IDLE          21
 #define STATE_GAME_RUNNING  22
@@ -34,6 +73,7 @@
 #define EV_START_GAME       21
 #define EV_GAME_OVER        22
 #define EV_EXIT_GAME        23
+*/
 
 //#endif //__AVR_ATmega162__
 
