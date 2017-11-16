@@ -45,6 +45,8 @@ enum event_t {
 };
 #endif //__AVR_ATmega162__
 
+static void nothingHappens(void) {}
+
 
 struct stateTrans_t {
     state_t state;
@@ -75,7 +77,7 @@ public:
 private:
     // Private due to singleton design pattern
     FSM();
-    static void nothingHappens(void) {}
+    
 
 public:
     // Deleted due to singleton design pattern
