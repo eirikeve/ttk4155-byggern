@@ -279,6 +279,7 @@ void testFSM()
     UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
+    printf("TestFSM\n");
 
     FSM& fsm = fsm.getInstance();
     #ifdef __AVR_ATmega162__
