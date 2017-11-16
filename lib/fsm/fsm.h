@@ -7,7 +7,6 @@
 #include <stdlib.h>
 
 #ifdef __AVR_ATmega162__
-#define STATE_TRANS_MATRIX_SIZE 9
 enum state_t {
     STARTUP = 0,
     IN_MENU,
@@ -29,7 +28,6 @@ enum event_t {
     EV_NRF_END
 };
 #elif __AVR_ATmega2560__
-#define STATE_TRANS_MATRIX_SIZE 4
 enum state_t {
     STARTUP,
     IDLE,
@@ -46,23 +44,10 @@ enum event_t {
 #endif //__AVR_ATmega162__
 
 
-
-
-struct stateTrans_t {
-    state_t state;
-    event_t event;
-    state_t next_state;
-
-    void (*onEnterFunc)(void);
-    void (*onStateFunc)(void);
-};
-
 class FSM
 {
 private:
-    bool initialized = false;
     state_t  current_state;
-    stateTrans_t *stateTransMatrix;
     stateTrans_t currentTransition;
     void (*onStateFunc)(void);
 
@@ -86,8 +71,6 @@ public:
     // Deleted due to singleton design pattern
     void operator=(FSM const&)  = delete;
 
-    void  initialize(void (*FnPointers[2 * STATE_TRANS_MATRIX_SIZE])(void));
-    stateTrans_t const * lookUpNextTransition(event_t event);
     void handleEvent(event_t event);
     void  runOnState();
     inline state_t getCurrentState() {return this->current_state;}
