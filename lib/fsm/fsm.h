@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 //#ifdef __AVR_ATmega162__
-#define     STATE_STARTUP   0
+#define     STATE_STARTUP1  0
 #define     STATE_MENU      1
 #define     STATE_GAME      2
 #define     STATE_SNAKE     3
@@ -25,7 +25,7 @@
 #define EV_NRF_END          8
 
 //#elif __AVR_ATmega2560__
-#define STATE_STARTUP       20
+#define STATE_STARTUP2      20
 #define STATE_IDLE          21
 #define STATE_GAME_RUNNING  22
 #define STATE_GAME_OVER     23

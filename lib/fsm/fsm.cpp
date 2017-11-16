@@ -22,7 +22,7 @@ void FSM::handleEventATmega162(uint8_t event)
     {
             case EV_GOTO_MENU:
             {
-                if (current_state == STATE_STARTUP)
+                if (current_state == STATE_STARTUP1)
                 {
                     transitionTo(STATE_MENU);
                 }
@@ -105,7 +105,7 @@ void FSM::handleEventATmega2560(uint8_t event)
     {
         case EV_GOTO_IDLE:
         {
-            if (current_state == STATE_STARTUP)
+            if (current_state == STATE_STARTUP2)
             {
                 transitionTo(STATE_IDLE);
             }
