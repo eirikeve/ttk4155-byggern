@@ -18,6 +18,7 @@ MenuNode *Menu::getCurrent()
     return this->current;
 }
 
+// Does this need to have a return type? Does it return anything ever?
 MenuNode *Menu::select()
 {
     if (this->current->getChild(0) != NULL)
@@ -26,6 +27,13 @@ MenuNode *Menu::select()
         printf("%s\n", this->current->getChild(this->selectIndex)->getName());
         this->current = this->current->getChild(this->selectIndex);
         this->selectIndex = 0;
+    }
+    else // Has no children!
+    {
+        if (current->callback_function != NULL)
+        {
+            current->callback_function(current->callback_function_arg);
+        }
     }
 }
 
