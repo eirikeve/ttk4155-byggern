@@ -701,7 +701,8 @@ void testMainLoop()
     screen_handler.addScreen(&screen_header);
     screen_handler.addScreen(&screen_full);
 
-    Menu 
+    MenuNode node_main("Main Menu");
+    Menu(&node_main);
 
 
     FSM& fsm = FSM::getInstance();
