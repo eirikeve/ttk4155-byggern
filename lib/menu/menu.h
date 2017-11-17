@@ -13,6 +13,7 @@ private:
   MenuNode *current;
   uint8_t selectIndex;
 
+
 public:
   Menu(MenuNode *head);
 
