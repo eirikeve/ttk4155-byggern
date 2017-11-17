@@ -283,34 +283,17 @@ void testFSM()
 
     FSM& fsm = fsm.getInstance();
     #ifdef __AVR_ATmega162__
-    function_pointer fns[2 * STATE_TRANS_MATRIX_SIZE] = 
-    {
-        &doNothing, &doNothing, &doNothing, &doNothing, &doNothing, &doNothing,
-        &doNothing, &doNothing, &doNothing, &doNothing, &doNothing, &doNothing,
-        &doNothing, &doNothing, &doNothing, &doNothing, &doNothing, &doNothing
-    };
-    printf("DoNothing %d\n", doNothing);
-    fsm.printMx();
-    fsm.initialize(fns);
-    fsm.printMx();
-    //printf("TestFSM2\n");
 
-    //printf("States: Startup %d, Menu %d, ", (int)STARTUP, (int)IN_MENU);
-    // printf("Snake %d, Game %d, ", (int)IN_GAME, (int)IN_SNAKE);
-    // printf("Display %d, NRF %d\n", (int)IN_DISPLAY, (int)IN_NRF);
-    // printf("Events: GoToMenu %d, StartGame %d, GameOver %d, StartSnake %d, SnakeOver %d\nStartDisplay %d, DisplayEnd %d, StartNrf %d, NrfEnd %d\n",
-    //     (int)EV_GOTO_MENU, (int)EV_START_GAME, (int)EV_GAME_OVER, (int)EV_START_SNAKE, (int)EV_SNAKE_OVER,
-    //     (int)EV_START_DISPLAY, (int)EV_DISPLAY_END, (int)EV_START_NRF, (int)EV_NRF_END);
     int i = 0;
-    event_t event = event_t::EV_GOTO_MENU;
+    int event = 0; // EV_GOTO_MENU
+    srand(1);
     while (i < 100)
     {
         ++i;
-        //printf("i: %4d \tOld state %2d \tEvent %2d \t", i, (int)fsm.getCurrentState(), (int)event);
+        printf("i: %4d \tOld state %2d \tEvent %2d \t", i, fsm.getCurrentState(), event);
         fsm.handleEvent(event);
-        event = (event_t)(rand() % (EV_NRF_END+1));
-        //printf("New state %2d\n", (int)fsm.getCurrentState());
-        _delay_ms(100);
+        event = (rand() % (/*ev_node1_t::EV_NRF_END+1*/ 7));
+        printf("New state %2d\n", (int)fsm.getCurrentState());
     }
 
     #endif
@@ -343,4 +326,32 @@ void testLab8() {
         can.transmit(&msg);
         _delay_ms(100);
     }
+}
+
+
+
+void testMainLoop()
+{
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    ADC& adc = ADC::getInstance();
+
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);
+
+    Slider & slider0 = Slider::getInstance(0);
+    slider0.initialize(&adc, &pb2);
+
+    Slider & slider1 = Slider::getInstance(1);
+    slider1.initialize(&adc, &pb1);
+
+    FSM& fsm = FSM::getInstance();
+    
+
 }

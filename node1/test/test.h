@@ -35,3 +35,5 @@ void testFSM();
 
 // Test LAb8
 void testLab8();
+
+void testMainLoop();

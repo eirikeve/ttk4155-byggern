@@ -2,9 +2,13 @@
 // 13/11/2017
 
 #include "fsm.h"
+#ifdef __AVR_ATmega162__
+
+void nothingHappens(void) {}
 
 FSM::FSM()
 {
+<<<<<<< HEAD
     #ifdef __AVR_ATmega162__
     //stateTrans_t stateTransMx[STATE_TRANS_MATRIX_SIZE] 
     stateTransMatrix  = {
@@ -40,26 +44,128 @@ void FSM::initialize(function_pointer functions[2 * STATE_TRANS_MATRIX_SIZE])
     {       
         stateTransMatrix[i].onEnterFunc = functions[2 * i];
         stateTransMatrix[i].onStateFunc = functions[2 * i + 1];
-    }
-    current_state = state_t::STARTUP;
-    initialized = true;
+=======
+    init();
 }
 
-stateTrans_t const* FSM::lookUpNextTransition(event_t event)
+void FSM::init()
 {
-    for (int i = 0; i < STATE_TRANS_MATRIX_SIZE; i++)
+    stateLoopFunction = NULL;
+    for (uint8_t state = (uint8_t)STATE_STARTUP1; state < (uint8_t)STATE_STARTUP1 + NUM_STATES_NODE1; ++state)
     {
-        if (stateTransMatrix[i].state == current_state &&
-            stateTransMatrix[i].event == event)
-            {
-                return &stateTransMatrix[i];
-            }
+        stateFunctionsArray[state] = stateFunctions(state, NULL, NULL);
+>>>>>>> feature/fsm
     }
-    return NULL;
 }
 
-void FSM::handleEvent(event_t event)
+void FSM::reset()
 {
+    init();
+}
+
+void FSM::transitionTo(uint8_t s)
+{
+    // Change state, set onState function, perform transition function
+    current_state = s;
+    stateLoopFunction = stateFunctionsArray[s].stateLoopFunction;
+    stateFunctionsArray[s].transitionFunction();
+    return;
+}
+
+void FSM::handleEvent(uint8_t event)
+{
+<<<<<<< HEAD
+    for (int i = 0; i < STATE_TRANS_MATRIX_SIZE; i++)
+=======
+    // Don't exit the error state except if resetting.
+    if (current_state == STATE_ERROR) return;
+
+    switch(event)
+>>>>>>> feature/fsm
+    {
+            case EV_GOTO_MENU:
+            {
+                if (current_state == STATE_STARTUP1)
+                {
+                    transitionTo(STATE_MENU);
+                }
+                
+                break;
+            }
+            case EV_START_GAME:
+            {
+                if (current_state == STATE_MENU)
+                {
+                    transitionTo(STATE_GAME);
+                }
+                break;
+            }
+            case EV_GAME_OVER:
+            {
+                if (current_state == STATE_GAME)
+                {
+                    transitionTo(STATE_MENU);
+                }
+                break;
+            }
+            case EV_START_SNAKE:
+            {
+                if (current_state == STATE_MENU)
+                {
+                    transitionTo(STATE_SNAKE);
+                }
+                break;
+            }
+            case EV_SNAKE_OVER:
+            {
+                if (current_state ==  STATE_SNAKE)
+                {
+                    transitionTo(STATE_MENU);
+                }
+                
+                break;
+            }
+            case EV_START_DISPLAY:
+            {
+                if (current_state == STATE_MENU)
+                {
+                    transitionTo(STATE_DISPLAY);
+                }
+                break;
+            }
+            case EV_DISPLAY_END:
+            {
+                if (current_state == STATE_DISPLAY)
+                {
+                    transitionTo(STATE_MENU);
+                }
+                break;
+            }
+            case EV_START_NRF:
+            {
+                if (current_state == STATE_MENU)
+                {
+                    transitionTo(STATE_NRF);
+                }
+                break;
+            }
+            case EV_NRF_END:
+            {
+                if (current_state == STATE_NRF)
+                {
+                    transitionTo(STATE_MENU);
+                }
+                break;
+            }
+            default:
+                break;
+    }
+
+}
+
+void FSM::runStateLoop()
+{
+<<<<<<< HEAD
     //printf("In handleEvent: Event %d\n", (int)event);
     stateTrans_t const *transition = lookUpNextTransition(event);
     //printf("In handleEvent: Transition %d\n", (int)transition);
@@ -71,16 +177,37 @@ void FSM::handleEvent(event_t event)
 
         transition->onEnterFunc();
 
+=======
+    if (stateLoopFunction != nothingHappens   && 
+        stateLoopFunction != NULL             &&
+        current_state != (uint8_t)STATE_ERROR)
+    {
+        uint8_t state = current_state;
+        while (current_state == state)
+        {
+            stateLoopFunction();
+        }
+>>>>>>> feature/fsm
     }
+    else if (current_state != (uint8_t)STATE_ERROR)
+    {
+        // Should never happen under normal conditions :)
+        transitionTo((uint8_t)STATE_ERROR);
+    }
+    
 }
 
-
-void FSM::runOnState()
+void FSM::addStateFunctions(stateFunctions s_fun)
 {
-    onStateFunc();
+    // Indexing is by state. Though index indicates state, we also update
+    // the state variable (just to prevent any possible bugs)
+    stateFunctionsArray[s_fun.state].state = s_fun.state;
+    stateFunctionsArray[s_fun.state].transitionFunction = s_fun.transitionFunction;
+    stateFunctionsArray[s_fun.state].stateLoopFunction    = s_fun.stateLoopFunction;
 }
 
 
+<<<<<<< HEAD
 void FSM::printMx()
 {
     printf("MX SZ %d\n", STATE_TRANS_MATRIX_SIZE);
@@ -90,3 +217,6 @@ void FSM::printMx()
     }
 
 }
+=======
+#endif // __AVR_ATmega162__
+>>>>>>> feature/fsm
