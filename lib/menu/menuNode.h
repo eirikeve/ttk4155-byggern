@@ -15,11 +15,15 @@ private:
   // uint16_t totNrOfSiblings;
   uint16_t indexOfSiblings;
 
+  void (*callback_function)(uint8_t); // Used to trigger events in the FSM
+  uint8_t callback_function_arg;
+
   void setParent(MenuNode &menu);
   void setIndexOfSiblings(uint16_t index);
   void addSibling(MenuNode &menu);
 
 public:
+  MenuNode(char *name, void (*callback_function)(uint8_t), uint8_t cb_fun_arg);
   MenuNode(char *name);
 
   void addChild(MenuNode &menu);
@@ -36,4 +40,5 @@ public:
 
   char **getChildrenNames();
   char **getSiblingNames();
+  friend class Menu;
 };
