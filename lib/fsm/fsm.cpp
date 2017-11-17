@@ -2,22 +2,43 @@
 // 13/11/2017
 
 #include "fsm.h"
+#ifdef __AVR_ATmega162__
+
 void nothingHappens(void) {}
 
 FSM::FSM()
 {
-    onStateFunc = nothingHappens;
+    init();
+}
+
+void FSM::init()
+{
+    stateLoopFunction = NULL;
+    for (uint8_t state = (uint8_t)STATE_STARTUP1; state < (uint8_t)STATE_STARTUP1 + NUM_STATES_NODE1; ++state)
+    {
+        stateFunctionsArray[state] = stateFunctions(state, NULL, NULL);
+    }
+}
+
+void FSM::reset()
+{
+    init();
 }
 
 void FSM::transitionTo(uint8_t s)
 {
-    // Change state, perform transition function, set onState function
+    // Change state, set onState function, perform transition function
     current_state = s;
+    stateLoopFunction = stateFunctionsArray[s].stateLoopFunction;
+    stateFunctionsArray[s].transitionFunction();
     return;
 }
 
-void FSM::handleEventATmega162(uint8_t event)
+void FSM::handleEvent(uint8_t event)
 {
+    // Don't exit the error state except if resetting.
+    if (current_state == STATE_ERROR) return;
+
     switch(event)
     {
             case EV_GOTO_MENU:
@@ -99,82 +120,35 @@ void FSM::handleEventATmega162(uint8_t event)
     }
 
 }
-void FSM::handleEventATmega2560(uint8_t event)
+
+void FSM::runStateLoop()
 {
-    switch(event)
+    if (stateLoopFunction != nothingHappens   && 
+        stateLoopFunction != NULL             &&
+        current_state != (uint8_t)STATE_ERROR)
     {
-        case EV_GOTO_IDLE:
+        uint8_t state = current_state;
+        while (current_state == state)
         {
-            if (current_state == STATE_STARTUP2)
-            {
-                transitionTo(STATE_IDLE);
-            }
-            break;
-        }
-        case EV_START_GAME:
-        {
-            if (current_state == STATE_IDLE)
-            {
-                transitionTo(STATE_GAME_RUNNING);
-            }
-            break;
-        }
-        case EV_GAME_OVER:
-        {
-            if (current_state == STATE_GAME_RUNNING)
-            {
-                transitionTo(STATE_GAME_OVER);
-            }
-            break;
-        }
-        case EV_EXIT_GAME:
-        {
-            if (current_state == STATE_GAME_OVER)
-            {
-                transitionTo(STATE_IDLE);
-            }
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-void FSM::handleEvent(uint8_t event)
-{
-    #ifdef __AVR_ATmega162__
-    handleEventATmega162(event);
-
-    #elif __AVR_ATmega2560__
-    handleEventATmega2560(event);
-
-    #endif //__AVR_ATmega162__
-}
-
-
-void FSM::runOnState()
-{
-    onStateFunc();
-}
-
-
-void addToTransFnArray(transitionFunction tf)
-{
-    #ifdef __AVR_ATmega162__
-    if (tf.state == (int)(state_node1_t)tf.state) // State is defined in node1 state enum
-    {
-        if (transFnArraySize == 0)
-        {
-            transFnArray = calloc(1, sizeof(transitionFunction));
-            transFnArray[0] = tf;
-        }
-        else{
-            // Check if state is already in the array, if so, replace it instead of re-adding
+            stateLoopFunction();
         }
     }
-
-    #elif __AVR_ATmega2560__
-    // Same as above, but with state_node2_t instead
-
-    #endif //__AVR_ATmega162__
+    else if (current_state != (uint8_t)STATE_ERROR)
+    {
+        // Should never happen under normal conditions :)
+        transitionTo((uint8_t)STATE_ERROR);
+    }
+    
 }
+
+void FSM::addStateFunctions(stateFunctions s_fun)
+{
+    // Indexing is by state. Though index indicates state, we also update
+    // the state variable (just to prevent any possible bugs)
+    stateFunctionsArray[s_fun.state].state = s_fun.state;
+    stateFunctionsArray[s_fun.state].transitionFunction = s_fun.transitionFunction;
+    stateFunctionsArray[s_fun.state].stateLoopFunction    = s_fun.stateLoopFunction;
+}
+
+
+#endif // __AVR_ATmega162__

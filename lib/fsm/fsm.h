@@ -5,21 +5,23 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <tuple>
-typedef void (*callback_function)(void);
+#define NUM_STATES_NODE1 7
+
 
 //#ifdef __AVR_ATmega162__
-enum state_node1_t =
+enum state_node1_t 
 {
     STATE_STARTUP1,
     STATE_MENU,
     STATE_GAME,
     STATE_SNAKE,
     STATE_DISPLAY,
-    STATE_NRF
+    STATE_NRF,
+    STATE_ERROR
 };
 
-enum ev_node1_t =
+
+enum ev_node1_t 
 {
     EV_GOTO_MENU,
     EV_START_GAME,
@@ -50,7 +52,7 @@ enum ev_node1_t =
 
 
 //#elif __AVR_ATmega2560__
-enum state_node2_t =
+/*enum state_node2_t
 {
     STATE_STARTUP2,
     STATE_IDLE,
@@ -58,13 +60,15 @@ enum state_node2_t =
     STATE_GAME_OVER
 };
 
-enum ev_node2_t =
+
+enum ev_node2_t
 {
     EV_GOTO_IDLE,
     EV_START_GAME,
     EV_GAME_OVER,
     EV_EXIT_GAME
 };
+*/
 /*
 #define STATE_STARTUP2      20
 #define STATE_IDLE          21
@@ -79,26 +83,44 @@ enum ev_node2_t =
 
 //#endif //__AVR_ATmega162__
 
-struct transitionFunction{
-    uint8_t state;
-    callback_function transition_function;
 
-    transitionFunction(uint8_t s, callback_function fun_ptr)
+typedef void (*callback_function)(void);
+
+/*
+ * stateFunctions is a struct which links a state and two callback functions.
+ * This indicates that upon entering that state, transitionFunction is called.
+ * After calling transitionFunction, onStateFunction will loop indefinitely until
+ * the next state change.
+ */
+struct stateFunctions{
+    // A state from state_node1_t
+    uint8_t state;
+    // A void *function(void) which will be called upon transitioning to state
+    callback_function transitionFunction;
+    // A void *function(void) which will be called repeatedly after the
+    // transition function was called.
+    callback_function stateLoopFunction;
+    stateFunctions() {state = NULL; transitionFunction = NULL; stateLoopFunction = NULL;}
+    stateFunctions(uint8_t s, callback_function transitionFun, callback_function stateLoopFun)
     {
         state = s;
-        transition_function = fun_ptr;
+        transitionFunction = transitionFun;
+        stateLoopFunction = stateLoopFun;
     }
-}
+};
 
+/*
+ * FSM is a class which implements a Moore state machine
+ * It is a singleton class, so only one instance can exist
+ * The states of the FSM are defined in the state_node1_t enum
+ * Before using, stateFunctions must be loaded into the FSM
+ */
 class FSM
 {
 private:
     uint8_t  current_state;
-    transitionFunction *transFnArray;
-    uint 8_t transFnArraySize = 0;
-    void (*onStateFunc)(void);
-
-
+    callback_function stateLoopFunction;
+    stateFunctions stateFunctionsArray[NUM_STATES_NODE1];
 
 public:
     static FSM& getInstance()
@@ -111,23 +133,19 @@ public:
 private:
     // Private due to singleton design pattern
     FSM();
-    void handleEventATmega162(uint8_t event);
-    void handleEventATmega2560(uint8_t event);
-    
+    void init();
 
 public:
     // Deleted due to singleton design pattern
     FSM(FSM const&)    = delete;
     // Deleted due to singleton design pattern
     void operator=(FSM const&)  = delete;
-
+    void reset();
     void handleEvent(uint8_t event);
-    void  runOnState();
-    void addTransitionFunction(int state, void *fun(void));
+    void runStateLoop();
+    void addStateFunctions(stateFunctions s_fun);
+
     inline int getCurrentState() {return this->current_state;}
-    void addToTransFnArray(transitionFunction tf);
-
-
 
 };
 

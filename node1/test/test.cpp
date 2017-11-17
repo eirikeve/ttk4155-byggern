@@ -292,7 +292,7 @@ void testFSM()
         ++i;
         printf("i: %4d \tOld state %2d \tEvent %2d \t", i, fsm.getCurrentState(), event);
         fsm.handleEvent(event);
-        event = (rand() % (EV_NRF_END+1));
+        event = (rand() % (/*ev_node1_t::EV_NRF_END+1*/ 7));
         printf("New state %2d\n", (int)fsm.getCurrentState());
     }
 
@@ -328,8 +328,30 @@ void testLab8() {
     }
 }
 
+
+
 void testMainLoop()
 {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    ADC& adc = ADC::getInstance();
+
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);
+
+    Slider & slider0 = Slider::getInstance(0);
+    slider0.initialize(&adc, &pb2);
+
+    Slider & slider1 = Slider::getInstance(1);
+    slider1.initialize(&adc, &pb1);
+
     FSM& fsm = FSM::getInstance();
+    
 
 }
