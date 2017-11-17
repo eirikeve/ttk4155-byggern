@@ -351,6 +351,8 @@ void testMainLoop()
     Slider & slider1 = Slider::getInstance(1);
     slider1.initialize(&adc, &pb1);
 
+    
+
     FSM& fsm = FSM::getInstance();
     
 

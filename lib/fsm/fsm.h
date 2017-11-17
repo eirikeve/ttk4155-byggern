@@ -5,11 +5,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-<<<<<<< HEAD
-#include <stdio.h>
-=======
 #define NUM_STATES_NODE1 7
->>>>>>> feature/fsm
 
 
 //#ifdef __AVR_ATmega162__
@@ -72,19 +68,6 @@ enum ev_node2_t
     EV_GAME_OVER,
     EV_EXIT_GAME
 };
-<<<<<<< HEAD
-#endif //__AVR_ATmega162__
-
-
-typedef void (*function_pointer)(void);
-
-struct stateTrans_t {
-    state_t state;
-    event_t event;
-    state_t next_state;
-    void (*onEnterFunc)(void);
-    void (*onStateFunc)(void);
-=======
 */
 /*
 #define STATE_STARTUP2      20
@@ -124,7 +107,6 @@ struct stateFunctions{
         transitionFunction = transitionFun;
         stateLoopFunction = stateLoopFun;
     }
->>>>>>> feature/fsm
 };
 
 /*
@@ -136,20 +118,9 @@ struct stateFunctions{
 class FSM
 {
 private:
-<<<<<<< HEAD
-    bool initialized = false;
-    state_t  current_state;
-    stateTrans_t stateTransMatrix[STATE_TRANS_MATRIX_SIZE];
-    stateTrans_t currentTransition;
-    void (*onStateFunc)(void);
-    
-
-
-=======
     uint8_t  current_state;
     callback_function stateLoopFunction;
     stateFunctions stateFunctionsArray[NUM_STATES_NODE1];
->>>>>>> feature/fsm
 
 public:
     static FSM& getInstance()
@@ -174,17 +145,7 @@ public:
     void runStateLoop();
     void addStateFunctions(stateFunctions s_fun);
 
-<<<<<<< HEAD
-    void  initialize(function_pointer functions[2 * STATE_TRANS_MATRIX_SIZE]);
-    stateTrans_t const * lookUpNextTransition(event_t event);
-    void handleEvent(event_t event);
-    void  runOnState();
-    inline state_t getCurrentState() {return this->current_state;}
-    void printMx();
-
-=======
     inline int getCurrentState() {return this->current_state;}
->>>>>>> feature/fsm
 
 };
 
