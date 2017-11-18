@@ -31,7 +31,8 @@ enum ev_node1_t
     EV_START_DISPLAY,
     EV_DISPLAY_END,
     EV_START_NRF,
-    EV_NRF_END
+    EV_NRF_END,
+    EV_NO_CAN_ACK
 };
 /*#define     STATE_STARTUP1  0
 #define     STATE_MENU      1

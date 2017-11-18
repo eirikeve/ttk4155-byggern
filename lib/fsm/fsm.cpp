@@ -115,6 +115,14 @@ void FSM::handleEvent(uint8_t event)
                 }
                 break;
             }
+            case EV_NO_CAN_ACK:
+                {
+                    if (current_state != STATE_ERROR)
+                    {
+                        transitionTo(STATE_ERROR);
+                    }
+                    break;
+                }
             default:
                 break;
     }
