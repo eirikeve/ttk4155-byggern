@@ -123,11 +123,9 @@ int main(void)
 	
 	//testLab8();
 	//testPrintfWithUart();
-<<<<<<< HEAD
+
 	//testMainLoop();
-=======
-	testMenu();
->>>>>>> bd6fe52bd4f3134b126125b3ea668a6077083c18
+
 	// testCanLoopback();
 
 	// Initialize all
