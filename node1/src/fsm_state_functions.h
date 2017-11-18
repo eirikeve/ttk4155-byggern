@@ -32,3 +32,6 @@ void gameLoop();
 void snakeLoop();
 void displayLoop();
 void gameNRFLoop();
+void errorLoop();
+void errorTransition();
+void loadStateFunctionsToFSM();

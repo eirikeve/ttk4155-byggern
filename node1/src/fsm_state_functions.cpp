@@ -211,9 +211,70 @@ void displayLoop()
     fsm.handleEvent(EV_DISPLAY_END);
 }
 
-
+void gameNRFLoop()
 {
     // todo add the NRF functionality
     fsm.handleEvent(EV_GAME_NRF_END);
 }
 
+void errorLoop()
+{
+    return;
+}
+void errorTransition()
+{
+    // Broadcast RESET to other nodes
+    CAN & can = CAN::getInstance();
+    CanMessage msg;
+    msg.id = CAN_ID_RESET;
+    msg.length = CAN_LENGTH_RESET;
+    msg.data[0] = 0b0;
+    can.transmit(&msg);
+    if(!(checkForACK())
+    {
+        // Try twice
+        can.transmit(&msg);
+    }
+
+}
+
+void loadStateFunctionsToFSM()
+{
+    FSM & fsm = FSM::getInstance();
+
+    stateFunctions sf;
+
+    s_fun.state = STATE_STARTUP1;
+    s_fun.transitionFunction    = nothingHappens;
+    s_fun.stateLoopFunction     = startupLoop;
+    fsm.addStateFunctions(s_fun);
+
+    s_fun.state = STATE_MENU;
+    s_fun.transitionFunction    = nothingHappens;
+    s_fun.stateLoopFunction     = menuLoop;
+    fsm.addStateFunctions(s_fun);
+
+    s_fun.state = STATE_GAME;
+    s_fun.transitionFunction    = nothingHappens;
+    s_fun.stateLoopFunction     = gameLoop;
+    fsm.addStateFunctions(s_fun);
+
+    s_fun.state = STATE_SNAKE;
+    s_fun.transitionFunction    = nothingHappens;
+    s_fun.stateLoopFunction     = snakeLoop;
+    fsm.addStateFunctions(s_fun);
+
+    s_fun.state = STATE_DISPLAY;
+    s_fun.transitionFunction    = nothingHappens;
+    s_fun.stateLoopFunction     = displayLoop;
+    fsm.addStateFunctions(s_fun);
+
+    s_fun.state = STATE_GAME_NRF;
+    s_fun.transitionFunction    = nothingHappens;
+    s_fun.stateLoopFunction     = gameNRFLoop;
+    fsm.addStateFunctions(s_fun);
+
+    s_fun.state = STATE_ERROR;
+    s_fun.transitionFunction    = errorTransition;
+    s_fun.stateLoopFunction     = errorLoop;
+}
