@@ -112,6 +112,9 @@
 //#include "../lib/display/screenhandler.h"
 #include "../lib/menu/menu.h"
 #include "../lib/can/canmsg.h"
+#include "../lib/utilities/eeprom.h"
+#include "fsm_state_functions.h"
+
 
 
 
