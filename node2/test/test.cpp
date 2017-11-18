@@ -452,26 +452,49 @@ void testGame(){
     Servo& servo = Servo::getInstance();
     Motor& motor = Motor::getInstance();
     Solenoid & solenoid = Solenoid::getInstance();
+    IR_detector & ir = IR_detector::getInstance();
 
     while (true) {
+        if (ir.blocked)
+        {
+            // Game over
+            CanMessage msg;
+            msg.id = CAN_ID_STOP_GAME;
+            msg.length = 1;
+            msg.data[0] = 0b0;
+            can.transmit(&msg);
+
+            if (!(checkForACK()))
+            {
+                // Try to retransmit once if msg didn't go through
+                can.transmit(&msg);
+            }
+            return;
+        }
         CanMessage recv = can.receive();
-        if (recv.id != NULL) {
-			// input to motor
-            motor.run((int8_t) recv.data[0]);
+        if (recv.id == CAN_ID_SEND_SEND_USR_INPUT) 
+        {
+			// input to motor, from joystick
+            motor.run((int8_t)recv.data[0]);
 
 			// activate solenoid
-            if (recv.data[1]) {
+            if (recv.data[2]) {
                 solenoid.shoot();
-                servo.setAngle(0);
+                servo.setAngle((int8_t)recv.data[1]);
             }
 			
 			// input to servo
-            servo.setAnglePercentage(recv.data[2]);
+            servo.setAngle((int8_t)recv.data[1]);
 			
-			// possibility to return
-			if (recv.data[5]){
-				return;
-			}
+        }
+        else if (recv.id == CAN_ID_RESET)
+        {
+            CanMessage msg;
+            msg.id = CAN_ID_ACK;
+            msg.length = CAN_LENGTH_ACK;
+            msg.data[0] = 0b0;
+            can.transmit(&msg);
+            return;
         }
     }
 }
