@@ -22,6 +22,7 @@ void ScreenHandler::_render()
         {
             if (screens[screen]->ready_to_render)
             {
+                screens[screen]->updateBorderLines();
                 _changeVRAMBuffer(screens[screen]);
                 screens[screen]->renderOnlyThis();
                 
