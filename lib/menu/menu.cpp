@@ -30,9 +30,9 @@ void Menu::select()
             this->current = child;
             this->selectIndex = 0;
         }
-        // else if (child->callback_function != NULL){
-        //     this->current->callback_function(current->callback_function_arg);
-        // }
+        else if (child->callback_function != NULL){
+            child->callback_function(current->callback_function_arg);
+        }
     }
 }
 
