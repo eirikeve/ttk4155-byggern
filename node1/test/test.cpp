@@ -719,6 +719,96 @@ void SRAM_test()
 
 
 #if TEST_MENU
+
+void callback(uint8_t argv) {
+    printf("Menu callback function called\n");
+}
+
+void testMenuCallback() {
+
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    ADC& adc = ADC::getInstance();
+
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);
+
+    Screen screen = Screen();
+	screen.clear();
+    screen.render((uint8_t*)AVR_VRAM_1);
+
+    MenuNode main("main", &callback, NULL);
+
+    Menu menuStructure(&main);
+
+    int8_t x;
+	int8_t y;
+	Direction currentDir = Direction::NEUTRAL;
+	Direction lastDir = Direction::NEUTRAL;
+
+	while (true)
+	{
+        screen.clear();
+		lastDir = currentDir;
+        currentDir = joystick.read(&x, &y);
+		char **choices = NULL;
+		if (menuStructure.getCurrent() != NULL)
+		{
+			choices = menuStructure.getCurrent()->getChildrenNames();
+			for (int i = 0; i < menuStructure.getCurrent()->getTotNrOfChildren(); i++)
+			{
+				screen.goTo(i, 1);
+				if (i == menuStructure.getSelectIndex())
+				{
+					screen.writeChar('>');
+                }
+                else {
+                    screen.writeChar(' ');
+                }
+				screen.writeString(choices[i]);
+				screen.writeChar('\n');
+			}
+			free(choices);
+		}
+
+		if (lastDir == Direction::NEUTRAL)
+		{
+			switch (currentDir)
+			{
+			case Direction::NORTH:
+			{
+				menuStructure.up();
+				break;
+			}
+			case Direction::SOUTH:
+			{
+				menuStructure.down();
+				break;
+			}
+			case Direction::EAST:
+			{
+				menuStructure.select();
+				screen.clear();
+				break;
+			}
+			case Direction::WEST:
+			{
+				menuStructure.back();
+				screen.clear();
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
+		}
+        screen.render();
+	}
+
+}
 void testMenu() {
 
     ADC& adc = ADC::getInstance();
@@ -728,7 +818,6 @@ void testMenu() {
 
     Screen screen = Screen();
 	screen.clear();
-    // screen.writeString("Hello world\n");
     screen.render((uint8_t*)AVR_VRAM_1);
 
 	MenuNode main("main");

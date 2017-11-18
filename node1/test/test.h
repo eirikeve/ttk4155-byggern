@@ -50,4 +50,5 @@ void testScreenHandlerAnimation();
 void SRAM_test();
 
 // Test menu
+void testMenuCallback();
 void testMenu();
