@@ -25,9 +25,25 @@
 
 
 
+
 void startupLoop()
 {
     FSM & fsm = FSM::getInstance();
+    CAN & can = CAN::getInstance();
+
+    // Todo: Add graphic/ print showing that we are waiting for CAN response.
+
+    CanMessage msg;
+    msg.id = CAN_ID_RESET;
+    msg.length = CAN_LENGTH_RESET;
+    msg.data[0] = 0b0;
+    can.transmit(&msg);
+    while(!(checkForACK())
+    {
+        can.transmit(&msg);
+    }
+
+    // Todo: Add graphic/ print showing that we got CAN response.
 
     // If all state functions are loaded into the fsm, go to the menu state
     if (fsm.checkAllStateFunctionsExist())
@@ -63,16 +79,7 @@ void gameLoop(void)
     can.transmit(&msg);
 
     // Wait for ACK from node 2. If none is received, inform the FSM
-    for (uint16_t i = 0; i < 2000; ++i )
-    {
-        recv = can.receive();
-        if (recv.id == CAN_ID_ACK)
-        {
-            break; // for loop
-        }
-        _delay_ms(1);
-    }
-    if(recv.id != CAN_ID_ACK)
+    if (!(checkForACK()))
     {
         fsm.handleEvent(EV_NO_CAN_ACK);
         return; // return to main while loop, where new onStateLoop will run
@@ -93,7 +100,7 @@ void gameLoop(void)
         slider_x = slider.read();
         slider_button_pressed = slider.buttonPressed();
 
-        printf("x: %d, y: %d, dir: %d\n", x, y, dir);
+        //printf("x: %d, y: %d, dir: %d\n", x, y, dir);
         msg.data[0] = joystick_x;
 		msg.data[1] = slider_x;
         msg.data[2] = (int8_t)slider_button_pressed;
@@ -134,6 +141,7 @@ void snakeLoop()
         current_highscore_L = (uint8_t)(highscore & 0xFF);
         eepromWrite(EEPROM_SNAKE_HIGHSCORE_ADDR_H, current_highscore_H);
         eepromWrite(EEPROM_SNAKE_HIGHSCORE_ADDR_L, current_highscore_L);
+
         // Todo: Add a nice splash screen which congratulates the user!
     }
 
