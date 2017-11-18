@@ -23,7 +23,7 @@ void eepromWrite(uint16_t eeprom_address, uint8_t data)
     EEARH |= (uint8_t)((eeprom_address >> 8) & 0x01);
     EEDR = data;
 
-    EECR = 0b0100  // Master write enable, while setting write enable to 0 (must be done this way)
+    EECR = 0b0100;  // Master write enable, while setting write enable to 0 (must be done this way)
     EECR |= 0b0010; // Write enable
 
 }
