@@ -101,6 +101,6 @@ int main(void)
 	
 	//testLab8();
 	//testPrintfWithUart();
-	testMainLoop();
+	testMenu();
 	// testCanLoopback();
 }

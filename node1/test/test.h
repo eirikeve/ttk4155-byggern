@@ -48,3 +48,6 @@ void testScreenHandler();
 void testScreenHandlerAnimation();
 
 void SRAM_test();
+
+// Test menu
+void testMenu();
