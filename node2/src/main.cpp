@@ -45,6 +45,9 @@ int main(void)
 
     Solenoid & solenoid = Solenoid::getInstance();
 
+    IR_detector& ir = IR_detector::getInstance();
+    ir.initialize(&adc, NULL, 4);
+
     float Kp = 0.008;
     float Ti = 100000;
     float Td = 0;
