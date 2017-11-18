@@ -1,6 +1,7 @@
 
 #include <util/delay.h>
 #include <stdio.h>
+#include "canmsg.h"
 
 #include "can.h"
 // #include "../CAN/SPI.h"
