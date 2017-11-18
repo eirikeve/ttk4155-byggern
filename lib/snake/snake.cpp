@@ -62,7 +62,7 @@ void Snake::changeDirection(){
     4 + 2
       3
     */
-	int newDir;
+	uint8_t newDir;
 	newDir = this->getJoystick();
 	if(newDir == 1 && this->direction != 3) this->direction = 1;
 	else if(newDir == 2 && this->direction != 4) this->direction = 2;
@@ -70,7 +70,7 @@ void Snake::changeDirection(){
 	else if(newDir == 4 && this->direction != 2) this->direction = 4;
 }
 
-int Snake::getJoystick(){
+uint8_t Snake::getJoystick(){
 	// Initilize things needed to read joystick
     Joystick & joystick = Joystick::getInstance();
 
@@ -79,13 +79,11 @@ int Snake::getJoystick(){
 
 	// If joystick returns up, right, down or left
     Direction dir = joystick.read(&x, &y);
-	int nx = joystick.readX();
-	int ny = joystick.readY();
-	int threshold = 90;
-	if (nx > threshold) return 2;
-	if (nx < -threshold) return 4;
-	if (ny > threshold) return 1;
-	if (ny < -threshold) return 3;
+	uint8_t threshold = 90;
+	if (x > threshold) return 2;
+	if (x < -threshold) return 4;
+	if (y > threshold) return 1;
+	if (y < -threshold) return 3;
 	return 0;
 
 }
@@ -93,7 +91,6 @@ int Snake::getJoystick(){
 bool Snake::getJoystickButton(){
 	// Initilize things needed to read joystick
     Joystick & joystick = Joystick::getInstance();
-	if (joystick.buttonPressed()) printf("Hei fra button");
 	return joystick.buttonPressed();
 }
 
@@ -103,29 +100,29 @@ void Snake::update(){
 	case 0:
 		break;
     case 1: this->move(0, -1);
-		printf("Dette er case 1");
+		// printf("Dette er case 1");
         break;
     case 2: this->move(1, 0);
-		printf("dette er case 2");
+		// printf("dette er case 2");
         break;
     case 3: this->move(0, 1);
-		printf("dette er case 3");
+		// printf("dette er case 3");
         break;
     case 4: this->move(-1, 0);
-		printf("dette er case 4");
+		// printf("dette er case 4");
         break;
     }
 	
 	// Reduce snake values on map by 1
-    for (int i = 0; i < s; i++) {
+    for (uint8_t i = 0; i < s; i++) {
         if (map[i] > 0) map[i]--;
     }
 }
 
-void Snake::move(int dx,int dy){
+void Snake::move(int8_t dx,int8_t dy){
 	 // determine new head position
-    int newx = headxpos + dx;
-    int newy = headypos + dy;
+    uint8_t newx = headxpos + dx;
+    uint8_t newy = headypos + dy;
 
     // Check if there is food at location
     if (map[this->xytomapIndex(newx,newy)] == -1) {
@@ -136,7 +133,7 @@ void Snake::move(int dx,int dy){
         this->generateFood();
     }
 	
-	printf("%d\n", newx);
+	//printf("%d\n", newx);
 	//Game over if snake is outside map
 	if (newx>mapwidth-1 || newy>mapheight-1 || newx < 0 || newy < 0){
 		running = false;
@@ -157,8 +154,8 @@ void Snake::move(int dx,int dy){
 
 // Generates new food on map
 void Snake::generateFood() {
-    int x = 0;
-    int y = 0;
+    uint8_t x = 0;
+    uint8_t y = 0;
     do {
         // Generate random x and y values within the map
         x = rand() % (mapwidth);
@@ -171,7 +168,7 @@ void Snake::generateFood() {
     map[this->xytomapIndex(x,y)] = -1;
 }
 
-int Snake::xytomapIndex(int x,int y){
+uint8_t Snake::xytomapIndex(uint8_t x,uint8_t y){
 	return x + y * mapwidth;
 }
 
@@ -179,7 +176,7 @@ int Snake::xytomapIndex(int x,int y){
 void Snake::initMap()
 {	// clears map
 	snakeLength = 3;
-	for (int i = 0;i<s;i++){
+	for (uint8_t i = 0;i<s;i++){
 		map[i] = 0;
 	}
 	this->printMap();
@@ -200,7 +197,7 @@ void Snake::initMap()
 }
 
 // Returns graphical character for display from map value
-char Snake::getMapValue(int value)
+char Snake::getMapValue(uint8_t value)
 {
     // Returns a part of snake body
     if (value > 0) return 'o';
@@ -217,7 +214,7 @@ void Snake::printMap(){
 	
 	char pmap[s+1];
 	// numbers to icons
-	for (int i = 0; i < s; i++){
+	for (uint8_t i = 0; i < s; i++){
 		pmap[i] = getMapValue(map[i]);
 	}
 	pmap[s] = '\0';
