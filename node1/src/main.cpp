@@ -132,7 +132,7 @@ int main(void)
 	
 	//testLab8();
 	// testPrintfWithUart();
-	testMenuCallback();
+	// testMenuCallback();
 	// testCanLoopback();
 
 	// Initialize all
@@ -143,9 +143,9 @@ int main(void)
 
     printf("Starting...");
 
-    // SPI& spi = SPI::getInstance(0);
-    // CAN& can = CAN::getInstance();
-    // can.initialize(&spi, false);
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
 
     ADC& adc = ADC::getInstance();
 
@@ -166,11 +166,9 @@ int main(void)
 	FSM& fsm = FSM::getInstance();
     
     loadStateFunctionsToFSM();
-    
-    printf("Success\n");
 
-	/*while (true)
+	while (true)
 	{
 		fsm.runStateLoop();
-	}*/
+	}
 }
