@@ -129,7 +129,7 @@ int main(void)
 	
 	//testLab8();
 	// testPrintfWithUart();
-	testMenu();
+	testMenuCallback();
 	// testCanLoopback();
 
 	// Initialize all

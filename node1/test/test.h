@@ -50,6 +50,7 @@ void testScreenHandlerAnimation();
 void SRAM_test();
 
 // Test menu
+void testMenuCallback();
 void testMenu();
 // Test snake
 void testSnake();

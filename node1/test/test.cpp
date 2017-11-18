@@ -728,6 +728,101 @@ void SRAM_test()
 
 
 #if TEST_MENU
+
+void callback(uint8_t argv) {
+    printf("Menu callback function called\n");
+}
+
+void testMenuCallback() {
+
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    ADC& adc = ADC::getInstance();
+
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);
+
+    Screen screen = Screen();
+	screen.clear();
+    screen.render((uint8_t*)AVR_VRAM_1);
+
+    MenuNode main("");
+	MenuNode nr1("Nr1", &callback, NULL);
+	MenuNode nr2("Nr2");
+    MenuNode nr3("Sub1");
+    main.addChild(nr1);
+	main.addChild(nr2);
+    nr2.addChild(nr3);
+    Menu menuStructure(&main);
+
+    int8_t x;
+	int8_t y;
+	Direction currentDir = Direction::NEUTRAL;
+	Direction lastDir = Direction::NEUTRAL;
+
+	while (true)
+	{
+        screen.clear();
+		lastDir = currentDir;
+        currentDir = joystick.read(&x, &y);
+		char **choices = NULL;
+		if (menuStructure.getCurrent() != NULL)
+		{
+			choices = menuStructure.getCurrent()->getChildrenNames();
+			for (int i = 0; i < menuStructure.getCurrent()->getTotNrOfChildren(); i++)
+			{
+				screen.goTo(i, 1);
+				if (i == menuStructure.getSelectIndex())
+				{
+					screen.writeChar('>');
+                }
+                else {
+                    screen.writeChar(' ');
+                }
+				screen.writeString(choices[i]);
+				screen.writeChar('\n');
+			}
+			free(choices);
+		}
+
+		if (lastDir == Direction::NEUTRAL)
+		{
+			switch (currentDir)
+			{
+			case Direction::NORTH:
+			{
+				menuStructure.up();
+				break;
+			}
+			case Direction::SOUTH:
+			{
+				menuStructure.down();
+				break;
+			}
+			case Direction::EAST:
+			{
+				menuStructure.select();
+				screen.clear();
+				break;
+			}
+			case Direction::WEST:
+			{
+				menuStructure.back();
+				screen.clear();
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
+		}
+        screen.render();
+	}
+
+}
 void testMenu() {
 
     ADC& adc = ADC::getInstance();
@@ -737,20 +832,18 @@ void testMenu() {
 
     Screen screen = Screen();
 	screen.clear();
-    // screen.writeString("Hello world\n");
     screen.render((uint8_t*)AVR_VRAM_1);
 
-	MenuNode main("main");
-	MenuNode nr1("This");
-	MenuNode nr2("Use");
-	MenuNode nr3("and");
-	MenuNode nr4("to");
-	MenuNode nr5("Lorem");
-	MenuNode nr6("consectetur");
-	MenuNode nr7("sed");
-	MenuNode nr8("ut labore");
-	MenuNode nr9("Ut");
-	MenuNode nr10("quis");
+	MenuNode main("");
+	MenuNode nr1("Nr1");
+	MenuNode nr2("Nr2");
+	MenuNode nr3("Nr3");
+	MenuNode nr4("Nr4");
+	MenuNode nr5("Sub1");
+	MenuNode nr6("Sub2");
+	MenuNode nr8("Sub3");
+	MenuNode nr9("Sub4");
+	MenuNode nr10("Sub5");
 	main.addChild(nr1);
 	main.addChild(nr2);
 	main.addChild(nr3);

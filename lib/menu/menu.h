@@ -20,7 +20,7 @@ public:
   uint8_t getSelectIndex();
 
   MenuNode *getCurrent();
-  MenuNode *select();
+  void select();
   void *back();
   void *up();
   void *down();
