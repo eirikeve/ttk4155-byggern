@@ -709,5 +709,103 @@ void testMainLoop()
     
 }
 
+void testMenu() {
+
+    ADC& adc = ADC::getInstance();
+
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);
+
+	MenuNode main("main");
+	MenuNode nr1("This");
+	MenuNode nr2("Use");
+	MenuNode nr3("and");
+	MenuNode nr4("to");
+	MenuNode nr5("Lorem");
+	MenuNode nr6("consectetur");
+	MenuNode nr7("sed");
+	MenuNode nr8("ut labore");
+	MenuNode nr9("Ut");
+	MenuNode nr10("quis");
+	main.addChild(nr1);
+	main.addChild(nr2);
+	main.addChild(nr3);
+	main.addChild(nr4);
+	nr1.addChild(nr5);
+	nr1.addChild(nr6);
+	nr2.addChild(nr8);
+	nr5.addChild(nr9);
+	nr6.addChild(nr10);
+	Menu menuStructure(&main);
+
+	Screen screen = Screen();
+	screen.clear();
+
+
+	int8_t x;
+	int8_t y;
+	Direction currentDir = Direction::NEUTRAL;
+	Direction lastDir = Direction::NEUTRAL;
+
+	while (true)
+	{
+		lastDir = currentDir;
+        currentDir = joystick.read(&x, &y);
+		char **choices = NULL;
+		if (menuStructure.getCurrent() != NULL)
+		{
+			choices = menuStructure.getCurrent()->getChildrenNames();
+			for (int i = 0; i < menuStructure.getCurrent()->getTotNrOfChildren(); i++)
+			{
+				screen.goTo(i, 1);
+				if (i == menuStructure.getSelectIndex())
+				{
+					screen.writeChar('>');
+				}
+				screen.writeString(choices[i]);
+				screen.writeChar('\n');
+			}
+			free(choices);
+		}
+		else
+		{
+			screen.clear();
+		}
+
+		if (lastDir == Direction::NEUTRAL)
+		{
+			switch (currentDir)
+			{
+			case Direction::NORTH:
+			{
+				menuStructure.up();
+				break;
+			}
+			case Direction::SOUTH:
+			{
+				menuStructure.down();
+				break;
+			}
+			case Direction::EAST:
+			{
+				menuStructure.select();
+				screen.clear();
+				break;
+			}
+			case Direction::WEST:
+			{
+				menuStructure.back();
+				screen.clear();
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
+		}
+	}
+}
+
 
 #endif // DO_TESTS not defined
