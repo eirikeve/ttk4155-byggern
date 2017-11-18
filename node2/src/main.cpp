@@ -46,6 +46,8 @@ int main(void)
 
     Solenoid & solenoid = Solenoid::getInstance();
 
+    ADC_internal & adc = ADC_internal::getInstance();
+
     IR_detector& ir = IR_detector::getInstance();
     ir.initialize(&adc, NULL, 4);
 
