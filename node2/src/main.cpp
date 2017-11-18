@@ -21,11 +21,41 @@ extern "C" {
 
 int main(void)
 {
-	// testSolenoid();
-	// testLab8();
-	// testEncoder();
-	// testMotorOverCan();
-	// testMotor();
+	// initilize everything
+	UART & uart = UART::getInstance();
+    uart.initialize(9600);
 
-	testLab8();
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+
+    Servo& servo = Servo::getInstance();
+    servo.initialize(90);
+
+    TWI_Master_Initialise();
+    sei();
+    
+    DAC& dac = DAC::getInstance();
+    dac.initialize(0x00);
+
+    Timer& timer = Timer::getInstance(0);
+    Encoder& encoder = Encoder::getInstance();
+
+    Motor& motor = Motor::getInstance();
+
+    Solenoid & solenoid = Solenoid::getInstance();
+
+    float Kp = 0.008;
+    float Ti = 100000;
+    float Td = 0;
+    motor.initialize(&dac, &timer, &encoder, Kp,Ti,Td, 5);
+	
+	while(1){
+		// if we want to start pingpong game
+		if (recv.data[4]){
+			testGame();
+		}
+		
+		// etc
+	}
 }
