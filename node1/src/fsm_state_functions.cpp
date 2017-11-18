@@ -264,36 +264,37 @@ void loadStateFunctionsToFSM()
     stateFunctions s_fun;
 
     s_fun.state = STATE_STARTUP1;
-    s_fun.transitionFunction    = nothingHappens;
+    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = startupLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_MENU;
-    s_fun.transitionFunction    = nothingHappens;
+    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = menuLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_GAME;
-    s_fun.transitionFunction    = nothingHappens;
+    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = gameLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_SNAKE;
-    s_fun.transitionFunction    = nothingHappens;
+    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = snakeLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_DISPLAY;
-    s_fun.transitionFunction    = nothingHappens;
+    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = displayLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_GAME_NRF;
-    s_fun.transitionFunction    = nothingHappens;
+    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = gameNRFLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_ERROR;
-    s_fun.transitionFunction    = errorTransition;
+    // s_fun.transitionFunction    = errorTransition;
     s_fun.stateLoopFunction     = errorLoop;
+    fsm.addStateFunctions(s_fun);
 }

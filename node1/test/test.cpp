@@ -734,15 +734,15 @@ void callback(uint8_t argv) {
 }
 
 void testMenuCallback() {
+    // UART & uart = UART::getInstance();
+    // uart.initialize(9600);
+    // enablePrintfWithUart();
+    printf("TEST0\n");
     char mainText[] PROGMEM = "MAIN";
     char nr1Text[] PROGMEM = "Nr1";
     char nr2Text[] PROGMEM = "Nr2";
     char nr3Text[] PROGMEM = "Nr3";
-
-    UART & uart = UART::getInstance();
-    uart.initialize(9600);
-    enablePrintfWithUart();
-
+    printf("TEST1\n");
     ADC& adc = ADC::getInstance();
 
     Joystick & joystick = Joystick::getInstance();

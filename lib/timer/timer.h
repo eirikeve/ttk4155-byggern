@@ -46,7 +46,7 @@ class Timer
                 return instance;
             }
             else {
-                printf("Timer error: Maximum number of instances are: 2, with the highest id: 1. Trying to access Timer id: %d\n", id);
+                //printf("Timer error: Maximum number of instances are: 2, with the highest id: 1. Trying to access Timer id: %d\n", id);
                 assert(false);
             }
         }

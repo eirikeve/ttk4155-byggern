@@ -72,7 +72,7 @@ MenuNode *MenuNode::getParent()
 
 char *MenuNode::getName()
 {
-    return (char*) pgm_read_word(&this->name);
+    return this->name;
 }
 
 uint16_t MenuNode::getTotNrOfChildren()

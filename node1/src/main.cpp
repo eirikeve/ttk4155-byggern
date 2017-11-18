@@ -143,9 +143,9 @@ int main(void)
 
     printf("Starting...");
 
-    SPI& spi = SPI::getInstance(0);
-    CAN& can = CAN::getInstance();
-    can.initialize(&spi, false);
+    // SPI& spi = SPI::getInstance(0);
+    // CAN& can = CAN::getInstance();
+    // can.initialize(&spi, false);
 
     ADC& adc = ADC::getInstance();
 

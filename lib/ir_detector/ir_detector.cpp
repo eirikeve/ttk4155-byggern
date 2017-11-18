@@ -11,7 +11,7 @@ void IR_detector::initialize(ADC_internal* adc, uint8_t threshold, uint8_t filte
     }
     else {
         uint8_t valueUnblocked = adc->read();
-        printf("Unblocked value: %d\n", valueUnblocked);
+        //printf("Unblocked value: %d\n", valueUnblocked);
         this->threshold = valueUnblocked / 2.0;
     }
 }

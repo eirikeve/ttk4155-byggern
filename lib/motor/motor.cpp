@@ -84,7 +84,7 @@ void Motor::goLeft() {
 
 void Motor::run(int8_t speed) {
     if (speed > 100 || speed < -100) {
-        printf("Motor error: Max value in motor::run is 100, got %d\n", speed);
+        //printf("Motor error: Max value in motor::run is 100, got %d\n", speed);
         return;
     }
 

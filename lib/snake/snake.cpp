@@ -93,7 +93,6 @@ int Snake::getJoystick(){
 bool Snake::getJoystickButton(){
 	// Initilize things needed to read joystick
     Joystick & joystick = Joystick::getInstance();
-	if (joystick.buttonPressed()) printf("Hei fra button");
 	return joystick.buttonPressed();
 }
 
