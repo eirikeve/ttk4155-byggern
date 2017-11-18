@@ -1,7 +1,7 @@
 #pragma once
 #ifdef __AVR_ATmega162__
 
-#include <avr.io>
+#include <avr/io.h>
 #include <util/delay.h>
 #include "../utilities/utilities.h"
 
