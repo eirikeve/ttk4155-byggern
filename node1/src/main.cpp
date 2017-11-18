@@ -138,6 +138,8 @@ int main(void)
     uart.initialize(9600);
     enablePrintfWithUart();
 
+    printf("Starting...");
+
     SPI& spi = SPI::getInstance(0);
     CAN& can = CAN::getInstance();
     can.initialize(&spi, false);
@@ -153,23 +155,18 @@ int main(void)
     Slider & slider1 = Slider::getInstance(1);
     slider1.initialize(&adc, &pb1);
 
-    Screen screen_main   = Screen();
+    /*Screen screen_main   = Screen();
     Screen screen_header = Screen(&screen_main, 1, UPPER); // 1 page high, located on top
 	Screen screen_full   = Screen(); // Full screen, does not have a subscreen
-	
-
-    MenuNode node_main("Main Menu");
-    Menu main_menu(&node_main);
-
+	*/
 
 	FSM& fsm = FSM::getInstance();
-	
-	
-	/*
-	// Here: Load callback fns into FSM
-	
+    
+    loadStateFunctionsToFSM();
+    
+    printf("Success\n");
 
-	while (true)
+	/*while (true)
 	{
 		fsm.runStateLoop();
 	}*/
