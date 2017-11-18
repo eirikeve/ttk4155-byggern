@@ -215,7 +215,7 @@ void Screen::updateBorderLines()
             for (uint8_t c = 0; c < colsize; ++c)
             {
                 // Here, we only write one pixel per page. So we need to ensure that we don't erase anything already written
-                vram[(page1-1)*128 + (col0 + c)] |= (0b10000000); // Top pixel in page
+                vram[(page1-1)*128 + (col0 + c)] |= (0b10000000); // Bottom pixel
             }
         }
     }
@@ -335,6 +335,25 @@ void Screen::write(uint8_t c)
     vram[(page0 + loc_page) * 128 + (col0 + loc_col++)] = c;
 }
 
+void drawPixel(uint8_t x, uint8_t y, bool filled)
+{
+    uint8_t pageNum = y / 8;
+    uint8_t bitIndex= y % 8;
+
+    if (x < col0 || col1 <= x || pageNum < page0 || page1 <= pageNum) return;
+
+    if (filled)
+    {
+        // Fills the pixel, and doesn't alter the others in that page
+        vram[pageNum * OLED_PIXELS_WIDTH + x] |= (0b1 < bitIndex);
+    }
+    else
+    {
+        // Unfills the pixel, and doesn't alter the others in that page
+        vram[pageNum * OLED_PIXELS_WIDTH + x] &= (~(0b1 < bitIndex));
+    }
+}
+
 void Screen::fill(uint8_t v)
 {
     for (int j = page0; j < page1; j++)
@@ -373,12 +392,36 @@ void Screen::render(uint8_t * buffer)
         }
     }
 
-    
-
 }
 
 void Screen::flagReadyToRender()
 {
     ready_to_render = true;
 }
+
+
+void Screen::renderOnlyThis(uint8_t * buffer) = (uint8_t*)AVR_VRAM_1)
+{
+    if ((uint8_t*)AVR_VRAM_1 == buffer || (uint8_t*)AVR_VRAM_2 == buffer)
+        {
+        // Write SRAM data to the screen
+        for (int p = page0; p < page1; ++p)
+        {
+            oled.goToPage(p, col0);
+            for (int c = col0; c < col1; ++c)
+            {
+                oled.write(buffer[p * 128 + c]);
+            }
+            if (col1 == 128)
+            {
+                oled.goTo(p, 127);
+                oled.write(0x00);
+            }
+            
+        }
+    }
+}
+
+
+
 #endif

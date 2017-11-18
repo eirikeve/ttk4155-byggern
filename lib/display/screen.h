@@ -67,10 +67,12 @@ public:
   void writeChar(unsigned char c);
   void writeString(char *string);
   void write(uint8_t c);
+  void drawPixel(uint8_t x, uint8_t y, bool filled);
   void fill(uint8_t v);
   void clear();
   void flagReadyToRender();
   void render(uint8_t * buffer = (uint8_t*)AVR_VRAM_1);
+  void renderOnlyThis(uint8_t * buffer) = (uint8_t*)AVR_VRAM_1);
 
   friend class ScreenHandler;
 
