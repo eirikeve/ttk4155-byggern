@@ -751,8 +751,10 @@ void testMenuCallback() {
     MenuNode main("");
 	MenuNode nr1("Nr1", &callback, NULL);
 	MenuNode nr2("Nr2");
+    MenuNode nr3("Sub1");
     main.addChild(nr1);
 	main.addChild(nr2);
+    nr2.addChild(nr3);
     Menu menuStructure(&main);
 
     int8_t x;

@@ -24,7 +24,7 @@ void Menu::select()
     if (this->current->getChild(0) != NULL)
     {
         // printf("%s\n", this->current->getName());
-        printf("%s\n", this->current->getChild(this->selectIndex)->getName());
+        // printf("%s\n", this->current->getChild(this->selectIndex)->getName());
         this->current = this->current->getChild(this->selectIndex);
         this->selectIndex = 0;
     }
