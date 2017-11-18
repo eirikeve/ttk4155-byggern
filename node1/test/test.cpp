@@ -429,6 +429,7 @@ void testScreenHandler()
     s1.flagReadyToRender();
     s2.flagReadyToRender();
     _delay_ms(8000);
+    printf("test2\n");
 
 }
 void testScreenHandlerAnimation();
