@@ -400,17 +400,10 @@ void Screen::flagReadyToRender()
 }
 
 
-void Screen::renderOnlyThis()
+void Screen::renderOnlyThis(uint8_t * buffer)
 {
-    if ((uint8_t*)AVR_VRAM_1 == vram || (uint8_t*)AVR_VRAM_2 == vram)
+    if ((uint8_t*)AVR_VRAM_1 == buffer || (uint8_t*)AVR_VRAM_2 == buffer)
         {
-            uint8_t* buffer = (uint8_t*)AVR_VRAM_1;
-
-            if ((uint8_t*)AVR_VRAM_1 == vram)
-            {
-                uint8_t* buffer = (uint8_t*)AVR_VRAM_2;
-            }
-
             // Write SRAM data to the screen
             for (uint8_t p = page0; p < page1; ++p)
             {
