@@ -31,9 +31,7 @@ private:
 	
 	//menu
 	int currentOption = 0;
-	
-public:
-	void start();
+
 	void run();
 	void initMap();
 	void move(int dx, int dy);
@@ -47,4 +45,9 @@ public:
 	void printMap();
 	void printScore();
 	void printMenu();
+	
+public:
+	void start();
+	inline int getHighScore() const {return highscore;} 
+
 };
