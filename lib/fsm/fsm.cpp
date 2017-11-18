@@ -5,6 +5,8 @@
 #ifdef __AVR_ATmega162__
 
 
+#include <stdio.h>
+
 
 FSM::FSM()
 {
@@ -16,7 +18,7 @@ void FSM::init()
     stateLoopFunction = NULL;
     for (uint8_t state = (uint8_t)STATE_STARTUP1; state < (uint8_t)STATE_STARTUP1 + NUM_STATES_NODE1; ++state)
     {
-        stateFunctionsArray[state] = stateFunctions(state, nothingHappens, nothingHappens);
+        stateFunctionsArray[state] = stateFunctions(state, nothingHappens);
     }
 }
 
@@ -27,10 +29,10 @@ void FSM::reset()
 
 void FSM::transitionTo(uint8_t s)
 {
+    printf("New state %d\n", s);
     // Change state, set onState function, perform transition function
     current_state = s;
     stateLoopFunction = stateFunctionsArray[s].stateLoopFunction;
-    stateFunctionsArray[s].transitionFunction();
     return;
 }
 
@@ -160,7 +162,6 @@ void FSM::addStateFunctions(stateFunctions s_fun)
     // the state variable (just to prevent any possible bugs)
     // If we are in s_fun.state, we need to change our stateLoopFunction to the one just added.
     stateFunctionsArray[s_fun.state].state              = s_fun.state;
-    stateFunctionsArray[s_fun.state].transitionFunction = s_fun.transitionFunction;
     stateFunctionsArray[s_fun.state].stateLoopFunction  = s_fun.stateLoopFunction;
     
     if (s_fun.state == current_state)
@@ -176,7 +177,6 @@ bool FSM::checkAllStateFunctionsExist()
         // transitionFunction can be nothingHappens (since it is not always necessary)
         // but stateLoopFunction can not be nothingHappens, as the FSM will then never exit the state
         if (stateFunctionsArray[i].state != i                   ||
-            stateFunctionsArray[i].transitionFunction == NULL   ||
             stateFunctionsArray[i].stateLoopFunction  == NULL   ||
             stateFunctionsArray[i].stateLoopFunction  == nothingHappens)
             {

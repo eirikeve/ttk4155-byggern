@@ -96,19 +96,21 @@ typedef void (*callback_function)(void);
  */
 struct stateFunctions{
     // A state from state_node1_t
-    uint8_t state;
-    // A void *function(void) which will be called upon transitioning to state
-    callback_function transitionFunction;
+    uint16_t state;
     // A void *function(void) which will be called repeatedly after the
     // transition function was called.
+    
+    // A void *function(void) which will be called upon transitioning to state
     callback_function stateLoopFunction;
-    stateFunctions() {state = NULL; transitionFunction = NULL; stateLoopFunction = NULL;}
-    stateFunctions(uint8_t s, callback_function transitionFun, callback_function stateLoopFun)
+
+    
+    stateFunctions() {state = NULL; stateLoopFunction = NULL;}
+    stateFunctions(uint8_t s,  callback_function stateLoopFun)
     {
         state = s;
-        transitionFunction = transitionFun;
         stateLoopFunction = stateLoopFun;
     }
+
 };
 
 /*
