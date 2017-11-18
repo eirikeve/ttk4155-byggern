@@ -1,0 +1,26 @@
+/*
+ * canmsg.h
+ * Defines IDs and LENGTHs for all CAN messages used in the project
+ * IDs have some space between them, in case other messages are added
+ */
+
+#pragma once
+
+
+#define CAN_ID_RESET 0
+
+#define CAN_ID_STOP_GAME 10
+#define CAN_LENGTH_STOP_GAME 1
+
+#define CAN_ID_START_GAME 20
+#define CAN_LENGTH_START_GAME 1
+
+#define CAN_ID_SEND_SEND_USR_INPUT 30
+#define CAN_LENGTH_SEND_USR_INPUT 3
+
+#define CAN_ID_SEND_SOUND 40
+#define CAN_LENGTH_PLAY_SOUND 1
+
+#define CAN_ID_STOP_SOUND 50
+#define CAN_LENGTH_STOP_SOUND 1
+
