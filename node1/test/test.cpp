@@ -424,9 +424,6 @@ void testScreenHandler()
     s2.writeString("Should appear");
     s1.flagReadyToRender();
     s2.flagReadyToRender();
-    printf("Test2...\n");
-    s1.fill(0b01010101);
-    printf("Test3...\n");
 
 }
 void testScreenHandlerAnimation();
