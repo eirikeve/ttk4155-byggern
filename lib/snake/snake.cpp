@@ -22,7 +22,7 @@ void Snake::start(){
 		}
 		if (getJoystickButton())this->run();
 		this->printMenu();
-		_delay_ms(1000);
+		_delay_ms(500);
 	}
 }
 
@@ -41,16 +41,14 @@ void Snake::run(){
 		this->printMap();
 
 		//wait for length of difficulty
-		if (difficulty==1)_delay_ms(200);
+		if (difficulty==1)_delay_ms(150);
 		if (difficulty==2)_delay_ms(100);
 		if (difficulty==3)_delay_ms(50);
 
 	}
 	this->printScore();
 	_delay_ms(2000);
-	while(!running){
-		return;
-	}
+	return;
 	
 }
 
@@ -248,7 +246,7 @@ void Snake::printScore(){
 void Snake::printMenu(){
 	s1.clear();
 	s1.goToStart();
-    s1.goTo(1,30);
+    s1.goTo(1,40);
 	s1.writeString("SNAKE");
 	
 	if (currentOption == 0){
