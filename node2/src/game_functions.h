@@ -18,7 +18,7 @@ void runGame(){
     
 
     while (true) {
-        if (ir.blocked)
+        if (ir.blocked())
         {
             // Game over
             CanMessage msg;
@@ -35,7 +35,7 @@ void runGame(){
             return;
         }
         CanMessage recv = can.receive();
-        if (recv.id == CAN_ID_SEND_SEND_USR_INPUT) 
+        if (recv.id == CAN_ID_SEND_USR_INPUT) 
         {
 			// input to motor, from joystick
             motor.run((int8_t)recv.data[0]);

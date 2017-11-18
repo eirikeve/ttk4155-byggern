@@ -18,6 +18,7 @@
 #include "lib/dac/dac.h"
 #include "lib/solenoid/solenoid.h"
 #include "lib/encoder/encoder.h"
+#include "../lib/can/canmsg.h"
 
 extern "C" {
     #include "lib/twi/twi.h"
@@ -455,7 +456,7 @@ void testGame(){
     IR_detector & ir = IR_detector::getInstance();
 
     while (true) {
-        if (ir.blocked)
+        if (ir.blocked())
         {
             // Game over
             CanMessage msg;
@@ -472,7 +473,7 @@ void testGame(){
             return;
         }
         CanMessage recv = can.receive();
-        if (recv.id == CAN_ID_SEND_SEND_USR_INPUT) 
+        if (recv.id == CAN_ID_SEND_USR_INPUT) 
         {
 			// input to motor, from joystick
             motor.run((int8_t)recv.data[0]);
