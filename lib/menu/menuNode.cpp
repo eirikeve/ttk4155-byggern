@@ -80,18 +80,6 @@ uint16_t MenuNode::getTotNrOfChildren()
     return this->totNrOfChildren;
 }
 
-uint16_t MenuNode::getTotNrOfSiblings()
-{
-    if (this->parent)
-    {
-        return this->parent->getTotNrOfChildren();
-    }
-    else
-    {
-        return 0;
-    }
-}
-
 MenuNode *MenuNode::getSibling(int8_t offset)
 {
     if (offset == 0)
@@ -124,6 +112,19 @@ MenuNode *MenuNode::getChild(uint8_t nr)
     }
 }
 
+uint16_t MenuNode::getTotNrOfSiblings()
+{
+    if (this->parent)
+    {
+        return this->parent->getTotNrOfChildren();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+#ifndef SAVE_SPACE
 MenuNode **MenuNode::getChildren()
 {
     MenuNode **menus = (MenuNode **)malloc(this->getTotNrOfChildren());
@@ -151,15 +152,6 @@ MenuNode **MenuNode::getSiblings()
     }
     return menus;
 }
-char **MenuNode::getChildrenNames()
-{
-    char **names = (char **) malloc(sizeof(char*) * this->getTotNrOfChildren());
-    for (uint16_t i = 0; i < this->getTotNrOfChildren(); i++)
-    {
-        names[i] = this->getChild(i)->getName();
-    }
-    return names;
-}
 
 char **MenuNode::getSiblingNames()
 {
@@ -177,3 +169,14 @@ char **MenuNode::getSiblingNames()
     }
     return menus;
 }
+#endif
+char **MenuNode::getChildrenNames()
+{
+    char **names = (char **) malloc(sizeof(char*) * this->getTotNrOfChildren());
+    for (uint16_t i = 0; i < this->getTotNrOfChildren(); i++)
+    {
+        names[i] = this->getChild(i)->getName();
+    }
+    return names;
+}
+
