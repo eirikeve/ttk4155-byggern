@@ -19,7 +19,7 @@ MenuNode *Menu::getCurrent()
 }
 
 // Does this need to have a return type? Does it return anything ever?
-MenuNode *Menu::select()
+void Menu::select()
 {
     if (this->current->getChild(0) != NULL)
     {
@@ -28,12 +28,10 @@ MenuNode *Menu::select()
         this->current = this->current->getChild(this->selectIndex);
         this->selectIndex = 0;
     }
-    else // Has no children!
+    // No further children of choice. check if should call callback function
+    if (this->current->getChild(0) == NULL && current->callback_function != NULL)
     {
-        if (current->callback_function != NULL)
-        {
-            current->callback_function(current->callback_function_arg);
-        }
+        current->callback_function(current->callback_function_arg);
     }
 }
 

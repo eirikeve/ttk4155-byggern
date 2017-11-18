@@ -748,8 +748,11 @@ void testMenuCallback() {
 	screen.clear();
     screen.render((uint8_t*)AVR_VRAM_1);
 
-    MenuNode main("main", &callback, NULL);
-
+    MenuNode main("");
+	MenuNode nr1("Nr1", &callback, NULL);
+	MenuNode nr2("Nr2");
+    main.addChild(nr1);
+	main.addChild(nr2);
     Menu menuStructure(&main);
 
     int8_t x;
@@ -829,17 +832,16 @@ void testMenu() {
 	screen.clear();
     screen.render((uint8_t*)AVR_VRAM_1);
 
-	MenuNode main("main");
-	MenuNode nr1("This");
-	MenuNode nr2("Use");
-	MenuNode nr3("and");
-	MenuNode nr4("to");
-	MenuNode nr5("Lorem");
-	MenuNode nr6("consectetur");
-	MenuNode nr7("sed");
-	MenuNode nr8("ut labore");
-	MenuNode nr9("Ut");
-	MenuNode nr10("quis");
+	MenuNode main("");
+	MenuNode nr1("Nr1");
+	MenuNode nr2("Nr2");
+	MenuNode nr3("Nr3");
+	MenuNode nr4("Nr4");
+	MenuNode nr5("Sub1");
+	MenuNode nr6("Sub2");
+	MenuNode nr8("Sub3");
+	MenuNode nr9("Sub4");
+	MenuNode nr10("Sub5");
 	main.addChild(nr1);
 	main.addChild(nr2);
 	main.addChild(nr3);
