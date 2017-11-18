@@ -58,7 +58,6 @@ int main(void)
 
     CanMessage recv;
     CanMessage msg;
-
 	
 	while(1){
         recv = can.receive();
