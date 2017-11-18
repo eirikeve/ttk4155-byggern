@@ -21,8 +21,7 @@
 #include "../lib/display/screen.h"
 #include "../lib/display/screenhandler.h"
 #include "../lib/menu/menu.h"
-
-
+#include "lib/snake/snake.h"
 
 #define DO_TESTS
 #ifdef DO_TESTS
@@ -472,6 +471,20 @@ void testSubScreen()
     s2.clear();
     s1.clear();
     */
+}
+
+//Test snake
+void testSnake(){
+
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, NULL);
+    
+	Snake sn;
+	sn.start();
 }
 
 // Test ScreenHandler

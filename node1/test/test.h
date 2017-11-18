@@ -51,3 +51,5 @@ void SRAM_test();
 
 // Test menu
 void testMenu();
+// Test snake
+void testSnake();
