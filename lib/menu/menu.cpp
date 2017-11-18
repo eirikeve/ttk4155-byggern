@@ -26,13 +26,13 @@ void Menu::select()
         // Check that child to be selected has another child again.
         // (That the child has at least one more choise for user).
         // If not, check if child has a callback function that should be called
-        if (child->getChild(0) != NULL){
+        // if (child->getChild(0) != NULL){
             this->current = child;
             this->selectIndex = 0;
-        }
-        else if (child->callback_function != NULL){
-            this->current->callback_function(current->callback_function_arg);
-        }
+        // }
+        // else if (child->callback_function != NULL){
+        //     this->current->callback_function(current->callback_function_arg);
+        // }
     }
 }
 
