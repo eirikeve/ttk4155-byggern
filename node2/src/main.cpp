@@ -18,6 +18,7 @@ extern "C" {
 #include "test/test.h"
 #include "lib/uart/uart.h"
 #include "lib/utilities/printf.h"
+#include "game_functions.h"
 
 int main(void)
 {
@@ -52,13 +53,24 @@ int main(void)
     float Ti = 100000;
     float Td = 0;
     motor.initialize(&dac, &timer, &encoder, Kp,Ti,Td, 5);
+
+    CanMessage recv;
+    CanMessage msg;
+
 	
 	while(1){
-		// if we want to start pingpong game
-		if (recv.data[4]){
-			testGame();
-		}
-		
-		// etc
+        recv = can.receive();
+        // RESET is transmitted by node1 upon startup. Respond with ACK to show that node2 is running.
+        if (recv.id == CAN_ID_RESET)
+        {
+            msg.id = CAN_ID_ACK;
+            msg.length = CAN_LENGTH_ACK;
+            msg.data[0] = 0b0;
+            can.transmit(&msg);
+        }
+        else if (recv.id == CAN_ID_START_GAME)
+        {
+			runGame();
+        }
 	}
 }
