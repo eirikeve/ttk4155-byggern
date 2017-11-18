@@ -21,6 +21,7 @@
 #include "../lib/menu/menu.h"
 #include "../lib/can/canmsg.h"
 #include "../lib/slider/slider.h"
+#include "../lib/utilities/eeprom.h"
 
 
 
