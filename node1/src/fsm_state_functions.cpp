@@ -13,7 +13,7 @@ void startupLoop()
     msg.length = CAN_LENGTH_RESET;
     msg.data[0] = 0b0;
     can.transmit(&msg);
-    while(!(checkForACK())
+    while(!(checkForACK()))
     {
         can.transmit(&msg);
     }
@@ -36,23 +36,35 @@ void startupLoop()
 
 void menuLoop()
 {
+    Joystick & joystick = Joystick::getInstance();
+    FSM & fsm = FSM::getInstance();
+
     Screen screen = Screen();
 	screen.clear();
     screen.render((uint8_t*)AVR_VRAM_1);
 
     MenuNode main("");
-	MenuNode nr1("Nr1", &callback, NULL);
-	MenuNode nr2("Nr2");
-    MenuNode nr3("Sub1");
+	MenuNode nr1("PingPong Game");
+	MenuNode nr2("Snake Game");
+    MenuNode nr3("Display Test");
+    MenuNode nr4("Play PingPong with controller", &_fsm_extern_handle_event, (uint8_t)EV_START_GAME);
+    MenuNode nr5("Play PingPong with Bluetooth", &_fsm_extern_handle_event, (uint8_t)EV_START_GAME_NRF);
+    MenuNode nr6("Play Snake", &_fsm_extern_handle_event, (uint8_t)EV_START_SNAKE);
     main.addChild(nr1);
 	main.addChild(nr2);
-    nr2.addChild(nr3);
+    main.addChild(nr3);
+    nr1.addChild(nr4);
+    nr1.addChild(nr5);
+    nr2.addChild(nr6);
+
     Menu menuStructure(&main);
 
     int8_t x;
 	int8_t y;
 	Direction currentDir = Direction::NEUTRAL;
-	Direction lastDir = Direction::NEUTRAL;
+    Direction lastDir = Direction::NEUTRAL;
+    
+    uint8_t old_state = (uint8_t)fsm.getCurrentState();
 
 	while (true)
 	{
@@ -95,8 +107,13 @@ void menuLoop()
 			}
 			case Direction::EAST:
 			{
+                // Here: Need to exit if we did call a function!
 				menuStructure.select();
-				screen.clear();
+                screen.clear();
+                if (old_state != (uint8_t)fsm.getCurrentState())
+                {
+                    return;
+                }
 				break;
 			}
 			case Direction::WEST:
@@ -126,7 +143,7 @@ void gameLoop()
 
     // Send msg to node 2 that the game is starting
     CanMessage msg;
-    CanMeddage recv;
+    CanMessage recv;
 
     msg.id = CAN_ID_START_GAME;
     msg.length = CAN_LENGTH_START_GAME;
@@ -165,7 +182,7 @@ void gameLoop()
         recv = can.receive();
         if (recv.id == CAN_ID_STOP_GAME)
         {
-            msg.ID = CAN_ID_ACK;
+            msg.id = CAN_ID_ACK;
             msg.length = CAN_LENGTH_ACK;
             msg.data[0] = 0b0;
 
@@ -207,12 +224,14 @@ void snakeLoop()
 
 void displayLoop()
 {
+    FSM & fsm = FSM::getInstance();
     // todo add some awesome graphic stuff here!
     fsm.handleEvent(EV_DISPLAY_END);
 }
 
 void gameNRFLoop()
 {
+    FSM & fsm = FSM::getInstance();
     // todo add the NRF functionality
     fsm.handleEvent(EV_GAME_NRF_END);
 }
@@ -230,7 +249,7 @@ void errorTransition()
     msg.length = CAN_LENGTH_RESET;
     msg.data[0] = 0b0;
     can.transmit(&msg);
-    if(!(checkForACK())
+    if(!(checkForACK()))
     {
         // Try twice
         can.transmit(&msg);
@@ -242,7 +261,7 @@ void loadStateFunctionsToFSM()
 {
     FSM & fsm = FSM::getInstance();
 
-    stateFunctions sf;
+    stateFunctions s_fun;
 
     s_fun.state = STATE_STARTUP1;
     s_fun.transitionFunction    = nothingHappens;
