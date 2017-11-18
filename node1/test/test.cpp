@@ -22,13 +22,54 @@
 #include "../lib/display/screenhandler.h"
 #include "../lib/menu/menu.h"
 
+#ifndef TEST_UART
+#define TEST_UART 0
+#endif
+
+#ifndef TEST_JOYSTICK
+#define TEST_JOYSTICK 0
+#endif
+
+#ifndef TEST_LAB_8
+#define TEST_LAB_8 0
+#endif
+
+#ifndef TEST_MAINLOOP
+#define TEST_MAINLOOP 0
+#endif
+
+#ifndef TEST_MENU
+#define TEST_MENU 1
+#endif
+
+#ifndef TEST_TIMER
+#define TEST_TIMER 0
+#endif
+
+#ifndef TEST_SCREEN
+#define TEST_SCREEN 0
+#endif
+
+#ifndef TEST_SERVO
+#define TEST_SERVO 0
+#endif
+
+#ifndef TEST_SLIDER
+#define TEST_SLIDER 0
+#endif
+
+#ifndef TEST_SPI_CAN
+#define TEST_SPI_CAN 0
+#endif
+
+#ifndef TEST_SRAM
+#define TEST_SRAM 0
+#endif
 
 
-#define DO_TESTS
-#ifdef DO_TESTS
 
 
-
+#if TEST_UART
 void testUartTransmit() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -56,7 +97,9 @@ void testPrintfWithUart() {
         printf("Test printf\n");
     }
 }
+#endif //TEST_UART
 
+#if TEST_TIMER
 void callbackTimer0() {
     printf("Test timer0\n");
 }
@@ -102,7 +145,9 @@ void testTimerStop() {
         continue;
     }
 }
-    
+#endif //TEST_TIMER
+
+#if TEST_JOYSTICK    
 void testJoystick()
 {
     UART & uart = UART::getInstance();
@@ -139,7 +184,9 @@ void testJoystickButton() {
         }
     }
 }
+#endif TEST_JOYSTICK
 
+#if TEST_SPI_CAN
 void testSpi() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -212,6 +259,9 @@ void testCanReceive() {
     }
 }
 
+#endif //TEST_SPI_CAN
+
+#if TEST_SERVO
 void testControlServoOverCan() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -241,9 +291,53 @@ void testControlServoOverCan() {
         can.transmit(&msg);
     }
 }
+#endif //TEST_SERVO
 
+#if TEST_SLIDER
 
+void testSlider(){
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
 
+    ADC& adc = ADC::getInstance();
+
+    Slider & slider0 = Slider::getInstance(0);
+    slider0.initialize(&adc, NULL);
+
+    Slider & slider1 = Slider::getInstance(1);
+    slider1.initialize(&adc, NULL);
+
+    while (true) {
+        printf("Slider0 position: %d, Slider1 position: %d\n", slider0.read(), slider1.read());
+    }
+}
+
+void testSliderButton() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    ADC& adc = ADC::getInstance();
+
+    Slider & slider0 = Slider::getInstance(0);
+    slider0.initialize(&adc, &pb2);
+
+    Slider & slider1 = Slider::getInstance(1);
+    slider1.initialize(&adc, &pb1);
+
+    while (true) {
+        if (slider0.buttonPressed()) {
+            printf("Slider0 pressed\n");
+        }
+        if (slider1.buttonPressed()) {
+            printf("Slider1 pressed\n");
+        }
+    }
+}
+#endif //TEST_SLIDER
+
+#if TEST_SCREEN
 // Test display
 void testScreen()
 {
@@ -319,50 +413,6 @@ void testScreen()
     {
         s1.render();
         _delay_ms(500);
-    }
-
-
-}
-
-   
-void testSlider(){
-    UART & uart = UART::getInstance();
-    uart.initialize(9600);
-    enablePrintfWithUart();
-
-    ADC& adc = ADC::getInstance();
-
-    Slider & slider0 = Slider::getInstance(0);
-    slider0.initialize(&adc, NULL);
-
-    Slider & slider1 = Slider::getInstance(1);
-    slider1.initialize(&adc, NULL);
-
-    while (true) {
-        printf("Slider0 position: %d, Slider1 position: %d\n", slider0.read(), slider1.read());
-    }
-}
-
-void testSliderButton() {
-    UART & uart = UART::getInstance();
-    uart.initialize(9600);
-    enablePrintfWithUart();
-
-    ADC& adc = ADC::getInstance();
-
-    Slider & slider0 = Slider::getInstance(0);
-    slider0.initialize(&adc, &pb2);
-
-    Slider & slider1 = Slider::getInstance(1);
-    slider1.initialize(&adc, &pb1);
-
-    while (true) {
-        if (slider0.buttonPressed()) {
-            printf("Slider0 pressed\n");
-        }
-        if (slider1.buttonPressed()) {
-            printf("Slider1 pressed\n");
-        }
     }
 }
 
@@ -474,29 +524,123 @@ void testSubScreen()
     */
 }
 
-// Test ScreenHandler
+// // Test ScreenHandler
 
-void testFSM()
-{
-    printf("TestFSM\n");
+// // void testFSM()
+// // {
+// //     printf("TestFSM\n");
 
-    FSM& fsm = fsm.getInstance();
-    #ifdef __AVR_ATmega162__
+// //     FSM& fsm = fsm.getInstance();
 
-    int i = 0;
-    int event = 0; // EV_GOTO_MENU
-    srand(1);
-    while (i < 100)
-    {
-        ++i;
-        printf("i: %4d \tOld state %2d \tEvent %2d \t", i, fsm.getCurrentState(), event);
-        fsm.handleEvent(event);
-        event = (rand() % (/*ev_node1_t::EV_NRF_END+1*/ 7));
-        printf("New state %2d\n", (int)fsm.getCurrentState());
-    }
+// //     int i = 0;
+// //     int event = 0; // EV_GOTO_MENU
+// //     srand(1);
+// //     while (i < 100)
+// //     {
+// //         ++i;
+// //         printf("i: %4d \tOld state %2d \tEvent %2d \t", i, fsm.getCurrentState(), event);
+// //         fsm.handleEvent(event);
+// //         event = (rand() % (/*ev_node1_t::EV_NRF_END+1*/ 7));
+// //         printf("New state %2d\n", (int)fsm.getCurrentState());
+// //     }
+// // }
 
-    #endif
-}
+// void testScreenHandler()
+// {
+//     UART & uart = UART::getInstance();
+//     uart.initialize(9600);
+//     enablePrintfWithUart();
+//     printf("Test1..\n");
+//     ScreenHandler& h = ScreenHandler::getInstance();
+//     Screen s1 = Screen();
+//     Screen s2 = Screen();
+//     s1.clear();
+//     s2.clear();
+//     h.addScreen(&s1);
+
+//     const unsigned char appleLogo[8] =
+// 	{0b00000000, 0b01111000, 0b11111100, 0b11111110, 0b11001101, 0b01001000,0b00000000,0b00000000};
+// 	s1.goTo(4,61);
+// 	for (int i= 0; i < 8; ++i)
+// 	{
+// 		s1.write(appleLogo[i]);
+//     }
+//     s1.flagReadyToRender();
+// 	_delay_ms(200);
+// 	char letter = '-';
+// 	for (int i = 0; i < 26; ++i)
+// 	{
+// 		switch (letter)
+// 		{
+// 			case '-':
+// 				letter = '\\';
+// 				break;
+// 			case '\\':
+// 				letter = '|';
+// 				break;
+// 			case '|':
+// 				letter = '/';
+// 				break;
+// 			case '/':
+// 				letter = '-';
+// 				break;
+// 		}
+// 		s1.goTo(6, 29);
+// 		s1.writeString("Initializing ");
+// 		s1.writeChar(letter);
+// 		s1.goTo(7, 0);
+// 		for (int j = 0; j <= i; ++j)
+// 		{
+// 			s1.writeChar('-');
+// 		}
+// 		s1.flagReadyToRender();
+// 		_delay_ms(100);
+		
+//     }
+//     s1.goTo(6, 29);
+//     s1.writeString("Initializing *");
+//     s1.flagReadyToRender();
+//     _delay_ms(350);
+//     s1.clear();
+//     s1.flagReadyToRender();
+//     s2.clear();
+
+//     h.addScreen(&s2);
+//     s1.addSubScreen(&s2, 64, Orientation::RIGHT);
+//     s1.writeString("Testing ScreenHandler. This is display 1.");
+//     s2.writeString("This is display 2");
+//     s1.flagReadyToRender();
+//     _delay_ms(2000);
+//     s1.addBorderLines();
+//     s2.addBorderLines();
+//     s1.flagReadyToRender();
+//     _delay_ms(1000);
+//     s1.fill(0b11111111);
+//     s2.fill(0b00000000);
+//     s1.flagReadyToRender();
+//     _delay_ms(1000);
+//     s1.clear();
+//     s2.clear();
+//     Screen s3 = Screen();
+//     s3.addSubScreen(&s3, 4, Orientation::LOWER);
+//     s3.addBorderLines();
+//     s1.flagReadyToRender();
+//     h.removeScreen(&s2);
+//     h.removeScreen(&s3);
+//     s1.removeSubScreen();
+//     s1.writeString("Now, there is only one display again. \nNewline\nIt works!");
+//     s1.flagReadyToRender();
+//     _delay_ms(3000);    
+//     printf("Test2...\n");
+//     s1.fill(0b01010101);
+//     printf("Test3...\n");
+
+// }
+// void testScreenHandlerAnimation();
+
+#endif //TEST_SCREEN
+
+#if TEST_LAB_8
 void testLab8() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -526,106 +670,9 @@ void testLab8() {
         _delay_ms(100);
     }
 }
+#endif // TEST_LAB_8
 
-
-
-
-void testScreenHandler()
-{
-    UART & uart = UART::getInstance();
-    uart.initialize(9600);
-    enablePrintfWithUart();
-    printf("Test1..\n");
-    ScreenHandler& h = ScreenHandler::getInstance();
-    Screen s1 = Screen();
-    Screen s2 = Screen();
-    s1.clear();
-    s2.clear();
-    h.addScreen(&s1);
-
-    const unsigned char appleLogo[8] =
-	{0b00000000, 0b01111000, 0b11111100, 0b11111110, 0b11001101, 0b01001000,0b00000000,0b00000000};
-	s1.goTo(4,61);
-	for (int i= 0; i < 8; ++i)
-	{
-		s1.write(appleLogo[i]);
-    }
-    s1.flagReadyToRender();
-	_delay_ms(200);
-	char letter = '-';
-	for (int i = 0; i < 26; ++i)
-	{
-		switch (letter)
-		{
-			case '-':
-				letter = '\\';
-				break;
-			case '\\':
-				letter = '|';
-				break;
-			case '|':
-				letter = '/';
-				break;
-			case '/':
-				letter = '-';
-				break;
-		}
-		s1.goTo(6, 29);
-		s1.writeString("Initializing ");
-		s1.writeChar(letter);
-		s1.goTo(7, 0);
-		for (int j = 0; j <= i; ++j)
-		{
-			s1.writeChar('-');
-		}
-		s1.flagReadyToRender();
-		_delay_ms(100);
-		
-    }
-    s1.goTo(6, 29);
-    s1.writeString("Initializing *");
-    s1.flagReadyToRender();
-    _delay_ms(350);
-    s1.clear();
-    s1.flagReadyToRender();
-    s2.clear();
-
-    h.addScreen(&s2);
-    s1.addSubScreen(&s2, 64, Orientation::RIGHT);
-    s1.writeString("Testing ScreenHandler. This is display 1.");
-    s2.writeString("This is display 2");
-    s1.flagReadyToRender();
-    _delay_ms(2000);
-    s1.addBorderLines();
-    s2.addBorderLines();
-    s1.flagReadyToRender();
-    _delay_ms(1000);
-    s1.fill(0b11111111);
-    s2.fill(0b00000000);
-    s1.flagReadyToRender();
-    _delay_ms(1000);
-    s1.clear();
-    s2.clear();
-    Screen s3 = Screen();
-    s3.addSubScreen(&s3, 4, Orientation::LOWER);
-    s3.addBorderLines();
-    s1.flagReadyToRender();
-    h.removeScreen(&s2);
-    h.removeScreen(&s3);
-    s1.removeSubScreen();
-    s1.writeString("Now, there is only one display again. \nNewline\nIt works!");
-    s1.flagReadyToRender();
-    _delay_ms(3000);    
-    printf("Test2...\n");
-    s1.fill(0b01010101);
-    printf("Test3...\n");
-
-}
-void testScreenHandlerAnimation();
-
-
-
-
+#if TEST_SRAM
 void SRAM_test()
 {
     set_bit(MCUCR, SRE);
@@ -667,10 +714,116 @@ void SRAM_test()
 }
     printf("SRAM test completed with \n%4d errors in write phase and \n%4d errors in retrieval phase\n\n", write_errors, retrieval_errors);
 }
+#endif // TEST_SRAM
 
 
 
+#if TEST_MENU
+void testMenu() {
 
+    ADC& adc = ADC::getInstance();
+
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);
+
+    Screen screen = Screen();
+	screen.clear();
+    // screen.writeString("Hello world\n");
+    screen.render((uint8_t*)AVR_VRAM_1);
+
+	MenuNode main("main");
+	MenuNode nr1("This");
+	MenuNode nr2("Use");
+	MenuNode nr3("and");
+	MenuNode nr4("to");
+	MenuNode nr5("Lorem");
+	MenuNode nr6("consectetur");
+	MenuNode nr7("sed");
+	MenuNode nr8("ut labore");
+	MenuNode nr9("Ut");
+	MenuNode nr10("quis");
+	main.addChild(nr1);
+	main.addChild(nr2);
+	main.addChild(nr3);
+	main.addChild(nr4);
+	nr1.addChild(nr5);
+	nr1.addChild(nr6);
+	nr2.addChild(nr8);
+	nr5.addChild(nr9);
+	nr6.addChild(nr10);
+	Menu menuStructure(&main);
+
+	
+
+
+	int8_t x;
+	int8_t y;
+	Direction currentDir = Direction::NEUTRAL;
+	Direction lastDir = Direction::NEUTRAL;
+
+	while (true)
+	{
+        screen.clear();
+		lastDir = currentDir;
+        currentDir = joystick.read(&x, &y);
+		char **choices = NULL;
+		if (menuStructure.getCurrent() != NULL)
+		{
+			choices = menuStructure.getCurrent()->getChildrenNames();
+			for (int i = 0; i < menuStructure.getCurrent()->getTotNrOfChildren(); i++)
+			{
+				screen.goTo(i, 1);
+				if (i == menuStructure.getSelectIndex())
+				{
+					screen.writeChar('>');
+                }
+                else {
+                    screen.writeChar(' ');
+                }
+				screen.writeString(choices[i]);
+				screen.writeChar('\n');
+			}
+			free(choices);
+		}
+
+		if (lastDir == Direction::NEUTRAL)
+		{
+			switch (currentDir)
+			{
+			case Direction::NORTH:
+			{
+				menuStructure.up();
+				break;
+			}
+			case Direction::SOUTH:
+			{
+				menuStructure.down();
+				break;
+			}
+			case Direction::EAST:
+			{
+				menuStructure.select();
+				screen.clear();
+				break;
+			}
+			case Direction::WEST:
+			{
+				menuStructure.back();
+				screen.clear();
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
+		}
+        screen.render();
+	}
+}
+#endif //TEST_MENU
+
+#if TEST_MAINLOOP
 void testMainLoop()
 {
     UART & uart = UART::getInstance();
@@ -709,103 +862,5 @@ void testMainLoop()
     
 }
 
-void testMenu() {
 
-    ADC& adc = ADC::getInstance();
-
-    Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 10, &pb3);
-
-	MenuNode main("main");
-	MenuNode nr1("This");
-	MenuNode nr2("Use");
-	MenuNode nr3("and");
-	MenuNode nr4("to");
-	MenuNode nr5("Lorem");
-	MenuNode nr6("consectetur");
-	MenuNode nr7("sed");
-	MenuNode nr8("ut labore");
-	MenuNode nr9("Ut");
-	MenuNode nr10("quis");
-	main.addChild(nr1);
-	main.addChild(nr2);
-	main.addChild(nr3);
-	main.addChild(nr4);
-	nr1.addChild(nr5);
-	nr1.addChild(nr6);
-	nr2.addChild(nr8);
-	nr5.addChild(nr9);
-	nr6.addChild(nr10);
-	Menu menuStructure(&main);
-
-	Screen screen = Screen();
-	screen.clear();
-
-
-	int8_t x;
-	int8_t y;
-	Direction currentDir = Direction::NEUTRAL;
-	Direction lastDir = Direction::NEUTRAL;
-
-	while (true)
-	{
-		lastDir = currentDir;
-        currentDir = joystick.read(&x, &y);
-		char **choices = NULL;
-		if (menuStructure.getCurrent() != NULL)
-		{
-			choices = menuStructure.getCurrent()->getChildrenNames();
-			for (int i = 0; i < menuStructure.getCurrent()->getTotNrOfChildren(); i++)
-			{
-				screen.goTo(i, 1);
-				if (i == menuStructure.getSelectIndex())
-				{
-					screen.writeChar('>');
-				}
-				screen.writeString(choices[i]);
-				screen.writeChar('\n');
-			}
-			free(choices);
-		}
-		else
-		{
-			screen.clear();
-		}
-
-		if (lastDir == Direction::NEUTRAL)
-		{
-			switch (currentDir)
-			{
-			case Direction::NORTH:
-			{
-				menuStructure.up();
-				break;
-			}
-			case Direction::SOUTH:
-			{
-				menuStructure.down();
-				break;
-			}
-			case Direction::EAST:
-			{
-				menuStructure.select();
-				screen.clear();
-				break;
-			}
-			case Direction::WEST:
-			{
-				menuStructure.back();
-				screen.clear();
-				break;
-			}
-			default:
-			{
-				break;
-			}
-			}
-		}
-	}
-}
-
-
-#endif // DO_TESTS not defined
+#endif // TEST_MAINLOOP
