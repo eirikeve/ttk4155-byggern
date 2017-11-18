@@ -16,7 +16,7 @@ void FSM::init()
     stateLoopFunction = NULL;
     for (uint8_t state = (uint8_t)STATE_STARTUP1; state < (uint8_t)STATE_STARTUP1 + NUM_STATES_NODE1; ++state)
     {
-        stateFunctionsArray[state] = stateFunctions(state, NULL, NULL);
+        stateFunctionsArray[state] = stateFunctions(state, nothingHappens, nothingHappens);
     }
 }
 
@@ -99,17 +99,17 @@ void FSM::handleEvent(uint8_t event)
                 }
                 break;
             }
-            case EV_START_NRF:
+            case EV_START_GAME_NRF:
             {
                 if (current_state == STATE_MENU)
                 {
-                    transitionTo(STATE_NRF);
+                    transitionTo(STATE_GAME_NRF);
                 }
                 break;
             }
-            case EV_NRF_END:
+            case EV_GAME_NRF_END:
             {
-                if (current_state == STATE_NRF)
+                if (current_state == STATE_GAME_NRF)
                 {
                     transitionTo(STATE_MENU);
                 }
@@ -123,7 +123,16 @@ void FSM::handleEvent(uint8_t event)
                     }
                     break;
                 }
+            case EV_MISSING_STATE_FUNCTIONS:
+            {
+                if (current_state != STATE_ERROR)
+                {
+                    transitionTo(STATE_ERROR);
+                }
+                break;
+            }
             default:
+                transitionTo(STATE_ERROR);
                 break;
     }
 
@@ -135,11 +144,7 @@ void FSM::runStateLoop()
         stateLoopFunction != NULL             &&
         current_state != (uint8_t)STATE_ERROR)
     {
-        uint8_t state = current_state;
-        while (current_state == state)
-        {
-            stateLoopFunction();
-        }
+        stateLoopFunction();
     }
     else if (current_state != (uint8_t)STATE_ERROR)
     {
@@ -153,10 +158,32 @@ void FSM::addStateFunctions(stateFunctions s_fun)
 {
     // Indexing is by state. Though index indicates state, we also update
     // the state variable (just to prevent any possible bugs)
-    stateFunctionsArray[s_fun.state].state = s_fun.state;
+    // If we are in s_fun.state, we need to change our stateLoopFunction to the one just added.
+    stateFunctionsArray[s_fun.state].state              = s_fun.state;
     stateFunctionsArray[s_fun.state].transitionFunction = s_fun.transitionFunction;
-    stateFunctionsArray[s_fun.state].stateLoopFunction    = s_fun.stateLoopFunction;
+    stateFunctionsArray[s_fun.state].stateLoopFunction  = s_fun.stateLoopFunction;
+    
+    if (s_fun.state == current_state)
+    {
+        stateLoopFunction = stateFunctionsArray[s_fun.state].stateLoopFunction;
+    }
 }
 
+bool FSM::checkAllStateFunctionsExist()
+{
+    for (uint8_t i = 0; i < NUM_STATES_NODE1; ++i)
+    {
+        // transitionFunction can be nothingHappens (since it is not always necessary)
+        // but stateLoopFunction can not be nothingHappens, as the FSM will then never exit the state
+        if (stateFunctionsArray[i].state != i                   ||
+            stateFunctionsArray[i].transitionFunction == NULL   ||
+            stateFunctionsArray[i].stateLoopFunction  == NULL   ||
+            stateFunctionsArray[i].stateLoopFunction  == nothingHappens)
+            {
+                return false;
+            }
+        }
+        return true;
+}
 
 #endif // __AVR_ATmega162__
