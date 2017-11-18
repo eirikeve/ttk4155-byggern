@@ -385,7 +385,7 @@ void testScreenHandler()
     s1.writeString("Testing ScreenHandler. This is display 1.");
     s2.writeString("This is display 2");
     s1.flagReadyToRender();
-    s1.flagReadyToRender();
+    s2.flagReadyToRender();
     _delay_ms(4000);
     s1.addBorderLines();
     s2.addBorderLines();
@@ -395,6 +395,7 @@ void testScreenHandler()
     s1.fill(0b11111111);
     s2.fill(0b00000000);
     s1.flagReadyToRender();
+    s1.flagReadyToRender();
     _delay_ms(4000);
     s1.clear();
     s2.clear();
@@ -402,6 +403,8 @@ void testScreenHandler()
     s3.addSubScreen(&s3, 4, Orientation::LOWER);
     s3.addBorderLines();
     s1.writeString("Now three screens!\n");
+    s2.writeString("22222!");
+    s3.writeString("33333!");
     s1.flagReadyToRender();
     s2.flagReadyToRender();
     s3.flagReadyToRender();
@@ -424,6 +427,7 @@ void testScreenHandler()
     s2.writeString("Should appear");
     s1.flagReadyToRender();
     s2.flagReadyToRender();
+    _delay_ms(8000);
 
 }
 void testScreenHandlerAnimation();
