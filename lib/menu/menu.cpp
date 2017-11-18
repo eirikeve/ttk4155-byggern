@@ -31,7 +31,7 @@ void Menu::select()
             this->selectIndex = 0;
         }
         else if (child->callback_function != NULL){
-            child->callback_function(current->callback_function_arg);
+            child->callback_function(child->callback_function_arg);
         }
     }
 }
