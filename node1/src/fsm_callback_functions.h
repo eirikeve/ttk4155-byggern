@@ -21,6 +21,7 @@
 #include "../lib/menu/menu.h"
 #include "../lib/can/canmsg.h"
 #include "../lib/slider/slider.h"
+#include "../lib/utilities/eeprom.h"
 
 
 
@@ -87,6 +88,7 @@ void gameLoop(void)
 
     while (true) 
     {
+        // Transmit control data, and check for END_GAME event
         joystick_x = joystick.readX();
         slider_x = slider.read();
         slider_button_pressed = slider.buttonPressed();
@@ -106,7 +108,6 @@ void gameLoop(void)
             msg.data[0] = 0b0;
 
             can.transmit(&msg);
-
             fsm.handleEvent(EV_GAME_OVER);
             return; // return to main while loop, where new onStateLoop will run
         }
@@ -115,6 +116,28 @@ void gameLoop(void)
 
 void snakeLoop()
 {
+    // Get initialized instance
+    FSM & fsm = FSM::getInstance();
+
+    // The snake game runs until exit is requested by user.
+	Snake sn;
+    sn.start();
+
+    // Highscore is stored in the EEPROM, so we check if the new score is higher than the current highscore.
+    uint16_t highscore = (uint16_t)sn.getHighScore();
+    uint8_t current_highscore_L = eepromRead(EEPROM_SNAKE_HIGHSCORE_ADDR_L);
+    uint8_t current_highscore_H = eepromRead(EEPROM_SNAKE_HIGHSCORE_ADDR_H);
+    uint16_t current_highscore = (uint16_t)current_highscore_L | ((uint16_t)current_highscore_H < 8);
+    if (highscore > current_highscore)
+    {
+        current_highscore_H = (uint8_t)((highscore > 8) & 0xFF);
+        current_highscore_L = (uint8_t)(highscore & 0xFF);
+        eepromWrite(EEPROM_SNAKE_HIGHSCORE_ADDR_H, current_highscore_H);
+        eepromWrite(EEPROM_SNAKE_HIGHSCORE_ADDR_L, current_highscore_L);
+        // Todo: Add a nice splash screen which congratulates the user!
+    }
+
+    fsm.handleEvent(EV_SNAKE_OVER);
     
 }
 

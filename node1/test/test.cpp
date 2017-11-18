@@ -21,6 +21,7 @@
 #include "../lib/display/screen.h"
 #include "../lib/display/screenhandler.h"
 #include "../lib/menu/menu.h"
+#include "lib/snake/snake.h"
 
 #ifndef TEST_UART
 #define TEST_UART 0
@@ -66,6 +67,13 @@
 #define TEST_SRAM 0
 #endif
 
+#ifndef TEST_FSM
+#define TEST_FSM 0
+#endif
+
+#ifndef TEST_SNAKE
+#define TEST_SNAKE 0
+#endif
 
 
 
@@ -524,6 +532,7 @@ void testSubScreen()
     */
 }
 
+
 // // Test ScreenHandler
 
 // // void testFSM()
@@ -953,3 +962,47 @@ void testMainLoop()
 
 
 #endif // TEST_MAINLOOP
+
+
+#if TEST_SNAKE
+//Test snake
+void testSnake(){
+
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, NULL);
+    
+	Snake sn;
+	sn.start();
+}
+#endif
+
+// Test ScreenHandler
+#if TEST_FSM
+
+void testFSM()
+{
+    printf("TestFSM\n");
+
+    FSM& fsm = fsm.getInstance();
+    #ifdef __AVR_ATmega162__
+
+    int i = 0;
+    int event = 0; // EV_GOTO_MENU
+    srand(1);
+    while (i < 100)
+    {
+        ++i;
+        printf("i: %4d \tOld state %2d \tEvent %2d \t", i, fsm.getCurrentState(), event);
+        fsm.handleEvent(event);
+        event = (rand() % (/*ev_node1_t::EV_NRF_END+1*/ 7));
+        printf("New state %2d\n", (int)fsm.getCurrentState());
+    }
+
+    #endif
+}
+
+#endif

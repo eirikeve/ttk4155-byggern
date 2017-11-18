@@ -17,6 +17,9 @@
 #define INDEX_APPLE 95
 #define INDEX_SQUARE 96
 
+#define EEPROM_SNAKE_HIGHSCORE_ADDR_L 0
+#define EEPROM_SNAKE_HIGHSCORE_ADDR_H 1
+
 #define set_bit(reg, bit) (reg |= (1 << (bit)))
 #define set_bit_value(reg, bit, val) (reg |= (val << (bit)))
 #define clr_bit(reg, bit) (reg &= ~(1 << (bit)))
