@@ -1,7 +1,6 @@
 #pragma once
-extern "C" {
 #include <stdint.h>
-}
+#include <avr/pgmspace.h>
 
 class MenuNode
 {
@@ -10,7 +9,7 @@ private:
   MenuNode *child;
   MenuNode *nextSibling;
   MenuNode *prevSibling;
-  char *name;
+  PROGMEM char * name;
   uint16_t totNrOfChildren;
   // uint16_t totNrOfSiblings;
   uint16_t indexOfSiblings;

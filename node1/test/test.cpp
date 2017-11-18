@@ -734,6 +734,10 @@ void callback(uint8_t argv) {
 }
 
 void testMenuCallback() {
+    char mainText[] PROGMEM = "MAIN";
+    char nr1Text[] PROGMEM = "Nr1";
+    char nr2Text[] PROGMEM = "Nr2";
+    char nr3Text[] PROGMEM = "Nr3";
 
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -748,10 +752,11 @@ void testMenuCallback() {
 	screen.clear();
     screen.render((uint8_t*)AVR_VRAM_1);
 
-    MenuNode main("");
-	MenuNode nr1("Nr1", &callback, NULL);
-	MenuNode nr2("Nr2");
-    MenuNode nr3("Sub1");
+    MenuNode main(mainText);
+	MenuNode nr1(nr1Text, &callback, NULL);
+	MenuNode nr2(nr2Text);
+	MenuNode nr3(nr3Text);
+
     main.addChild(nr1);
 	main.addChild(nr2);
     nr2.addChild(nr3);
@@ -824,6 +829,17 @@ void testMenuCallback() {
 
 }
 void testMenu() {
+    char mainText[] PROGMEM = "MAIN";
+    char nr1Text[] PROGMEM = "Nr1";
+    char nr2Text[] PROGMEM = "Nr2";
+    char nr3Text[] PROGMEM = "Nr3";
+    char nr4Text[] PROGMEM = "Nr4";
+    char nr5Text[] PROGMEM = "Nr5";
+    char nr6Text[] PROGMEM = "Nr6";
+    char nr8Text[] PROGMEM = "Nr8";
+    char nr9Text[] PROGMEM = "Nr9";
+    char nr10Text[] PROGMEM = "Nr10";
+    
 
     ADC& adc = ADC::getInstance();
 
@@ -834,16 +850,16 @@ void testMenu() {
 	screen.clear();
     screen.render((uint8_t*)AVR_VRAM_1);
 
-	MenuNode main("");
-	MenuNode nr1("Nr1");
-	MenuNode nr2("Nr2");
-	MenuNode nr3("Nr3");
-	MenuNode nr4("Nr4");
-	MenuNode nr5("Sub1");
-	MenuNode nr6("Sub2");
-	MenuNode nr8("Sub3");
-	MenuNode nr9("Sub4");
-	MenuNode nr10("Sub5");
+	MenuNode main(mainText);
+	MenuNode nr1(nr1Text);
+	MenuNode nr2(nr2Text);
+	MenuNode nr3(nr3Text);
+	MenuNode nr4(nr4Text);
+	MenuNode nr5(nr5Text);
+	MenuNode nr6(nr6Text);
+	MenuNode nr8(nr8Text);
+	MenuNode nr9(nr9Text);
+	MenuNode nr10(nr10Text);
 	main.addChild(nr1);
 	main.addChild(nr2);
 	main.addChild(nr3);

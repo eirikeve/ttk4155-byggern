@@ -1,28 +1,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 #include "menuNode.h"
 
-MenuNode::MenuNode(char *name, void (*callback_function)(uint8_t), uint8_t cb_fun_arg) :  parent(NULL),
-                                                                                child(NULL),
-                                                                                nextSibling(NULL),
-                                                                                prevSibling(NULL),
-                                                                                name(name),
-                                                                                totNrOfChildren(0),
-                                                                                indexOfSiblings(0),
-                                                                                callback_function(callback_function),
-                                                                                callback_function_arg(cb_fun_arg) {}
+MenuNode::MenuNode(PROGMEM char * name, void (*callback_function)(uint8_t), uint8_t cb_fun_arg) : parent(NULL),
+                                                                                                child(NULL),
+                                                                                                nextSibling(NULL),
+                                                                                                prevSibling(NULL),
+                                                                                                name(name),
+                                                                                                totNrOfChildren(0),
+                                                                                                indexOfSiblings(0),
+                                                                                                callback_function(callback_function),
+                                                                                                callback_function_arg(cb_fun_arg) {}
 
 
-MenuNode::MenuNode(char *name) : parent(NULL),
-                                 child(NULL),
-                                 nextSibling(NULL),
-                                 prevSibling(NULL),
-                                 name(name),
-                                 totNrOfChildren(0),
-                                 indexOfSiblings(0),
-                                 callback_function(NULL),
-                                 callback_function_arg(NULL) {}
+MenuNode::MenuNode(PROGMEM char * name) : parent(NULL),
+                                        child(NULL),
+                                        nextSibling(NULL),
+                                        prevSibling(NULL),
+                                        name(name),
+                                        totNrOfChildren(0),
+                                        indexOfSiblings(0),
+                                        callback_function(NULL),
+                                        callback_function_arg(NULL) {}
 
 void MenuNode::setParent(MenuNode &menu)
 {
@@ -71,7 +72,7 @@ MenuNode *MenuNode::getParent()
 
 char *MenuNode::getName()
 {
-    return this->name;
+    return (char*) pgm_read_word(&this->name);
 }
 
 uint16_t MenuNode::getTotNrOfChildren()
