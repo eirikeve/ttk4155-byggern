@@ -10,7 +10,7 @@
 #include "lib/pins/pins.h"
 #include "lib/uart/uart.h"
 #include "lib/adc/adc.h"
-#include "lib/joystick/joystick.h"
+#include "../lib/joystick/joystick.h"
 #include "lib/timer/timer.h"
 #include "../lib/spi/spi.h"
 #include "../lib/can/can.h"
@@ -22,6 +22,7 @@
 #include "../lib/can/canmsg.h"
 #include "../lib/slider/slider.h"
 #include "../lib/utilities/eeprom.h"
+#include "../lib/snake/snake.h"
 
 
 
