@@ -20,7 +20,7 @@
 #define CAN_ID_START_GAME 20 
 #define CAN_LENGTH_START_GAME 1 // Data does not matter
 
-#define CAN_ID_SEND_SEND_USR_INPUT 30
+#define CAN_ID_SEND_USR_INPUT 30
 #define CAN_LENGTH_SEND_USR_INPUT 3 // [(int8_t)joystick_x, (int8_t)slider_x, (bool)slider_button_pressed]
 
 #define CAN_ID_SEND_SOUND 40
