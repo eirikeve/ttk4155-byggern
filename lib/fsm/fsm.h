@@ -153,3 +153,4 @@ public:
 };
 
 void nothingHappens(void);
+void _fsm_extern_handle_event(uint8_t event);

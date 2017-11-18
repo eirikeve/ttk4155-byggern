@@ -188,4 +188,10 @@ bool FSM::checkAllStateFunctionsExist()
 
 
 void nothingHappens(void) {}
+
+void _fsm_extern_handle_event(uint8_t event)
+{
+    FSM & fsm = FSM::getInstance();
+    fsm.handleEvent(event);
+}
 #endif // __AVR_ATmega162__
