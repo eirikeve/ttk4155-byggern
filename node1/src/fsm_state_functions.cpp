@@ -1,6 +1,7 @@
 #include "fsm_state_functions.h"
 
 
+
 void startupLoop()
 {
     FSM & fsm = FSM::getInstance();
@@ -13,10 +14,10 @@ void startupLoop()
     msg.length = CAN_LENGTH_RESET;
     msg.data[0] = 0b0;
     can.transmit(&msg);
-    while(!(checkForACK()))
-    {
-        can.transmit(&msg);
-    }
+    // while(!(checkForACK()))
+    // {
+    //     can.transmit(&msg);
+    // }
 
     // Todo: Add graphic/ print showing that we got CAN response.
 
@@ -200,10 +201,11 @@ void snakeLoop()
 
     // The snake game runs until exit is requested by user.
 	Snake sn;
+    printf("Started snek\n");
     sn.start();
-
+    printf("Snek finished\n");
     // Highscore is stored in the EEPROM, so we check if the new score is higher than the current highscore.
-    uint16_t highscore = (uint16_t)sn.getHighScore();
+    /*uint16_t highscore = (uint16_t)sn.getHighScore();
     uint8_t current_highscore_L = eepromRead(EEPROM_SNAKE_HIGHSCORE_ADDR_L);
     uint8_t current_highscore_H = eepromRead(EEPROM_SNAKE_HIGHSCORE_ADDR_H);
     uint16_t current_highscore = (uint16_t)current_highscore_L | ((uint16_t)current_highscore_H << 8);
@@ -216,6 +218,7 @@ void snakeLoop()
 
         // Todo: Add a nice splash screen which congratulates the user!
     }
+    */
 
     fsm.handleEvent(EV_SNAKE_OVER);
     
