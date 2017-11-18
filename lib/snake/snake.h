@@ -10,37 +10,37 @@ class Snake
 {
 private:
 	// Snake Variables
-	int headxpos;
-	int headypos;
-	int snakeLength = 3;
-	int direction = 2;
+	uint8_t headxpos;
+	uint8_t headypos;
+	uint8_t snakeLength = 3;
+	uint8_t direction = 2;
 	
 	// Map dimensions
-	const int mapwidth = 21;
-	const int mapheight = 8;
-	static const int s = 168;
+	const uint8_t mapwidth = 21;
+	const uint8_t mapheight = 8;
+	static const uint8_t s = 168;
 	
 	// Tile values on map
-	int map[s];
+	int8_t map[s];
 	
 	//others
 	bool running;
-	int difficulty = 1;
-	int highscore = 0;
+	uint8_t difficulty = 1;
+	uint8_t highscore = 0;
 	Screen s1 = Screen();
 	
 	//menu
-	int currentOption = 0;
+	uint8_t currentOption = 0;
 
 	void run();
 	void initMap();
-	void move(int dx, int dy);
+	void move(int8_t dx, int8_t dy);
 	void update();
 	void changeDirection();
 	void generateFood();
-	char getMapValue(int value);
-	int xytomapIndex(int x,int y);
-	int getJoystick();
+	char getMapValue(uint8_t value);
+	uint8_t xytomapIndex(uint8_t x,uint8_t y);
+	uint8_t getJoystick();
 	bool getJoystickButton();
 	void printMap();
 	void printScore();
@@ -48,6 +48,6 @@ private:
 	
 public:
 	void start();
-	inline int getHighScore() const {return highscore;} 
+	inline uint8_t getHighScore() const {return highscore;} 
 
 };
