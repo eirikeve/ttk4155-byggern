@@ -117,15 +117,19 @@
 
 int main(void)
 {
+	// UART & uart = UART::getInstance();
+    // uart.initialize(9600);
+    // enablePrintfWithUart();
+    // while (true) {
+    //     printf("Test printf\n");
+    // }
 	// Whad does these do?
 	//set_bit(DDRB, 0);
 	//set_bit(PORTB, 0);
 	
 	//testLab8();
-	//testPrintfWithUart();
-
-	//testMainLoop();
-
+	// testPrintfWithUart();
+	testMenu();
 	// testCanLoopback();
 
 	// Initialize all

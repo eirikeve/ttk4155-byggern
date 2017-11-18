@@ -24,6 +24,27 @@ extern "C" {
     
 }
 
+#ifndef TEST_UART
+#define TEST_UART 0
+#endif
+
+#ifndef TEST_TIMER
+#define TEST_TIMER 0
+#endif
+
+#ifndef TEST_MOTOR
+#define TEST_MOTOR 0
+#endif
+
+#ifndef TEST_SERVO
+#define TEST_SERVO 0
+#endif
+
+#ifndef TEST_CAN
+#define TEST_CAN 0
+#endif
+
+#if TEST_UART
 void testUartTransmit() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -51,6 +72,9 @@ void testPrintfWithUart() {
         printf("Test printf\n");
     }
 }
+#endif //TEST_UART
+
+#if TEST_TIMER
 void callbackTimer0() {
     printf("Test timer0\n");
 }
@@ -96,8 +120,9 @@ void testTimerStop() {
         continue;
     }
 }
+#endif //TEST_TIMER
 
-
+#if TEST_SERVO
 void testServoPercentage() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -136,6 +161,20 @@ void testServoAngle() {
     }
 }
 
+void testServo() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    Servo& servo = Servo::getInstance();
+    servo.initialize(90);
+
+    while (true) {
+        servo.setAnglePercentage(100);
+    }
+}
+#endif //TEST_SERVO
+
 void testADC() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -171,6 +210,7 @@ void testSpi() {
     }
 }
 
+#if TEST_CAN
 void testCanLoopback() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -253,20 +293,9 @@ void testControlServoOverCan() {
         }
     }
 }
+#endif //TEST_CAN
 
-void testServo() {
-    UART & uart = UART::getInstance();
-    uart.initialize(9600);
-    enablePrintfWithUart();
-
-    Servo& servo = Servo::getInstance();
-    servo.initialize(90);
-
-    while (true) {
-        servo.setAnglePercentage(100);
-    }
-}
-
+#if TEST_MOTOR
 void testMotor() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -413,6 +442,36 @@ void testLab8() {
                 solenoid.shoot();
                 servo.setAngle(0);
             }
+        }
+    }
+}
+#endif //TEST_MOTOR
+
+void testGame(){
+    CAN& can = CAN::getInstance();
+    Servo& servo = Servo::getInstance();
+    Motor& motor = Motor::getInstance();
+    Solenoid & solenoid = Solenoid::getInstance();
+
+    while (true) {
+        CanMessage recv = can.receive();
+        if (recv.id != NULL) {
+			// input to motor
+            motor.run((int8_t) recv.data[0]);
+
+			// activate solenoid
+            if (recv.data[1]) {
+                solenoid.shoot();
+                servo.setAngle(0);
+            }
+			
+			// input to servo
+            servo.setAnglePercentage(recv.data[2]);
+			
+			// possibility to return
+			if (recv.data[5]){
+				return;
+			}
         }
     }
 }
