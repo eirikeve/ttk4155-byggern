@@ -1,29 +1,4 @@
-#pragma once
-
-#include <stdio.h>
-#include <avr/io.h>
-#include <util/delay.h>
-#include <stdint.h>
-
-#include "test.h"
-#include "lib/utilities/printf.h"
-#include "lib/pins/pins.h"
-#include "lib/uart/uart.h"
-#include "lib/adc/adc.h"
-#include "lib/joystick/joystick.h"
-#include "lib/timer/timer.h"
-#include "../lib/spi/spi.h"
-#include "../lib/can/can.h"
-#include "../lib/slider/slider.h"
-#include "../lib/fsm/fsm.h"
-#include "../lib/display/screen.h"
-//#include "../lib/display/screenhandler.h"
-#include "../lib/menu/menu.h"
-#include "../lib/can/canmsg.h"
-#include "../lib/slider/slider.h"
-#include "../lib/utilities/eeprom.h"
-
-
+#include "fsm_state_functions.h"
 
 
 void startupLoop()
@@ -59,9 +34,89 @@ void startupLoop()
 
 }
 
-void menuLoop();
+void menuLoop()
+{
+    Screen screen = Screen();
+	screen.clear();
+    screen.render((uint8_t*)AVR_VRAM_1);
 
-void gameLoop(void)
+    MenuNode main("");
+	MenuNode nr1("Nr1", &callback, NULL);
+	MenuNode nr2("Nr2");
+    MenuNode nr3("Sub1");
+    main.addChild(nr1);
+	main.addChild(nr2);
+    nr2.addChild(nr3);
+    Menu menuStructure(&main);
+
+    int8_t x;
+	int8_t y;
+	Direction currentDir = Direction::NEUTRAL;
+	Direction lastDir = Direction::NEUTRAL;
+
+	while (true)
+	{
+        screen.clear();
+		lastDir = currentDir;
+        currentDir = joystick.read(&x, &y);
+		char **choices = NULL;
+		if (menuStructure.getCurrent() != NULL)
+		{
+			choices = menuStructure.getCurrent()->getChildrenNames();
+			for (int i = 0; i < menuStructure.getCurrent()->getTotNrOfChildren(); i++)
+			{
+				screen.goTo(i, 1);
+				if (i == menuStructure.getSelectIndex())
+				{
+					screen.writeChar('>');
+                }
+                else {
+                    screen.writeChar(' ');
+                }
+				screen.writeString(choices[i]);
+				screen.writeChar('\n');
+			}
+			free(choices);
+		}
+
+		if (lastDir == Direction::NEUTRAL)
+		{
+			switch (currentDir)
+			{
+			case Direction::NORTH:
+			{
+				menuStructure.up();
+				break;
+			}
+			case Direction::SOUTH:
+			{
+				menuStructure.down();
+				break;
+			}
+			case Direction::EAST:
+			{
+				menuStructure.select();
+				screen.clear();
+				break;
+			}
+			case Direction::WEST:
+			{
+				menuStructure.back();
+				screen.clear();
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
+		}
+        screen.render();
+	}
+
+}
+
+void gameLoop()
 {
     // Get initialized instances
     FSM & fsm = FSM::getInstance();
@@ -134,10 +189,10 @@ void snakeLoop()
     uint16_t highscore = (uint16_t)sn.getHighScore();
     uint8_t current_highscore_L = eepromRead(EEPROM_SNAKE_HIGHSCORE_ADDR_L);
     uint8_t current_highscore_H = eepromRead(EEPROM_SNAKE_HIGHSCORE_ADDR_H);
-    uint16_t current_highscore = (uint16_t)current_highscore_L | ((uint16_t)current_highscore_H < 8);
+    uint16_t current_highscore = (uint16_t)current_highscore_L | ((uint16_t)current_highscore_H << 8);
     if (highscore > current_highscore)
     {
-        current_highscore_H = (uint8_t)((highscore > 8) & 0xFF);
+        current_highscore_H = (uint8_t)((highscore >> 8) & 0xFF);
         current_highscore_L = (uint8_t)(highscore & 0xFF);
         eepromWrite(EEPROM_SNAKE_HIGHSCORE_ADDR_H, current_highscore_H);
         eepromWrite(EEPROM_SNAKE_HIGHSCORE_ADDR_L, current_highscore_L);
@@ -147,5 +202,18 @@ void snakeLoop()
 
     fsm.handleEvent(EV_SNAKE_OVER);
     
+}
+
+
+void displayLoop()
+{
+    // todo add some awesome graphic stuff here!
+    fsm.handleEvent(EV_DISPLAY_END);
+}
+
+
+{
+    // todo add the NRF functionality
+    fsm.handleEvent(EV_GAME_NRF_END);
 }
 
