@@ -1,4 +1,6 @@
 #pragma once
+#ifdef __AVR_ATmega162__
+
 #include <avr.io>
 #include <util/delay.h>
 #include "../utilities/utilities.h"
@@ -25,3 +27,5 @@ void eepromWrite(uint16_t eeprom_address, uint8_t data)
     EECR |= 0b0010; // Write enable
 
 }
+
+#endif // __AVR_ATmega162__
