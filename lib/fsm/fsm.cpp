@@ -4,7 +4,7 @@
 #include "fsm.h"
 #ifdef __AVR_ATmega162__
 
-void nothingHappens(void) {}
+
 
 FSM::FSM()
 {
@@ -186,4 +186,6 @@ bool FSM::checkAllStateFunctionsExist()
         return true;
 }
 
+
+void nothingHappens(void) {}
 #endif // __AVR_ATmega162__

@@ -152,3 +152,4 @@ public:
 
 };
 
+void nothingHappens(void);
