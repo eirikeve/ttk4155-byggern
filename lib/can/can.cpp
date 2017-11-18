@@ -215,3 +215,23 @@ void CAN::mcp2515ReadStatus() {
 
     this->spi->deselectSlave();
 }
+
+
+
+
+bool checkForACK()
+{
+    CAN & can = CAN::getInstance();
+    CanMessage recv;
+
+    for (uint16_t i = 0; i < 1000; ++i )
+    {
+        recv = can.receive();
+        if (recv.id == CAN_ID_ACK)
+        {
+            break; // for loop
+        }
+        _delay_ms(1);
+    }
+    return (recv.id == CAN_ID_ACK);
+}

@@ -89,3 +89,6 @@ class CAN
         friend void MCP2515_vect();
 
 };
+    
+
+bool checkForACK();
