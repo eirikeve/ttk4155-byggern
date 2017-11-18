@@ -416,6 +416,7 @@ void testScreenHandler()
     s1.flagReadyToRender();
     _delay_ms(4000);    
     s1.addSubScreen(&s2, 4, LOWER);
+    h.addScreen(&s2);
     s1.clear();
     s1.writeString("Added s2 again. Now testing if s2 will update when not prompted to!");
     s2.writeString("Should not appear");
