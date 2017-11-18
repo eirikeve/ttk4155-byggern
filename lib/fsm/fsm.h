@@ -16,7 +16,7 @@ enum state_node1_t
     STATE_GAME,
     STATE_SNAKE,
     STATE_DISPLAY,
-    STATE_NRF,
+    STATE_GAME_NRF,
     STATE_ERROR
 };
 
@@ -30,8 +30,10 @@ enum ev_node1_t
     EV_SNAKE_OVER,
     EV_START_DISPLAY,
     EV_DISPLAY_END,
-    EV_START_NRF,
-    EV_NRF_END
+    EV_START_GAME_NRF,
+    EV_GAME_NRF_END,
+    EV_NO_CAN_ACK,
+    EV_MISSING_STATE_FUNCTIONS
 };
 /*#define     STATE_STARTUP1  0
 #define     STATE_MENU      1
@@ -144,6 +146,7 @@ public:
     void handleEvent(uint8_t event);
     void runStateLoop();
     void addStateFunctions(stateFunctions s_fun);
+    bool checkAllStateFunctionsExist();
 
     inline int getCurrentState() {return this->current_state;}
 
