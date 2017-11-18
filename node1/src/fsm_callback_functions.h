@@ -115,6 +115,8 @@ void gameLoop(void)
 
 void snakeLoop()
 {
-    
+	Snake sn;
+    sn.start();
+    int highscore = sn.getHighScore();
 }
 
