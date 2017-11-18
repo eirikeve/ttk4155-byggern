@@ -335,7 +335,7 @@ void Screen::write(uint8_t c)
     vram[(page0 + loc_page) * 128 + (col0 + loc_col++)] = c;
 }
 
-void drawPixel(uint8_t x, uint8_t y, bool filled)
+void Screen::drawPixel(uint8_t x, uint8_t y, bool filled)
 {
     uint8_t pageNum = y / 8;
     uint8_t bitIndex= y % 8;
@@ -380,11 +380,11 @@ void Screen::render(uint8_t * buffer)
     if ((uint8_t*)AVR_VRAM_1 == buffer || (uint8_t*)AVR_VRAM_2 == buffer)
     {
         // Write SRAM data to the screen
-        for (int p = 0; p < 8; ++p)
+        for (uint8_t p = 0; p < 8; ++p)
         {
             oled.goToPage(p);
             oled.goToColumn(0);
-            for (int c = 0; c < 127; ++c)
+            for (uint8_t c = 0; c < 127; ++c)
             {
                 oled.write(buffer[p * 128 + c]);
             }
@@ -400,25 +400,32 @@ void Screen::flagReadyToRender()
 }
 
 
-void Screen::renderOnlyThis(uint8_t * buffer) = (uint8_t*)AVR_VRAM_1)
+void Screen::renderOnlyThis()
 {
-    if ((uint8_t*)AVR_VRAM_1 == buffer || (uint8_t*)AVR_VRAM_2 == buffer)
+    if ((uint8_t*)AVR_VRAM_1 == vram || (uint8_t*)AVR_VRAM_2 == vram)
         {
-        // Write SRAM data to the screen
-        for (int p = page0; p < page1; ++p)
-        {
-            oled.goToPage(p, col0);
-            for (int c = col0; c < col1; ++c)
+            uint8_t* buffer = (uint8_t*)AVR_VRAM_1;
+
+            if ((uint8_t*)AVR_VRAM_1 == vram)
             {
-                oled.write(buffer[p * 128 + c]);
+                uint8_t* buffer = (uint8_t*)AVR_VRAM_2;
             }
-            if (col1 == 128)
+
+            // Write SRAM data to the screen
+            for (uint8_t p = page0; p < page1; ++p)
             {
-                oled.goTo(p, 127);
-                oled.write(0x00);
+                oled.goTo(p, col0);
+                for (uint8_t c = col0; c < col1; ++c)
+                {
+                    oled.write(buffer[p * 128 + c]);
+                }
+                if (col1 == 128)
+                {
+                    oled.goTo(p, 127);
+                    oled.write(0x00);
+                }
+                
             }
-            
-        }
     }
 }
 
