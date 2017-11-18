@@ -8,7 +8,6 @@ ScreenHandler::ScreenHandler()
     num_screens = 0;
     max_num_screens = 5;
     array_size = 5;
-    screens = (Screen*)[5];
     currentBuffer = (uint8_t*)AVR_VRAM_1;
     Timer& interruptTimer = Timer::getInstance(1);
     interruptTimer.initialize((uint16_t)(1000.0/OLED_UPDATE_FPS), &ScreenHandlerTimerInterrupt, NULL);
@@ -18,55 +17,33 @@ ScreenHandler::ScreenHandler()
 void ScreenHandler::_render()
 {
     if (num_screens > 0)
-    {   uint8_t* otherBuffer = (uint8_t*)AVR_VRAM_1;
-        if (otherBuffer == currentBuffer)
+    {   
+        for (uint8_t screen = 0; screen < num_screens; ++screen)
         {
-            otherBuffer = (uint8_t*)AVR_VRAM_2;
+            if (screens[screen]->ready_to_render)
+            {
+                _changeVRAMBuffer(screens[screen]);
+                screens[screen]->renderOnlyThis();
+                
+            }
         }
-        screens[0]->render(otherBuffer); // Renders the whole screen!
     }
 }
 
 
 
-void ScreenHandler::_addScreenToArray(Screen * s)
+void ScreenHandler::_changeVRAMBuffer(Screen * s)
 {
-    for (uint8_t i = 0; i < num_screens; ++i)
+    if ((uint8_t*)AVR_VRAM_1 == s->vram)
     {
-        if (screens[i] == s)
-        {
-            // Screen already added to handler, don't add again
-            return;
-        }
-    }
-    if (num_screens >= max_num_screens)
-    {
-        // Not room for more screens
-        return; 
-    }
-    screens[num_screens] = s;
-    ++num_screens;
-}
-
-void ScreenHandler::_changeVRAMBuffer()
-{
-    if ((uint8_t*)AVR_VRAM_1 == currentBuffer)
-    {
-        currentBuffer = (uint8_t*)AVR_VRAM_2;
+        s->changeBufferTo((uint8_t*)AVR_VRAM_2);
     }
     else
     {
-        currentBuffer = (uint8_t*)AVR_VRAM_1;
+        s->changeBufferTo((uint8_t*)AVR_VRAM_1);
     }
-    for (uint8_t i = 0; i < num_screens; ++i)
-    {
-        screens[i]->changeBufferTo(currentBuffer);
-        if (i == 0)
-        {
-            screens[0]->copyVRAMtoCurrentBuffer();
-        }
-    }
-    
+
+    s->copyVRAMtoCurrentBuffer();
 }
 
 bool ScreenHandler::isReadyToRender()
@@ -92,7 +69,21 @@ void ScreenHandler::_clearRenderFlags()
 
 void ScreenHandler::addScreen(Screen * s)
 {
-    _addScreenToArray(s);
+    for (uint8_t i = 0; i < num_screens; ++i)
+    {
+        if (screens[i] == s)
+        {
+            // Screen already added to handler, don't add again
+            return;
+        }
+    }
+    if (num_screens >= max_num_screens)
+    {
+        // Not room for more screens
+        return; 
+    }
+    screens[num_screens] = s;
+    ++num_screens;
 }
 
 
@@ -123,6 +114,7 @@ uint8_t ScreenHandler::getNumScreens() const
 {
     return num_screens;
 }
+
 Screen * ScreenHandler::getScreenPtr(uint8_t screen_index)
 {
     if (screen_index < num_screens && screen_index >= 0)
@@ -136,7 +128,6 @@ Screen * ScreenHandler::getScreenPtr(uint8_t screen_index)
 void ScreenHandler::_interruptHandlerRoutine()
 {
     if (isReadyToRender()){
-        _changeVRAMBuffer();
         _render();
         _clearRenderFlags(); // Comment out this line (or the if check) to make the display always update when the interrupt is called
     }

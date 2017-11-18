@@ -14,7 +14,7 @@ private:
     uint8_t max_num_screens;
     uint8_t array_size;
     uint8_t* currentBuffer;
-    Screen ** screens[5];
+    Screen * screens[5];
 
 // Public variables
 public:
@@ -24,9 +24,7 @@ private:
     ScreenHandler();
     
     void _render();
-    void _increaseArraySize();
-    void _addScreenToArray(Screen * s);
-    void _changeVRAMBuffer();
+    void _changeVRAMBuffer(Screen * s);
     void _clearRenderFlags();
 
 // Public methods
