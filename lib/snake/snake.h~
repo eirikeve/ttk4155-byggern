@@ -43,7 +43,7 @@ public:
 	char getMapValue(int value);
 	int xytomapIndex(int x,int y);
 	int getJoystick();
-	bool getJoystickButton();
+	int getJoystickButton()
 	void printMap();
 	void printScore();
 	void printMenu();

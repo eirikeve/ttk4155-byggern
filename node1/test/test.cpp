@@ -331,7 +331,7 @@ void testSnake(){
     joystick.initialize(&adc, 10, NULL);
     
 	Snake sn;
-	sn.run();
+	sn.start();
 }
 
 // Test ScreenHandler

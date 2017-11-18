@@ -6,23 +6,26 @@
 void Snake::start(){
 	this->printMenu();
 	while(1){
-		while(getJoystick == 0){
-			// go up
-			if(getJoystick() == 1 && currentOption >0)currentOption = currentOption-1;
-			// go down
-			if(getJoystick() == 3 && currentOption <2)currentOption = currentOption+1;
-			// change difficulty
-			if(getJoystick() == 2&& currentOption == 2&&difficulty <3)currentOption = currentOption+1;
-			if(getJoystick() == 4&& currentOption == 2 && difficulty >1)currentOption = currentOption-1;
-			//chose option
-			if(getJoystickButton){
-				if (currentOption == 0) this->run;
-				if (currentOption == 2) return;
-			}
+		// go up
+		if(getJoystick() == 1 && currentOption >0)currentOption = currentOption-1;
+		// go down
+		else if(getJoystick() == 3 && currentOption <2)currentOption = currentOption+1;
+		// change difficulty
+		else if(getJoystick() == 2&& currentOption == 1&&difficulty <3)difficulty = difficulty+1;
+		else if(getJoystick() == 4&& currentOption == 1 && difficulty >1)difficulty = difficulty-1;
+		//chose option
+		else if(getJoystick() == 2&& currentOption == 0)this->run();
+		else if(getJoystick() == 2&& currentOption == 2)return;
+		if(getJoystickButton()){
+			if (currentOption == 0) this->run();
+			if (currentOption == 2) return;
 		}
+		if (getJoystickButton())this->run();
 		this->printMenu();
+		_delay_ms(1000);
 	}
 }
+
 void Snake::run(){
 	//Test
 	this->initMap();
@@ -38,7 +41,10 @@ void Snake::run(){
 		this->printMap();
 
 		//wait for length of difficulty
-		_delay_ms(100);
+		if (difficulty==1)_delay_ms(200);
+		if (difficulty==2)_delay_ms(100);
+		if (difficulty==3)_delay_ms(50);
+
 	}
 	this->printScore();
 	_delay_ms(2000);
@@ -86,10 +92,10 @@ int Snake::getJoystick(){
 
 }
 
-int Snake::getJoystickButton(){
+bool Snake::getJoystickButton(){
 	// Initilize things needed to read joystick
     Joystick & joystick = Joystick::getInstance();
-	
+	if (joystick.buttonPressed()) printf("Hei fra button");
 	return joystick.buttonPressed();
 }
 
@@ -241,38 +247,52 @@ void Snake::printScore(){
 
 void Snake::printMenu(){
 	s1.clear();
-    s1.go(30,2);
+	s1.goToStart();
+    s1.goTo(1,30);
 	s1.writeString("SNAKE");
 	
 	if (currentOption == 0){
-		s1.go(8,4);
+		s1.goTo(3,8);
 		s1.writeString("->PLAY GAME");
-		s1.go(20,5);
-		s1.writeString("DIFFICULTY: %d ", difficulty);
-		s1.go(20,6);
+		s1.goTo(4,20);
+		char diff[3];
+		itoa(difficulty, diff, 10);
+		s1.writeString("DIFFICULTY: ");
+		s1.writeString(diff);
+		s1.goTo(5,20);
 		s1.writeString("END GAME");
 	}
 	
 	if (currentOption == 1){
-		s1.go(20,4);
+		s1.goTo(3,20);
 		s1.writeString("PLAY GAME");
-		s1.go(8,5);
-		s1.writeString("->DIFFICULTY: %d ", difficulty);
-		s1.go(20,6);
+		s1.goTo(4,8);
+		char diff[3];
+		itoa(difficulty, diff, 10);
+		s1.writeString("->DIFFICULTY: ");
+		s1.writeString(diff);
+		s1.goTo(5,20);
 		s1.writeString("END GAME");
 	}
 	
 	if (currentOption == 2){
-		s1.go(20,4);
+		s1.goTo(3,20);
 		s1.writeString("PLAY GAME");
-		s1.go(20,5);
-		s1.writeString("DIFFICULTY: %d ", difficulty);
-		s1.go(8,6);
+		s1.goTo(4,20);
+		char diff[3];
+		itoa(difficulty, diff, 10);
+		s1.writeString("DIFFICULTY: ");
+		s1.writeString(diff);
+		s1.goTo(5,8);
 		s1.writeString("->END GAME");
 	}
 	
-	s1.go(20,8);
-	s1.writeString("HIGHSCORE: %d ", highscore);
+	s1.goTo(7,20);
+	char diff[3];
+	itoa(highscore, diff, 10);
+	s1.writeString("HIGHSCORE: ");
+	s1.writeString(diff);
+	s1.render();
 }
 
 #endif
