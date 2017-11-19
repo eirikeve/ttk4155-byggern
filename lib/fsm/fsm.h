@@ -23,6 +23,7 @@ enum state_node1_t
 
 enum ev_node1_t 
 {
+    EV_RESET,
     EV_GOTO_MENU,
     EV_START_GAME,
     EV_GAME_OVER,

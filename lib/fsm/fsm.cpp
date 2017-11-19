@@ -2,6 +2,9 @@
 // 13/11/2017
 
 #include "fsm.h"
+#include "../can/can.h"
+#include "../can/canmsg.h"
+
 #ifdef __AVR_ATmega162__
 
 
@@ -43,6 +46,17 @@ void FSM::handleEvent(uint8_t event)
 
     switch(event)
     {
+            case EV_RESET:
+            {
+                transitionTo(STATE_STARTUP1);
+                // Send ACK after RESET recv
+                CAN & can = CAN::getInstance();
+                CanMessage msg;
+                msg.length = 1;
+                msg.id = CAN_ID_ACK;
+
+                break;
+            }
             case EV_GOTO_MENU:
             {
                 if (current_state == STATE_STARTUP1)

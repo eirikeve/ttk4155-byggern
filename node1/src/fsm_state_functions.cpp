@@ -7,20 +7,6 @@ void startupLoop()
     FSM & fsm = FSM::getInstance();
     CAN & can = CAN::getInstance();
 
-    // Todo: Add graphic/ print showing that we are waiting for CAN response.
-
-    CanMessage msg;
-    msg.id = CAN_ID_RESET;
-    msg.length = CAN_LENGTH_RESET;
-    msg.data[0] = 0b0;
-    can.transmit(&msg);
-    // while(!(checkForACK()))
-    // {
-    //     can.transmit(&msg);
-    // }
-
-    // Todo: Add graphic/ print showing that we got CAN response.
-
     // If all state functions are loaded into the fsm, go to the menu state
     if (fsm.checkAllStateFunctionsExist())
     {
@@ -141,59 +127,76 @@ void gameLoop()
     // Get initialized instances
     FSM & fsm = FSM::getInstance();
     Joystick & joystick = Joystick::getInstance();
-    Slider & slider = Slider::getInstance(1);
+    Slider & slider1 = Slider::getInstance(1);
     CAN & can = CAN::getInstance();
 
     // Send msg to node 2 that the game is starting
     CanMessage msg;
     CanMessage recv;
 
-    msg.id = CAN_ID_START_GAME;
-    msg.length = CAN_LENGTH_START_GAME;
-    msg.data[0] = 0b0;
-    can.transmit(&msg);
 
-    // Wait for ACK from node 2. If none is received, inform the FSM
-    if (!(checkForACK()))
-    {
-        fsm.handleEvent(EV_NO_CAN_ACK);
-        return; // return to main while loop, where new onStateLoop will run
-    }
-
-    msg.id = CAN_ID_SEND_USR_INPUT;
-    msg.length = CAN_LENGTH_SEND_USR_INPUT;
-    
-    // Joystick and slider read values
-    int8_t joystick_x;
-    int8_t slider_x;
-    bool slider_button_pressed;
-
-    while (true) 
-    {
-        // Transmit control data, and check for END_GAME event
-        joystick_x = joystick.readX();
-        slider_x = slider.read();
-        slider_button_pressed = slider.buttonPressed();
-
-        //printf("x: %d, y: %d, dir: %d\n", x, y, dir);
-        msg.data[0] = joystick_x;
-		msg.data[1] = slider_x;
-        msg.data[2] = (int8_t)slider_button_pressed;
+    msg.id = CAN_ID_RESET;
+    msg.length = CAN_LENGTH_RESET;
+    msg.data[0] = 0;
+    bool ack;   
+    do{
         can.transmit(&msg);
-        _delay_ms(100);
+        ack = checkForACK();
+        
+    } while(ack == false);
+    printf("Got Reset ACK");
 
-        recv = can.receive();
-        if (recv.id == CAN_ID_STOP_GAME)
+    msg.id = CAN_ID_START_GAME;
+    do{
+        can.transmit(&msg);
+        ack = checkForACK();
+    } while(ack == false); 
+    printf("Got Start ACK");
+
+    int8_t joystick_x;
+    int8_t joystick_y;
+    int8_t slider_x;
+    bool slider_button_pressed = false;
+
+    printf("Running game\n");
+        while (true) 
         {
-            msg.id = CAN_ID_ACK;
-            msg.length = CAN_LENGTH_ACK;
-            msg.data[0] = 0b0;
-
+            // In game
+            // Transmit control data, and check for END_GAME event
+            joystick.read(&joystick_x, &joystick_y);
+            slider_x = slider1.read();
+            slider_button_pressed = slider1.buttonPressed();
+            //printf("x: %d, y: %d, dir: %d\n", x, y, dir);
+            msg.id = CAN_ID_SEND_USR_INPUT;
+            msg.length = 3;
+            msg.data[0] = joystick_x;
+            msg.data[1] = slider_x;
+            msg.data[2] = (int8_t)slider_button_pressed;
             can.transmit(&msg);
-            fsm.handleEvent(EV_GAME_OVER);
-            return; // return to main while loop, where new onStateLoop will run
+            _delay_ms(100);
+
+            recv = can.receive();
+            if (recv.id == CAN_ID_STOP_GAME)
+            {
+                printf("\tRecvd STOP. Sending ACK.\n");
+                msg.id = CAN_ID_ACK;
+                msg.length = CAN_LENGTH_ACK;
+                msg.data[0] = 0b0;
+                can.transmit(&msg);
+                fsm.handleEvent(EV_GAME_OVER);
+                return;
+            }
+            else if (recv.id == CAN_ID_RESET)
+            {
+                printf("\tRecvd Reset! Exiting Loop\n");
+                // Usually, trigger event here.
+                fsm.handleEvent(EV_RESET);
+                return;
+               
+            }
         }
-    }
+    // Should not ever reach this, but added just in case
+    fsm.handleEvent(EV_GAME_OVER);
 }
 
 void snakeLoop()

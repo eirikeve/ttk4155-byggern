@@ -40,6 +40,17 @@ void toggle_led() {
     PORTB ^= 0b1;
 }
 
+void sendResetUntilACK()
+{
+    CAN & can = CAN::getInstance();
+    CanMessage msg;
+    msg.id = CAN_ID_RESET;
+    msg.length = CAN_LENGTH_RESET;
+    msg.data[0] = 0b0;
+    do{
+        can.transmit(&msg);
+    } while(!(checkForACK()));
+}
 
 
 int main(void)
@@ -65,8 +76,8 @@ int main(void)
     Joystick & joystick = Joystick::getInstance();
     joystick.initialize(&adc, 10, &pb3);
 
-    //Slider & slider0 = Slider::getInstance(0);
-    //slider0.initialize(&adc, &pb2);
+    Slider & slider0 = Slider::getInstance(0);
+    slider0.initialize(&adc, &pb2);
 
     Slider & slider1 = Slider::getInstance(1);
     slider1.initialize(&adc, &pb1);
@@ -74,86 +85,11 @@ int main(void)
     FSM & fsm = FSM::getInstance();
     loadStateFunctionsToFSM();
 
-    /*ADC& adc = ADC::getInstance();
-    Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 10, &pb3);*/
-    
-    CanMessage msg;
-    CanMessage recv;
+    sendResetUntilACK();
 
     printf("Node1 Starting\n");
 	while (true)
 	{
-	 	//fsm.runStateLoop();
-        
-        
-
-        msg.id = CAN_ID_RESET;
-        msg.length = CAN_LENGTH_RESET;
-        msg.data[0] = 0;
-        bool ack;
-
-
-
-        do{
-            printf("Loop Start, sending Reset\n");
-            can.transmit(&msg);
-            ack = checkForACK();
-            printf("ACK for reset? %d\n", ack);
-        } while(ack == false);
-
-        
-
-        msg.id = CAN_ID_START_GAME;
-        do{
-            printf("Sending StartGame\n");
-            can.transmit(&msg);
-            ack = checkForACK();
-            printf("ACK for startGame? %d\n", ack);
-        } while(ack == false);
-
-        int8_t joystick_x;
-        int8_t joystick_y;
-        int8_t slider_x = 0;
-        bool slider_button_pressed = false;
-        printf("Running game\n");
-            while (true) 
-            {
-                // In game
-                // Transmit control data, and check for END_GAME event
-                joystick.read(&joystick_x, &joystick_y);
-                slider_x = slider1.read();
-                slider_button_pressed = slider1.buttonPressed();
-
-                //printf("x: %d, y: %d, dir: %d\n", x, y, dir);
-                msg.id = CAN_ID_SEND_USR_INPUT;
-                msg.length = 3;
-                msg.data[0] = joystick_x;
-                msg.data[1] = slider_x;
-                msg.data[2] = (int8_t)slider_button_pressed;
-                can.transmit(&msg);
-                _delay_ms(100);
-                
-                recv = can.receive();
-                if (recv.id == CAN_ID_STOP_GAME)
-                {
-                    printf("\tRecvd STOP. Sending ACK.\n");
-                    msg.id = CAN_ID_ACK;
-                    msg.length = CAN_LENGTH_ACK;
-                    msg.data[0] = 0b0;
-
-                    can.transmit(&msg);
-                    break; // return to main while loop
-                }
-                else if (recv.id == CAN_ID_RESET)
-                {
-                    printf("\tRecvd Reset! Exiting Loop\n");
-                    // Usually, trigger event here.
-                    break;
-                }
-            }
-            printf("Restarting loop in..\n3sec\n");
-            _delay_ms(3000);
-
+        fsm.runStateLoop();
 	}
 }
