@@ -8,8 +8,8 @@ class OLED
 
 
 private:
-    uint8_t* dataAddr = (uint8_t *)0x1200;
-    uint8_t* commandAddr = (uint8_t *)0x1000;
+    const uint8_t* dataAddr = (uint8_t *)0x1200;
+    const uint8_t* commandAddr = (uint8_t *)0x1000;
     OLED();
 
   public:
