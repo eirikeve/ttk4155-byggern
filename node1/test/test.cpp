@@ -22,6 +22,7 @@
 #include "../lib/display/screenhandler.h"
 #include "../lib/menu/menu.h"
 #include "lib/snake/snake.h"
+#include "../lib/utilities/eeprom.h"
 
 #ifndef TEST_UART
 #define TEST_UART 0
@@ -1036,36 +1037,36 @@ void testFSM()
 void testEEPROM()
 {
     printf("Starting EEPROM test\n");
-    seed = 0;
+    int seed = 0;
     uint8_t data_in;
     uint8_t data_out;
     uint16_t write_errors = 0;
     uint16_t retrieval_errors = 0;
 
     // Test write
-    srand(seed)
-    for (uint16_t adddress = 0; address < 512; ++address)
+    srand(seed);
+    for (uint16_t address = 0; address < 512; ++address)
     {
-        data_in = rand % UINT8_MAX;
+        data_in = rand() % UINT8_MAX;
         eepromWrite(address, data_in);
         data_out = eepromRead(address);
         if (data_in != data_out)
         {
-            printf("Write err: EEPROM[%3d] = %02X (should be %02X)\n", i,retreived_value, some_value);
+            printf("Write err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
             ++write_errors;
         }
     }
 
     // Test Retrieve
-    srand(seed)
-    for (uint16_t adddress = 0; address < 512; ++address)
+    srand(seed); // Reset rand with same seed
+    for (uint16_t address = 0; address < 512; ++address)
     {
-        data_in = rand % UINT8_MAX;
+        data_in = rand() % UINT8_MAX;
 
         data_out = eepromRead(address);
         if (data_in != data_out)
         {
-            printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", i,retreived_value, some_value);
+            printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
             ++retrieval_errors;
         }
     }
