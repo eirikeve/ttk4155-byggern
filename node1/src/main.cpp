@@ -36,6 +36,7 @@
 #include "../lib/utilities/eeprom.h"
 #include "fsm_state_functions.h"
 
+
 void toggle_led() {
     PORTB ^= 0b1;
 }
