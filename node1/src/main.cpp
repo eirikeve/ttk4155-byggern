@@ -40,17 +40,7 @@ void toggle_led() {
     PORTB ^= 0b1;
 }
 
-void sendResetUntilACK()
-{
-    CAN & can = CAN::getInstance();
-    CanMessage msg;
-    msg.id = CAN_ID_RESET;
-    msg.length = CAN_LENGTH_RESET;
-    msg.data[0] = 0b0;
-    do{
-        can.transmit(&msg);
-    } while(!(checkForACK()));
-}
+
 
 
 int main(void)
