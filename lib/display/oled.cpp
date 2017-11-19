@@ -13,8 +13,6 @@ OLED::OLED()
 
     set_bit(MCUCR, SRE);
     set_bit(SFIOR, XMM2);
-    this->dataAddr = (uint8_t *)0x1200;
-    this->commandAddr = (uint8_t *)0x1000;
     write_c(0xae);
     // display off
     write_c(0xa1);
