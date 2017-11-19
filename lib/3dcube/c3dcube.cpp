@@ -39,12 +39,12 @@ void c3DCube::runTimeStep(int8_t joystick_x, int8_t joystick_y)
 void c3DCube::drawToVram()
 {
     // Draw lower cube
-    /*drawLine(lo_left_coord, lo_upper_coord, lo_right_coord, lo_upper_coord);
+    drawLine(lo_left_coord, lo_upper_coord, lo_right_coord, lo_upper_coord);
     drawLine(lo_left_coord, lo_upper_coord, lo_left_coord, lo_lower_coord);
     drawLine(lo_right_coord, lo_lower_coord, lo_left_coord, lo_lower_coord);
-    drawLine(lo_right_coord, lo_lower_coord, lo_right_coord, lo_upper_coord);*/
+    drawLine(lo_right_coord, lo_lower_coord, lo_right_coord, lo_upper_coord);
     // Replaced that with this:
-    for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
+    /*for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
     {
         putPixel(x, lo_upper_coord);
         putPixel(x, lo_lower_coord);
@@ -53,7 +53,13 @@ void c3DCube::drawToVram()
     {
         putPixel(lo_left_coord, y);
         putPixel(lo_right_coord,y);
-    } 
+    } */
+
+    // Draw lines between the lower and upper corners, to simulate 3d effect
+    drawLine(lo_left_coord, lo_upper_coord, hi_left_coord, hi_upper_coord);
+    drawLine(lo_right_coord, lo_upper_coord, hi_right_coord, hi_upper_coord);
+    drawLine(lo_left_coord, lo_lower_coord, hi_left_coord, hi_lower_coord);
+    drawLine(lo_right_coord, lo_lower_coord, hi_right_coord, hi_lower_coord);
 
 
     // Draw upper cube
