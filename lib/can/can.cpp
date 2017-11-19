@@ -236,3 +236,33 @@ bool checkForACK()
     }
     return (recv.id == CAN_ID_ACK);
 }
+
+void sendResetUntilACK()
+{
+    CAN & can = CAN::getInstance();
+    CanMessage msg;
+    CanMessage recv;
+    msg.id = CAN_ID_RESET;
+    msg.length = CAN_LENGTH_RESET;
+    msg.data[0] = 0b0;
+    do{
+        can.transmit(&msg);
+        for (uint16_t i = 0; i < 1000; ++i )
+        {
+            recv = can.receive();
+            if (recv.id == CAN_ID_ACK)
+            {
+                break; // for loop
+            }
+            // In case both nodes send reset simultaneously
+            else if (recv.id == CAN_ID_RESET)
+            {
+                msg.id = CAN_ID_ACK;
+                msg.length = CAN_LENGTH_ACK;
+                can.transmit(&msg);
+                return;
+            }
+        _delay_ms(1);
+        }
+    } while(recv.id != CAN_ID_ACK && recv.id != CAN_ID_RESET);
+}
