@@ -3,8 +3,11 @@
 #include "snake.h"
 #include <stdlib.h>
 
+// Code inspired by https://codereview.stackexchange.com/questions/66481/snake-game-in-c
+// All functions have been changed, some have been removed and some added
+
 void Snake::run(){
-	//Test
+	// sets initial conditions
 	this->initMap();
 	running = true;
 	while(running){
@@ -23,6 +26,7 @@ void Snake::run(){
 		if (difficulty==3)_delay_ms(50);
 
 	}
+	// show score for 2 seconds before ending the game
 	this->printScore();
 	_delay_ms(2000);
 	return;
@@ -31,6 +35,7 @@ void Snake::run(){
 
 void Snake::changeDirection(){
 	/*
+	Directions mapped like so:
 	    UP
     LEFT + RIGHT
        DOWN
@@ -39,8 +44,10 @@ void Snake::changeDirection(){
     4 + 2
       3
     */
+	// reads joystick
 	uint8_t newDir;
 	newDir = this->getJoystick();
+	// prevents turning 180 degrees
 	if(newDir == 1 && this->direction != 3) this->direction = 1;
 	else if(newDir == 2 && this->direction != 4) this->direction = 2;
 	else if(newDir == 3 && this->direction != 1) this->direction = 3;
@@ -48,13 +55,13 @@ void Snake::changeDirection(){
 }
 
 uint8_t Snake::getJoystick(){
-	// Initilize things needed to read joystick
+	// Gets joystick object
     Joystick & joystick = Joystick::getInstance();
 
     int8_t x;
     int8_t y;
 
-	// If joystick returns up, right, down or left
+	// Returns direction based on input from joystick
     Direction dir = joystick.read(&x, &y);
 	uint8_t threshold = 90;
 	if (x > threshold) return 2;
@@ -93,7 +100,7 @@ void Snake::move(int8_t dx,int8_t dy){
 
     // Check if there is food at location
     if (map[this->xytomapIndex(newx,newy)] == -1) {
-        // Increase food value (body length)
+        // Increase length of snake
         snakeLength++;
 
         // Generate new food on map
@@ -135,10 +142,10 @@ void Snake::generateFood() {
 }
 
 uint8_t Snake::xytomapIndex(uint8_t x,uint8_t y){
+	// simple comversion from 2d to 1d
 	return x + y * mapwidth;
 }
 
-// Initializes map
 void Snake::initMap()
 {	// clears map
 	snakeLength = 3;
@@ -156,7 +163,6 @@ void Snake::initMap()
 
 }
 
-// Returns graphical character for display from map value
 char Snake::getMapValue(uint8_t value)
 {
     // Returns a part of snake body
