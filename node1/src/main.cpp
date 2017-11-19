@@ -158,6 +158,8 @@ int main(void)
     Slider & slider1 = Slider::getInstance(1);
     slider1.initialize(&adc, &pb1);
 
+    OLED & oled = OLED::getInstance();
+
     /*Screen screen_main   = Screen();
     Screen screen_header = Screen(&screen_main, 1, UPPER); // 1 page high, located on top
 	Screen screen_full   = Screen(); // Full screen, does not have a subscreen

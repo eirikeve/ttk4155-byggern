@@ -27,7 +27,8 @@ private:
 	bool running;
 	uint8_t difficulty = 1;
 	uint8_t highscore = 0;
-	Screen s1 = Screen();
+	OLED & oled = OLED::getInstance();
+	Screen s1 = Screen(&oled);
 	
 	//menu
 	uint8_t currentOption = 0;

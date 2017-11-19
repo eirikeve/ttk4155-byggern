@@ -39,8 +39,9 @@ void menuLoop()
 {
     Joystick & joystick = Joystick::getInstance();
     FSM & fsm = FSM::getInstance();
+    OLED & oled = OLED::getInstance();
 
-    Screen screen = Screen();
+    Screen screen = Screen(&oled);
 	screen.clear();
     screen.render((uint8_t*)AVR_VRAM_1);
 
@@ -202,7 +203,7 @@ void snakeLoop()
     // The snake game runs until exit is requested by user.
 	Snake sn;
     printf("Started snek\n");
-    sn.start();
+    //sn.start();
     printf("Snek finished\n");
     // Highscore is stored in the EEPROM, so we check if the new score is higher than the current highscore.
     /*uint16_t highscore = (uint16_t)sn.getHighScore();
