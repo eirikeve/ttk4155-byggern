@@ -1,9 +1,12 @@
 #include "fsm_state_functions.h"
 
 
-
 void startupLoop()
 {
+    // Reset timer blink period here, in case of reset after ERROR.
+    Timer& timer = Timer::getInstance(0);
+    timer.setInterruptPeriod(500);
+
     FSM & fsm = FSM::getInstance();
     CAN & can = CAN::getInstance();
 
@@ -218,9 +221,13 @@ void gameNRFLoop()
 
 void errorLoop()
 {
+    // LED blink timer
     Timer& timer = Timer::getInstance(0);
+    timer.setInterruptPeriod(100);
+
     return;
 }
+
 void errorTransition()
 {
     // Broadcast RESET to other nodes
