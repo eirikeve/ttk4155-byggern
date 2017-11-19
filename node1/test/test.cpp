@@ -40,7 +40,7 @@
 #endif
 
 #ifndef TEST_MENU
-#define TEST_MENU 1
+#define TEST_MENU 0
 #endif
 
 #ifndef TEST_TIMER
@@ -1032,7 +1032,7 @@ void testFSM()
 #endif
 
 
-#if 
+#if TEST_EEPROM
 void testEEPROM()
 {
     printf("Starting EEPROM test\n");
@@ -1071,3 +1071,4 @@ void testEEPROM()
     }
     printf("Finished. %3d write err, %3d read err\n", write_errors, retrieval_errors);
 }
+#endif //TEST_EEPROM
