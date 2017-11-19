@@ -1036,6 +1036,11 @@ void testFSM()
 #if TEST_EEPROM
 void testEEPROM()
 {
+
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
     printf("Starting EEPROM test\n");
     int seed = 0;
     uint8_t data_in;
@@ -1052,24 +1057,48 @@ void testEEPROM()
         data_out = eepromRead(address);
         if (data_in != data_out)
         {
-            printf("Write err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
+            printf("Write err: EEPROM[%X] = %X (should be %X)\n", address,data_out, data_in);
             ++write_errors;
         }
     }
-
-    // Test Retrieve
-    srand(seed); // Reset rand with same seed
+    srand(seed);
     for (uint16_t address = 0; address < 512; ++address)
     {
         data_in = rand() % UINT8_MAX;
-
         data_out = eepromRead(address);
         if (data_in != data_out)
         {
-            printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
+            printf("Read err: EEPROM[%X] = %X (should be %X)\n", address,data_out, data_in);
             ++retrieval_errors;
         }
     }
+
+    // // Test Retrieve
+    // srand(seed); // Reset rand with same seed
+    // for (uint16_t address = 0; address < 512; ++address)
+    // {
+    //     data_in = address % UINT8_MAX;
+
+    //     data_out = eepromRead(address);
+    //     if (data_in != data_out)
+    //     {
+    //         printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
+    //         ++retrieval_errors;
+    //     }
+    // }
+    // printf("Finished. %3d write err, %3d read err\n", write_errors, retrieval_errors);
+
+    // for (uint16_t address = 0; address < 512; ++address)
+    // {
+    //     data_in = address % UINT8_MAX;
+
+    //     data_out = eepromRead(address);
+    //     if (data_in != data_out)
+    //     {
+    //         printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
+    //         ++retrieval_errors;
+    //     }
+    // }
     printf("Finished. %3d write err, %3d read err\n", write_errors, retrieval_errors);
 }
 #endif //TEST_EEPROM
