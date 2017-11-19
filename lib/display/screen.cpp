@@ -2,9 +2,9 @@
 #include "screen.h"
 
 
-Screen::Screen()
+Screen::Screen(OLED * oled)
 {
-    oled = OLED();
+    oled = oled;
     vram = (uint8_t*)AVR_VRAM_1;
     superScreen = NULL;
     subScreen = NULL;
@@ -19,7 +19,7 @@ Screen::Screen()
     ready_to_render = false;
 }
 
-Screen::Screen(Screen *superscreen, uint8_t sz, Orientation o) : Screen()
+Screen::Screen(OLED * oled, Screen *superscreen, uint8_t sz, Orientation o) : Screen(oled)
 {
     if (superscreen)
     {
@@ -363,13 +363,13 @@ void Screen::render(uint8_t * buffer)
         // Write SRAM data to the screen
         for (int p = 0; p < 8; ++p)
         {
-            oled.goToPage(p);
-            oled.goToColumn(0);
+            oled->goToPage(p);
+            oled->goToColumn(0);
             for (int c = 0; c < 127; ++c)
             {
-                oled.write(buffer[p * 128 + c]);
+                oled->write(buffer[p * 128 + c]);
             }
-            oled.write(0x00);
+            oled->write(0x00);
         }
     }
 

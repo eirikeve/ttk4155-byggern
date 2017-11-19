@@ -20,7 +20,7 @@ class Screen
 {
 
 private:
-  OLED oled;
+  OLED * oled;
   volatile uint8_t *vram;
   bool ready_to_render;
 
@@ -51,8 +51,8 @@ public:
   uint8_t pagesize;
   uint8_t colsize;
 
-  Screen();
-  Screen(Screen *superscreen, uint8_t sz, Orientation o);
+  Screen(OLED * oled);
+  Screen(OLED * oled, Screen *superscreen, uint8_t sz, Orientation o);
   ~Screen();
   void addSubScreen(Screen *subscreen, uint8_t sz, Orientation o);
   void removeSubScreen();
