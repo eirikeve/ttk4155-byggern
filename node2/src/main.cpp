@@ -61,13 +61,8 @@ int main(void)
     CanMessage recv;
     CanMessage msg;
 
-    printf("Sending RESET\n");
-    msg.id = CAN_ID_RESET;
-    msg.length = CAN_LENGTH_RESET;
-    msg.data[0] = 0b0;
-    can.transmit(&msg);
-    bool ack = checkForACK();
-    printf("ACK for reset? %d\n", ack);
+    printf("Sending RESET Until ACK\n");
+    sendResetUntilACK();
 
 
     msg.id = CAN_ID_ACK;
