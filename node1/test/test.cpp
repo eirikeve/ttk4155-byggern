@@ -357,10 +357,8 @@ void testScreen()
     UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
-    OLED & oled = OLED::getInstance();
-
     // Screen init
-    Screen s1 = Screen(&oled);
+    Screen s1 = Screen();
 
     // Animated apple logo
     const unsigned char appleLogo[8] =
@@ -435,10 +433,9 @@ void doNothing(void){}
 
 void testSubScreen()
 {
-    OLED & oled = OLED::getInstance();
-    Screen s1 = Screen(&oled);
-    Screen s2 = Screen(&oled);
-    Screen s3 = Screen(&oled);
+    Screen s1 = Screen();
+    Screen s2 = Screen();
+    Screen s3 = Screen();
     s1.addSubScreen(&s2, 4, Orientation::LOWER);
     s1.goToStart();
     s2.goToStart();
