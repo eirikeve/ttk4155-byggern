@@ -38,7 +38,7 @@ extern "C" {
 #endif
 
 #ifndef TEST_SERVO
-#define TEST_SERVO 0
+#define TEST_SERVO 1
 #endif
 
 #ifndef TEST_CAN

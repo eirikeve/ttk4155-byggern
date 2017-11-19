@@ -8,7 +8,7 @@
 #pragma once
 
 
-#define CAN_ID_RESET 0
+#define CAN_ID_RESET 1
 #define CAN_LENGTH_RESET 1 // Data does not matter
 
 #define CAN_ID_ACK 5

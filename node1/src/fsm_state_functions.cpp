@@ -36,13 +36,15 @@ void startupLoop()
 }
 
 void menuLoop()
-{
+{ 
     Joystick & joystick = Joystick::getInstance();
     FSM & fsm = FSM::getInstance();
 
     Screen screen = Screen();
 	screen.clear();
     screen.render((uint8_t*)AVR_VRAM_1);
+
+    
 
     MenuNode main("");
 	MenuNode nr1("PingPong Game");
@@ -202,7 +204,7 @@ void snakeLoop()
     // The snake game runs until exit is requested by user.
 	Snake sn;
     printf("Started snek\n");
-    sn.start();
+    sn.run();
     printf("Snek finished\n");
     // Highscore is stored in the EEPROM, so we check if the new score is higher than the current highscore.
     /*uint16_t highscore = (uint16_t)sn.getHighScore();
@@ -241,6 +243,7 @@ void gameNRFLoop()
 
 void errorLoop()
 {
+    Timer& timer = Timer::getInstance(0);
     return;
 }
 void errorTransition()

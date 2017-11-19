@@ -1,82 +1,3 @@
-// /*
-//  * Test.c
-//  *
-//  * Created: 04.09.2017 11:26:38
-//  *  Author: aasmune
-//  */
-
-// extern "C" {
-// #include <avr/io.h>
-// #include "util/delay.h"
-// #include <stdio.h>
-// #include "lib/comm/comm.h"
-// #include <avr/pgmspace.h>
-// }
-
-// #include "../lib/CAN/SPI.h"
-// #include "lib/tempDisplay/temp.h"
-// #include "../lib/CAN/MCP2515.h"
-// #include <stdint.h>
-// #include "lib/fonts/fonts.h"
-// #include "lib/CAN/can.h"
-
-// int main(void)
-// {
-// 	// SPI_init();
-// 	init_uart();
-// 	// printf("Hei\n");
-// 	// mcp2515_init();
-// 	set_bit(DDRB, 0);
-// 	clr_bit(DDRE, 0);
-// 	init_uart();
-// 	clr_bit(PORTB, PB4);
-// 	can_init();
-// 	sei();
-// 	can_message msg;
-// 	msg.id = 2;
-// 	msg.length = 1;
-// 	uint8_t i = 0;
-// 	msg.data[0] = 0;
-
-// 	// printf("\n\nAfter init:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-// 	// printf("Sending now\n");
-// 	// can_message_send(&msg);
-// 	// printf("After sending msg:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-// 	// can_message recv = can_data_receive();
-// 	// printf("After recv msg:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-// 	// printf("Sending now\n");
-// 	// can_message_send(&msg);
-// 	// printf("After sending msg:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-// 	// can_message recv1 = can_data_receive();
-// 	// printf("After recv1 msg:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-
-// 	while (1)
-// 	{
-// 		(msg.data[0])++;
-// 		can_message_send(&msg);
-// 		can_message recv = can_data_receive();
-// 		printf("id: %d, len: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
-
-// 	// 	// mcp2515_write(0x36, 'X');
-// 	// 	// printf("%c\n", mcp2515_read(0x36));
-// 	// 	// clr_bit(PORTB, PB4); // Select CAN-controller
-// 	// 	// SPI_send(0xA5);
-// 	// 	// // _delay_ms(1000);
-// 	// 	// set_bit(PORTB, PB4); // Select CAN-controller
-// 	// 	// mcp2515_write(0x00, 'z');
-// 	// 	// printf("asd %d\n", mcp2515_read(0x01));
-// 	// 	set_bit(PORTB, 0);
-// 	// 	_delay_ms(100);
-// 	// 	clr_bit(PORTB, 0);
-// 	// 	_delay_ms(100);
-// 	}
-// }
-
 #include <avr/io.h>
 #include "util/delay.h"
 #include <stdio.h>
@@ -115,60 +36,122 @@
 #include "../lib/utilities/eeprom.h"
 #include "fsm_state_functions.h"
 
+void toggle_led() {
+    PORTB ^= 0b1;
+}
 
 
 
 int main(void)
 {
-	// UART & uart = UART::getInstance();
-    // uart.initialize(9600);
-    // enablePrintfWithUart();
-    // while (true) {
-    //     printf("Test printf\n");
-    // }
-	// Whad does these do?
-	//set_bit(DDRB, 0);
-	//set_bit(PORTB, 0);
-	
-	//testLab8();
-	// testPrintfWithUart();
-	// testMenuCallback();
-	// testCanLoopback();
-
-	// Initialize all
-
+    // clr_bit(DDRE, 0);  
 	UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
 
-    printf("Starting...");
+    printf("Node 2 startup\n");
+    Timer& timer0 = Timer::getInstance(0);
+    timer0.initialize(500, toggle_led, &pb0);
+    timer0.start();
+
+    
 
     SPI& spi = SPI::getInstance(0);
     CAN& can = CAN::getInstance();
     can.initialize(&spi, false);
-
+    
+     
     ADC& adc = ADC::getInstance();
-
+    printf("Success!!\n");
     Joystick & joystick = Joystick::getInstance();
     joystick.initialize(&adc, 10, &pb3);
-
+    printf("SUCCESSS\n");
     Slider & slider0 = Slider::getInstance(0);
+    
     slider0.initialize(&adc, &pb2);
 
     Slider & slider1 = Slider::getInstance(1);
     slider1.initialize(&adc, &pb1);
 
-    /*Screen screen_main   = Screen();
-    Screen screen_header = Screen(&screen_main, 1, UPPER); // 1 page high, located on top
-	Screen screen_full   = Screen(); // Full screen, does not have a subscreen
-	*/
-
-	FSM& fsm = FSM::getInstance();
-    
+    FSM & fsm = FSM::getInstance();
     loadStateFunctionsToFSM();
 
+    printf("Success\n");
+    /*ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);*/
+    
+
+    printf("Node1 Starting\n");
 	while (true)
 	{
-		fsm.runStateLoop();
+	 	//fsm.runStateLoop();
+        
+        CanMessage msg;
+        CanMessage recv;
+
+        msg.id = CAN_ID_RESET;
+        msg.length = CAN_LENGTH_RESET;
+        msg.data[0] = 0;
+        bool ack;
+
+        printf("Sending Reset\n");
+        can.transmit(&msg);
+        ack = checkForACK();
+        printf("ACK for reset? %d\n", ack);
+
+        
+
+        
+
+        msg.id = CAN_ID_START_GAME;
+        do{
+            printf("Sending StartGame\n");
+            can.transmit(&msg);
+            ack = checkForACK();
+            printf("ACK for startGame? %d\n", ack);
+        } while(ack == false);
+
+        int i = 0;
+        int8_t joystick_x;
+        int8_t joystick_y;
+        int8_t slider_x = 0;
+        bool slider_button_pressed = false;
+        printf("Running game\n");
+            while (true) 
+            {
+                i += 5;
+                //int8_t joystick_x = ((i % 99) - 49);
+                // Transmit control data, and check for END_GAME event
+                joystick.read(&joystick_x, &joystick_y);
+
+                //printf("x: %d, y: %d, dir: %d\n", x, y, dir);
+                msg.id = CAN_ID_SEND_USR_INPUT;
+                msg.length = 3;
+                msg.data[0] = joystick_x;
+                msg.data[1] = slider_x;
+                msg.data[2] = (int8_t)slider_button_pressed;
+                can.transmit(&msg);
+                _delay_ms(100);
+                printf("Sending id %d Joystick.x %d\n", msg.id, joystick_x);
+
+                recv = can.receive();
+                if (recv.id == CAN_ID_STOP_GAME)
+                {
+                    printf("Recvd STOP. Sending ACK.\n");
+                    msg.id = CAN_ID_ACK;
+                    msg.length = CAN_LENGTH_ACK;
+                    msg.data[0] = 0b0;
+
+                    can.transmit(&msg);
+                    return 0; // return to main while loop, where new onStateLoop will run
+                }
+            }
+            printf("Restarting loop in..\n3\n");
+            _delay_ms(1000);
+            printf("2\n");
+            _delay_ms(1000);
+            printf("1\n");
+            _delay_ms(1000);
 	}
 }
