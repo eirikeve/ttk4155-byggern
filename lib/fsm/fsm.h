@@ -140,6 +140,7 @@ private:
     FSM();
     void init();
 
+
 public:
     // Deleted due to singleton design pattern
     FSM(FSM const&)    = delete;

@@ -48,12 +48,14 @@ void FSM::handleEvent(uint8_t event)
     {
             case EV_RESET:
             {
+                // Always occurs after getting a reset CAN msg, respond with ACK
                 transitionTo(STATE_STARTUP1);
                 // Send ACK after RESET recv
                 CAN & can = CAN::getInstance();
                 CanMessage msg;
                 msg.length = 1;
                 msg.id = CAN_ID_ACK;
+                can.transmit(&msg);
 
                 break;
             }
@@ -132,33 +134,29 @@ void FSM::handleEvent(uint8_t event)
                 break;
             }
             case EV_NO_CAN_ACK:
-                {
-                    if (current_state != STATE_ERROR)
-                    {
-                        transitionTo(STATE_ERROR);
-                    }
-                    break;
-                }
             case EV_MISSING_STATE_FUNCTIONS:
-            {
-                if (current_state != STATE_ERROR)
-                {
-                    transitionTo(STATE_ERROR);
-                }
-                break;
-            }
             default:
+            {
+                // Some error occurred.
                 transitionTo(STATE_ERROR);
-                break;
+                // Set LED Blinking to very fast
+                stateLoopFunction();
+                // Send RESET to other nodes
+                sendResetUntilACK();
+                // If we ever get ACK, goto startup
+                transitionTo(STATE_STARTUP1);
+                
+            }
+
     }
 
 }
 
 void FSM::runStateLoop()
 {
-    if (stateLoopFunction != nothingHappens   && 
-        stateLoopFunction != NULL             &&
-        current_state != (uint8_t)STATE_ERROR)
+    if (stateLoopFunction != nothingHappens && 
+        stateLoopFunction != NULL           &&
+        current_state     != STATE_ERROR)
     {
         stateLoopFunction();
     }
@@ -208,4 +206,5 @@ void _fsm_extern_handle_event(uint8_t event)
     FSM & fsm = FSM::getInstance();
     fsm.handleEvent(event);
 }
+
 #endif // __AVR_ATmega162__
