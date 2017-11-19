@@ -49,7 +49,7 @@ int main(void)
     uart.initialize(9600);
     enablePrintfWithUart();
 
-    printf("Node 2 startup\n");
+    printf("Node 1 startup\n");
     Timer& timer0 = Timer::getInstance(0);
     timer0.initialize(500, toggle_led, &pb0);
     timer0.start();
@@ -62,10 +62,8 @@ int main(void)
     
      
     ADC& adc = ADC::getInstance();
-    printf("Success!!\n");
     Joystick & joystick = Joystick::getInstance();
     joystick.initialize(&adc, 10, &pb3);
-    printf("SUCCESSS\n");
 
     //Slider & slider0 = Slider::getInstance(0);
     //slider0.initialize(&adc, &pb2);
@@ -76,31 +74,33 @@ int main(void)
     FSM & fsm = FSM::getInstance();
     loadStateFunctionsToFSM();
 
-    printf("Success\n");
     /*ADC& adc = ADC::getInstance();
     Joystick & joystick = Joystick::getInstance();
     joystick.initialize(&adc, 10, &pb3);*/
     
+    CanMessage msg;
+    CanMessage recv;
 
     printf("Node1 Starting\n");
 	while (true)
 	{
 	 	//fsm.runStateLoop();
         
-        CanMessage msg;
-        CanMessage recv;
+        
 
         msg.id = CAN_ID_RESET;
         msg.length = CAN_LENGTH_RESET;
         msg.data[0] = 0;
         bool ack;
 
-        printf("Sending Reset\n");
-        can.transmit(&msg);
-        ack = checkForACK();
-        printf("ACK for reset? %d\n", ack);
 
-        
+
+        do{
+            printf("Loop Start, sending Reset\n");
+            can.transmit(&msg);
+            ack = checkForACK();
+            printf("ACK for reset? %d\n", ack);
+        } while(ack == false);
 
         
 
@@ -133,12 +133,11 @@ int main(void)
                 msg.data[2] = (int8_t)slider_button_pressed;
                 can.transmit(&msg);
                 _delay_ms(100);
-                printf("Sending id %d, JS %d, SL %d, BTN %d\n", msg.id, joystick_x, slider_x, slider_button_pressed);
-
+                
                 recv = can.receive();
                 if (recv.id == CAN_ID_STOP_GAME)
                 {
-                    printf("Recvd STOP. Sending ACK.\n");
+                    printf("\tRecvd STOP. Sending ACK.\n");
                     msg.id = CAN_ID_ACK;
                     msg.length = CAN_LENGTH_ACK;
                     msg.data[0] = 0b0;
@@ -148,15 +147,13 @@ int main(void)
                 }
                 else if (recv.id == CAN_ID_RESET)
                 {
-                    printf("Recvd Node2 startup! Exiting Loop\n");
+                    printf("\tRecvd Reset! Exiting Loop\n");
+                    // Usually, trigger event here.
                     break;
                 }
             }
-            printf("Restarting loop in..\n3\n");
-            _delay_ms(1000);
-            printf("2\n");
-            _delay_ms(1000);
-            printf("1\n");
-            _delay_ms(1000);
+            printf("Restarting loop in..\n3sec\n");
+            _delay_ms(3000);
+
 	}
 }
