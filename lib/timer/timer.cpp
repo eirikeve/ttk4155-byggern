@@ -68,13 +68,17 @@ void TIMER1_vect() {
 Timer::Timer(uint8_t id): id(id), callbackFunction(NULL) {}
 
 void Timer::initialize(uint16_t ms, void (*callbackFunction)(void), PIN* pin) {
-    cli();
+    
     // Calculate top value for timer using a prescaler at 1024.
     uint16_t OCRn = (uint16_t) (ms * 0.001 *  (F_CPU) / (1024));
+    
+    cli();
+
     if (this->id == 0) {
 
         // CTC mode
         TIMER0_TCCR |= (1<<TIMER0_WGM2);
+
 
         // Set top value for timer.
         TIMER0_OCRn = OCRn;
@@ -105,6 +109,29 @@ void Timer::initialize(uint16_t ms, void (*callbackFunction)(void), PIN* pin) {
     // Enable global interrupts
     sei();
 
+}
+
+void Timer::setInterruptPeriod(uint16_t ms)
+{
+    if( ms == period)
+    {
+        // Already has this value.
+        return;
+    }
+    // Calculate top value for timer using a prescaler at 1024.
+    uint16_t OCRn = (uint16_t) (ms * 0.001 *  (F_CPU) / (1024));
+    if (this->id == 0)
+    {
+        // Set top value for timer.
+        TIMER0_OCRn = OCRn;
+    }
+    else if (this->id == 1)
+    {
+        // Set top value for timer.
+        TIMER1_OCRn = OCRn;
+    }
+    
+    
 }
 
 void Timer::start() {
