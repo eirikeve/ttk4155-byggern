@@ -7,6 +7,7 @@
 #include "../utilities/utilities.h"
 #include <stdint.h>
 #include "../joystick/joystick.h"
+#include "../display/screen.h"
 
 
 
@@ -41,7 +42,7 @@ private:
     int8_t last_joystick_x = 0;
     int8_t last_joystick_y = 0;
 
-    uint8_t* vram = AVR_VRAM_1;
+    uint8_t* vram = (uint8_t*)AVR_VRAM_1;
 
 // Public variables
 public:
@@ -49,12 +50,12 @@ public:
 // Private methods
 private:
     void runTimeStep(int8_t joystick_x, int8_t joystick_y);
-    void drawToVRam();
-    int8_t calcLineOffset(uint8_t a_coord, uint8_t opposite_dim_flex);
+    void drawToVram();
+    int8_t calcLineOffset(uint8_t a_coord, int8_t opposite_dim_flex);
     void simFlex(int8_t joystick_x, int8_t joystick_y);
     void drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
-    inline void putPixel(uint8_t x, uint8_t y) {vram[(y%OLED_PIXELS_HEIGHT)/8 + (x%OLED_PIXELS_WIDTH)] |= (0b1<<((y%OLED_PIXELS_HEIGHT)%8));}
-    inline void remPixel(uint8_t x, uint8_t y) {vram[(y%OLED_PIXELS_HEIGHT)/8 + (x%OLED_PIXELS_WIDTH)] &= (0x11111110<<((y%OLED_PIXELS_HEIGHT)%8));}
+    void putPixel(uint8_t x, uint8_t y) {vram[(y%OLED_PIXELS_HEIGHT)/8 + (x%OLED_PIXELS_WIDTH)] |= (0b1<<((y%OLED_PIXELS_HEIGHT)%8));}
+    void remPixel(uint8_t x, uint8_t y) {vram[(y%OLED_PIXELS_HEIGHT)/8 + (x%OLED_PIXELS_WIDTH)] &= (0x11111110<<((y%OLED_PIXELS_HEIGHT)%8));}
 
 
 
@@ -62,7 +63,7 @@ private:
 // Public methods
 public:
     c3DCube();
-    run();
+    void run();
 
 
 };

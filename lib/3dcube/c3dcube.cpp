@@ -3,12 +3,11 @@
 
 #ifdef __AVR_ATmega162__
 
-#include "3dcube.h"
+#include "c3dcube.h"
 #include <util/delay.h>
 
 c3DCube::c3DCube() 
 {
-    s.changeBufferTo(vram);
     s.clear();
 }
 
@@ -24,7 +23,7 @@ void c3DCube::run()
         btnPress = joystick.buttonPressed();
         runTimeStep(joystick_x, joystick_y);
         s.render();
-    }
+    } while (!btnPress);
 }
 
 void c3DCube::runTimeStep(int8_t joystick_x, int8_t joystick_y)
@@ -34,6 +33,8 @@ void c3DCube::runTimeStep(int8_t joystick_x, int8_t joystick_y)
     //simFlex(joystick_x, joystick_y);
     drawToVram();
 }
+
+
 
 void c3DCube::drawToVram()
 {
@@ -146,7 +147,7 @@ void c3DCube::simFlex(int8_t joystick_x, int8_t joystick_y)
 Bresenham's Line Algorithm, based on this:
 http://raspberrycompote.blogspot.no/2014/04/low-level-graphics-on-raspberry-pi.html
 */
-void drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
+void c3DCube::drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
 {
     int8_t dx = x1 - x0;
     dx = (dx >= 0) ? dx : -dx; // abs()
