@@ -40,7 +40,7 @@ private:
 	// generates new food randomly
 	void generateFood();
 	// changes map from ints to chars
-	char getMapValue(uint8_t value);
+	char getMapValue(int8_t value);
 	// makes 2d coordinates into 1d coordinates
 	uint8_t xytomapIndex(uint8_t x,uint8_t y);
 	// reads joystick direction

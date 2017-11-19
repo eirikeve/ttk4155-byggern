@@ -163,12 +163,12 @@ void Snake::initMap()
 
 }
 
-char Snake::getMapValue(uint8_t value)
+char Snake::getMapValue(int8_t value)
 {
     // Returns a part of snake body
     if (value > 0) return 'o';
 	// Returns food
-    if (value == -1) return 95 + ' '; //Apple
+    if (value == -1) return INDEX_APPLE + ' '; //Apple
 	// Returns empty space
 	if (value == 0) return ' ';
 }
