@@ -28,25 +28,32 @@ private:
 	uint8_t difficulty = 1;
 	uint8_t highscore = 0;
 	Screen s1 = Screen();
-	
-	//menu
-	uint8_t currentOption = 0;
 
+	// clears map, places snake and the first food
 	void initMap();
+	// shifts head of snake to the new position
 	void move(int8_t dx, int8_t dy);
+	// updates map, new snake head postion, new food, death of snake
 	void update();
+	// takes joystick input and changes direction
 	void changeDirection();
+	// generates new food randomly
 	void generateFood();
-	char getMapValue(uint8_t value);
+	// changes map from ints to chars
+	char getMapValue(int8_t value);
+	// makes 2d coordinates into 1d coordinates
 	uint8_t xytomapIndex(uint8_t x,uint8_t y);
+	// reads joystick direction
 	uint8_t getJoystick();
-	bool getJoystickButton();
+	// prints map to oled screen
 	void printMap();
+	// prints ending score screen
 	void printScore();
-	void printMenu();
 	
 public:
+	// initial run function 
 	void run();
+	// returns highscore, used to save the highscore for later
 	inline uint8_t getHighScore() const {return highscore;} 
 
 };
