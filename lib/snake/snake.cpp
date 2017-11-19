@@ -3,29 +3,6 @@
 #include "snake.h"
 #include <stdlib.h>
 
-void Snake::start(){
-	this->printMenu();
-	while(1){
-		// go up
-		if(getJoystick() == 1 && currentOption >0)currentOption = currentOption-1;
-		// go down
-		else if(getJoystick() == 3 && currentOption <2)currentOption = currentOption+1;
-		// change difficulty
-		else if(getJoystick() == 2&& currentOption == 1&&difficulty <3)difficulty = difficulty+1;
-		else if(getJoystick() == 4&& currentOption == 1 && difficulty >1)difficulty = difficulty-1;
-		//chose option
-		else if(getJoystick() == 2&& currentOption == 0)this->run();
-		else if(getJoystick() == 2&& currentOption == 2)return;
-		if(getJoystickButton()){
-			if (currentOption == 0) this->run();
-			if (currentOption == 2) return;
-		}
-		if (getJoystickButton())this->run();
-		this->printMenu();
-		_delay_ms(500);
-	}
-}
-
 void Snake::run(){
 	//Test
 	this->initMap();
@@ -88,28 +65,18 @@ uint8_t Snake::getJoystick(){
 
 }
 
-bool Snake::getJoystickButton(){
-	// Initilize things needed to read joystick
-    Joystick & joystick = Joystick::getInstance();
-	return joystick.buttonPressed();
-}
-
 void Snake::update(){
 	// move snake head
 	switch (this->direction) {
 	case 0:
 		break;
     case 1: this->move(0, -1);
-		// printf("Dette er case 1");
         break;
     case 2: this->move(1, 0);
-		// printf("dette er case 2");
         break;
     case 3: this->move(0, 1);
-		// printf("dette er case 3");
         break;
     case 4: this->move(-1, 0);
-		// printf("dette er case 4");
         break;
     }
 	
@@ -133,7 +100,6 @@ void Snake::move(int8_t dx,int8_t dy){
         this->generateFood();
     }
 	
-	//printf("%d\n", newx);
 	//Game over if snake is outside map
 	if (newx>mapwidth-1 || newy>mapheight-1 || newx < 0 || newy < 0){
 		running = false;
@@ -188,12 +154,6 @@ void Snake::initMap()
     // Generates first food
     this->generateFood();
 
-	// Wait for first input
-	while(getJoystick() == 0){
-		s1.goTo(3,10);
-		s1.writeString("Press any direction");
-		s1.render();
-	}
 }
 
 // Returns graphical character for display from map value
@@ -218,76 +178,28 @@ void Snake::printMap(){
 		pmap[i] = getMapValue(map[i]);
 	}
 	pmap[s] = '\0';
-	// printf(pmap);
-	// printf("\n");
+	
 	s1.writeString(pmap);
 	s1.render();
 }
 
 void Snake::printScore(){
+	// screen init
 	s1.clear();
     s1.goTo(3,32);
-	// printf(pmap);
-	// printf("\n");
+	
+	// write game over and score
 	s1.writeString("GAME OVER");
 	s1.goTo(4,32);
 	char score[3];
 	s1.writeString("SCORE: ");
 	itoa(snakeLength-3, score, 10);
 	s1.writeString(score);
+	
+	// set new highscore
 	if (snakeLength -3 > highscore) highscore = snakeLength -3;
-	// s1.writeString('\0');
 	s1.render();
 }
 
-void Snake::printMenu(){
-	s1.clear();
-	s1.goToStart();
-    s1.goTo(1,40);
-	s1.writeString("SNAKE");
-	
-	if (currentOption == 0){
-		s1.goTo(3,8);
-		s1.writeString("->PLAY GAME");
-		s1.goTo(4,20);
-		char diff[3];
-		itoa(difficulty, diff, 10);
-		s1.writeString("DIFFICULTY: ");
-		s1.writeString(diff);
-		s1.goTo(5,20);
-		s1.writeString("END GAME");
-	}
-	
-	if (currentOption == 1){
-		s1.goTo(3,20);
-		s1.writeString("PLAY GAME");
-		s1.goTo(4,8);
-		char diff[3];
-		itoa(difficulty, diff, 10);
-		s1.writeString("->DIFFICULTY: ");
-		s1.writeString(diff);
-		s1.goTo(5,20);
-		s1.writeString("END GAME");
-	}
-	
-	if (currentOption == 2){
-		s1.goTo(3,20);
-		s1.writeString("PLAY GAME");
-		s1.goTo(4,20);
-		char diff[3];
-		itoa(difficulty, diff, 10);
-		s1.writeString("DIFFICULTY: ");
-		s1.writeString(diff);
-		s1.goTo(5,8);
-		s1.writeString("->END GAME");
-	}
-	
-	s1.goTo(7,20);
-	char diff[3];
-	itoa(highscore, diff, 10);
-	s1.writeString("HIGHSCORE: ");
-	s1.writeString(diff);
-	s1.render();
-}
 
 #endif

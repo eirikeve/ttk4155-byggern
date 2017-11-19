@@ -32,7 +32,6 @@ private:
 	//menu
 	uint8_t currentOption = 0;
 
-	void run();
 	void initMap();
 	void move(int8_t dx, int8_t dy);
 	void update();
@@ -47,7 +46,7 @@ private:
 	void printMenu();
 	
 public:
-	void start();
+	void run();
 	inline uint8_t getHighScore() const {return highscore;} 
 
 };
