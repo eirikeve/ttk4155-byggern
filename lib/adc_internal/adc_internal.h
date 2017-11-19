@@ -21,7 +21,6 @@ class ADC_internal
         ADC_internal();
         
     public:
-        // ~ADC_internal() {}
         // Deleted due to singleton design pattern
         ADC_internal(ADC_internal const&)    = delete;
 

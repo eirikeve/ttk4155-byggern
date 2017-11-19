@@ -1,41 +1,5 @@
 #pragma once
-// #include "../utilities/utilities.h"
-#include "SPI.h"
-// #include "can.cpp"
-#include <stdint.h>
-
-#include "../utilities/utilities.h"
-extern "C" {
-#include <avr/interrupt.h>
-#include <avr/io.h>
-#include <stdio.h>
-}
-
-// #ifndef UTILITIES_H
-// #define UTILITIES_H
-
-// #define F_CPU 4915200
-
-// #endif // UTILITIES_H
-
-// #pragma once
-
-// #define ADC_ADDR 0x1400
-
-// #define set_bit(reg, bit) (reg |= (1 << (bit)))
-// #define set_bit_value(reg, bit, val) (reg |= (val << (bit)))
-// #define clr_bit(reg, bit) (reg &= ~(1 << (bit)))
-// #define test_bit(reg, bit) (reg & (1 << (bit)))
-// #define set_byte(reg, val) (reg = val)
-
-// #define loop_until_bit_is_clear(sfr,bit) \
-// do { } while (bit_is_set(sfr, bit)) 
-
-// #define loop_until_bit_is_set(sfr,bit) \
-// do { } while (bit_is_clear(sfr, bit)) 
 /*
-mcp2515.h
-
 This file contains constants that are specific to the MCP2515.
 
 Version     Date        Description
@@ -196,19 +160,3 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_TXB0SIDL 0x32
 #define MCP_TXB0DLC 0x35
 #define MCP_TXB0D0 0x36
-
-uint8_t mcp2515_init();
-uint8_t mcp2515_read(uint8_t address);
-void mcp2515_write(uint8_t address, uint8_t data);
-void mcp2515_request_to_send(uint8_t rts);
-void mcp2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data);
-void mcp2515_reset();
-void mcp_read_status();
-
-/*
-ISR(INT1_vect)
-{
-    
-
-}
-*/

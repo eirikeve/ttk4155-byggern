@@ -1,4 +1,12 @@
+#pragma once
 #include "oled.h"
+#include "../fonts/fonts.h"
+#include "../utilities/utilities.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <util/delay.h>
+
+
 
 enum Orientation
 {
@@ -11,13 +19,30 @@ enum Orientation
 class Screen
 {
 
-  //private:
-public:
+private:
   OLED oled;
+  volatile uint8_t *vram;
+  bool ready_to_render;
 
   Screen *superScreen;
   Screen *subScreen;
 
+  
+
+  uint8_t loc_page;
+  uint8_t loc_col;
+
+  bool has_border_lines;
+
+
+  const uint8_t character_size = 5;
+
+
+private:
+  void changeBufferTo(uint8_t * buffer = (uint8_t*)AVR_VRAM_1);
+  void copyVRAMtoCurrentBuffer();
+  
+public:
   uint8_t page0;
   uint8_t page1;
   uint8_t col0;
@@ -26,14 +51,6 @@ public:
   uint8_t pagesize;
   uint8_t colsize;
 
-  uint8_t loc_page;
-  uint8_t loc_col;
-
-  bool has_border_lines;
-
-  const uint8_t character_size = 5;
-
-public:
   Screen();
   Screen(Screen *superscreen, uint8_t sz, Orientation o);
   ~Screen();
@@ -42,14 +59,20 @@ public:
   void addBorderLines();
   void updateBorderLines();
   void removeBorderLines();
-
+  bool hasSubScreen() {return (subScreen ? true : false);}
   void goToPage(uint8_t page);
   void goToColumn(uint8_t col);
   void goTo(uint8_t page, uint8_t col);
+  inline void goToStart() {goTo(0,1);}
   void writeChar(unsigned char c);
   void writeString(char *string);
   void write(uint8_t c);
   void fill(uint8_t v);
   void clear();
-  void selfTest();
+  void flagReadyToRender();
+  void render(uint8_t * buffer = (uint8_t*)AVR_VRAM_1);
+
+  friend class ScreenHandler;
+
+
 };

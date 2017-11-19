@@ -1,142 +1,159 @@
-// /*
-//  * Test.c
-//  *
-//  * Created: 04.09.2017 11:26:38
-//  *  Author: aasmune
-//  */
-
-// extern "C" {
-// #include <avr/io.h>
-// #include "util/delay.h"
-// #include <stdio.h>
-// #include "lib/comm/comm.h"
-// #include <avr/pgmspace.h>
-// }
-
-// #include "../lib/CAN/SPI.h"
-// #include "lib/tempDisplay/temp.h"
-// #include "../lib/CAN/MCP2515.h"
-// #include <stdint.h>
-// #include "lib/fonts/fonts.h"
-// #include "lib/CAN/can.h"
-
-// int main(void)
-// {
-// 	// SPI_init();
-// 	init_uart();
-// 	// printf("Hei\n");
-// 	// mcp2515_init();
-// 	set_bit(DDRB, 0);
-// 	clr_bit(DDRE, 0);
-// 	init_uart();
-// 	clr_bit(PORTB, PB4);
-// 	can_init();
-// 	sei();
-// 	can_message msg;
-// 	msg.id = 2;
-// 	msg.length = 1;
-// 	uint8_t i = 0;
-// 	msg.data[0] = 0;
-
-// 	// printf("\n\nAfter init:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-// 	// printf("Sending now\n");
-// 	// can_message_send(&msg);
-// 	// printf("After sending msg:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-// 	// can_message recv = can_data_receive();
-// 	// printf("After recv msg:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-// 	// printf("Sending now\n");
-// 	// can_message_send(&msg);
-// 	// printf("After sending msg:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-// 	// can_message recv1 = can_data_receive();
-// 	// printf("After recv1 msg:\n");
-// 	// printf("RX0IF: %d\n", mcp2515_read(MCP_CANINTF) & 1);
-
-// 	while (1)
-// 	{
-// 		(msg.data[0])++;
-// 		can_message_send(&msg);
-// 		can_message recv = can_data_receive();
-// 		printf("id: %d, len: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
-
-// 	// 	// mcp2515_write(0x36, 'X');
-// 	// 	// printf("%c\n", mcp2515_read(0x36));
-// 	// 	// clr_bit(PORTB, PB4); // Select CAN-controller
-// 	// 	// SPI_send(0xA5);
-// 	// 	// // _delay_ms(1000);
-// 	// 	// set_bit(PORTB, PB4); // Select CAN-controller
-// 	// 	// mcp2515_write(0x00, 'z');
-// 	// 	// printf("asd %d\n", mcp2515_read(0x01));
-// 	// 	set_bit(PORTB, 0);
-// 	// 	_delay_ms(100);
-// 	// 	clr_bit(PORTB, 0);
-// 	// 	_delay_ms(100);
-// 	}
-// }
-
-extern "C" {
 #include <avr/io.h>
 #include "util/delay.h"
 #include <stdio.h>
 // #include "../lib/comm/comm.h"
 #include "../lib/utilities/utilities.h"
-}
-#include "../lib/CAN/SPI.h"
-#include "../lib/CAN/MCP2515.h"
-#include "lib/CAN/can.h"
+#include "lib/utilities/printf.h"
+
+#include "lib/can/can.h"
+#include "lib/spi/spi.h"
 #include "lib/timer/timer.h"
 #include "lib/joystick/joystick.h"
 #include <stdint.h>
 
-// #include "lib/joystick/joystick.h"
-#include "test/test.h"
+#include "../test/test.h"
+
+#include <stdio.h>
+#include <avr/io.h>
+#include <util/delay.h>
+#include <stdint.h>
+
+#include "test.h"
+#include "lib/utilities/printf.h"
+#include "lib/pins/pins.h"
+#include "lib/uart/uart.h"
+#include "lib/adc/adc.h"
+#include "lib/joystick/joystick.h"
+#include "lib/timer/timer.h"
+#include "../lib/spi/spi.h"
+#include "../lib/can/can.h"
+#include "../lib/slider/slider.h"
+#include "../lib/fsm/fsm.h"
+#include "../lib/display/screen.h"
+//#include "../lib/display/screenhandler.h"
+#include "../lib/menu/menu.h"
+#include "../lib/can/canmsg.h"
+#include "../lib/utilities/eeprom.h"
+#include "fsm_state_functions.h"
 
 void toggle_led() {
-	PORTB ^= (1 << PB0);
+    PORTB ^= 0b1;
 }
+
+
 
 int main(void)
 {
+    // clr_bit(DDRE, 0);  
+	UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
 
-	testTimer();
-	set_bit(DDRB, 0);
-	set_bit(PORTB, 0);
-	// init_timer(500);
+    printf("Node 1 startup\n");
+    Timer& timer0 = Timer::getInstance(0);
+    timer0.initialize(500, toggle_led, &pb0);
+    timer0.start();
 
-	can_init();
+    
 
-	sei();
-	can_message msg;
-	msg.id = 2;
-	msg.length = 3;
-	// Joystick joystick(10);
-	int8_t x;
-	int8_t y;
-	// }
-	while (1)
+    SPI& spi = SPI::getInstance(0);
+    CAN& can = CAN::getInstance();
+    can.initialize(&spi, false);
+    
+     
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);
+
+    //Slider & slider0 = Slider::getInstance(0);
+    //slider0.initialize(&adc, &pb2);
+
+    Slider & slider1 = Slider::getInstance(1);
+    slider1.initialize(&adc, &pb1);
+
+    FSM & fsm = FSM::getInstance();
+    loadStateFunctionsToFSM();
+
+    /*ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);*/
+    
+    CanMessage msg;
+    CanMessage recv;
+
+    printf("Node1 Starting\n");
+	while (true)
 	{
-		// Direction dir = joystick.read(&x, &y);
-		// printf("Node1\n");
-		// PORTB ^= (1 << PB0);
-		// _delay_ms(500);
-		msg.data[0] = x;
-		msg.data[1] = y;
-		// msg.data[2] = dir;
-		// (msg.data[1])++;		
-		can_message_send(&msg);
-	// 	can_message recv = can_data_receive();
-	// 	if (recv.id != NULL)
-	// 	{
-	// 		printf("id: %d, len: %d, data: %d\n", recv.id, recv.length, recv.data[0]);
-	// 	}
-	}
+	 	//fsm.runStateLoop();
+        
+        
 
-	// while(1) {
-	// 	// printf("Hello world\n");
-	// 	// mcp2515_write(0x36, 0xa5);
-	// 	// printf("Data: %d\n", mcp2515_read(0x36));
-	// }
+        msg.id = CAN_ID_RESET;
+        msg.length = CAN_LENGTH_RESET;
+        msg.data[0] = 0;
+        bool ack;
+
+
+
+        do{
+            printf("Loop Start, sending Reset\n");
+            can.transmit(&msg);
+            ack = checkForACK();
+            printf("ACK for reset? %d\n", ack);
+        } while(ack == false);
+
+        
+
+        msg.id = CAN_ID_START_GAME;
+        do{
+            printf("Sending StartGame\n");
+            can.transmit(&msg);
+            ack = checkForACK();
+            printf("ACK for startGame? %d\n", ack);
+        } while(ack == false);
+
+        int8_t joystick_x;
+        int8_t joystick_y;
+        int8_t slider_x = 0;
+        bool slider_button_pressed = false;
+        printf("Running game\n");
+            while (true) 
+            {
+                // In game
+                // Transmit control data, and check for END_GAME event
+                joystick.read(&joystick_x, &joystick_y);
+                slider_x = slider1.read();
+                slider_button_pressed = slider1.buttonPressed();
+
+                //printf("x: %d, y: %d, dir: %d\n", x, y, dir);
+                msg.id = CAN_ID_SEND_USR_INPUT;
+                msg.length = 3;
+                msg.data[0] = joystick_x;
+                msg.data[1] = slider_x;
+                msg.data[2] = (int8_t)slider_button_pressed;
+                can.transmit(&msg);
+                _delay_ms(100);
+                
+                recv = can.receive();
+                if (recv.id == CAN_ID_STOP_GAME)
+                {
+                    printf("\tRecvd STOP. Sending ACK.\n");
+                    msg.id = CAN_ID_ACK;
+                    msg.length = CAN_LENGTH_ACK;
+                    msg.data[0] = 0b0;
+
+                    can.transmit(&msg);
+                    break; // return to main while loop
+                }
+                else if (recv.id == CAN_ID_RESET)
+                {
+                    printf("\tRecvd Reset! Exiting Loop\n");
+                    // Usually, trigger event here.
+                    break;
+                }
+            }
+            printf("Restarting loop in..\n3sec\n");
+            _delay_ms(3000);
+
+	}
 }

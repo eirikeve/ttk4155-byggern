@@ -13,6 +13,7 @@ ADC::ADC() : addr((uint16_t*) 0x1400) {
 
 uint8_t ADC::read(CHANNEL c)
 {
+    clr_bit(DDRE, 0);
     *(this->addr) = (uint8_t)c;
     loop_until_bit_is_clear(PINE, PE0);
     return *(this->addr);

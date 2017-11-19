@@ -87,6 +87,6 @@ add_definitions(-DMCU_${MCU})
 # Compiling targets
 add_custom_target(strip ALL            ${AVRSTRIP} "${BUILD_PATH}/${PROJECT_NAME}.elf" DEPENDS ${PROJECT_NAME})
 add_custom_target(hex   ALL            ${OBJCOPY} -R .eeprom -O ihex "${BUILD_PATH}/${PROJECT_NAME}.elf" "${BUILD_PATH}/${PROJECT_NAME}.hex" DEPENDS strip)
-add_custom_target(flash                ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} -P ${USBPORT} -B ${BITCLOCK} -U flash:w:${BUILD_PATH}/${PROJECT_NAME}.hex:i DEPENDS hex)
+add_custom_target(flash                ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} -P ${USBPORT} -B ${BITCLOCK} -v -U flash:w:${BUILD_PATH}/${PROJECT_NAME}.hex:i DEPENDS hex)
 
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${BUILD_PATH}/${PROJECT_NAME}.hex;${BUILD_PATH}/${PROJECT_NAME}.eeprom;${BUILD_PATH}/${PROJECT_NAME}.lst")
