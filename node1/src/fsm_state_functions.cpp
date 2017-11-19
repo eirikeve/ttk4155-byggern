@@ -21,8 +21,12 @@ void startupLoop()
 
 }
 
-void menuLoop()
-{ 
+void menuLoop() {
+    const uint8_t nrOfItems = 4;
+
+    char* menu[] = {"Play game", "BLE demo", "Display demo", "Snake"};
+    uint8_t index = 0;
+
     Joystick & joystick = Joystick::getInstance();
     FSM & fsm = FSM::getInstance();
 
@@ -30,55 +34,29 @@ void menuLoop()
 	screen.clear();
     screen.render((uint8_t*)AVR_VRAM_1);
 
-    
-
-    MenuNode main("");
-	MenuNode nr1("PingPong Game");
-	MenuNode nr2("Snake Game");
-    MenuNode nr3("Display Test");
-    MenuNode nr4("Play PingPong with controller", &_fsm_extern_handle_event, (uint8_t)EV_START_GAME);
-    MenuNode nr5("Play PingPong with Bluetooth", &_fsm_extern_handle_event, (uint8_t)EV_START_GAME_NRF);
-    MenuNode nr6("Play Snake", &_fsm_extern_handle_event, (uint8_t)EV_START_SNAKE);
-    main.addChild(nr1);
-	main.addChild(nr2);
-    main.addChild(nr3);
-    nr1.addChild(nr4);
-    nr1.addChild(nr5);
-    nr2.addChild(nr6);
-
-    Menu menuStructure(&main);
-
     int8_t x;
 	int8_t y;
 	Direction currentDir = Direction::NEUTRAL;
     Direction lastDir = Direction::NEUTRAL;
     
-    uint8_t old_state = (uint8_t)fsm.getCurrentState();
+    //uint8_t old_state = (uint8_t)fsm.getCurrentState();
 
 	while (true)
 	{
         screen.clear();
 		lastDir = currentDir;
         currentDir = joystick.read(&x, &y);
-		char **choices = NULL;
-		if (menuStructure.getCurrent() != NULL)
-		{
-			choices = menuStructure.getCurrent()->getChildrenNames();
-			for (int i = 0; i < menuStructure.getCurrent()->getTotNrOfChildren(); i++)
-			{
-				screen.goTo(i, 1);
-				if (i == menuStructure.getSelectIndex())
-				{
-					screen.writeChar('>');
-                }
-                else {
-                    screen.writeChar(' ');
-                }
-				screen.writeString(choices[i]);
-				screen.writeChar('\n');
-			}
-			free(choices);
-		}
+
+        for (int i = 0; i < nrOfItems; i++) {
+            if (i == index) {
+                screen.writeChar('>');
+            }
+            else {
+                screen.writeChar(' ');
+            }
+            screen.writeString(menu[i]);
+            screen.writeChar('\n');
+        }
 
 		if (lastDir == Direction::NEUTRAL)
 		{
@@ -86,30 +64,35 @@ void menuLoop()
 			{
 			case Direction::NORTH:
 			{
-				menuStructure.up();
+				if (index > 0) {
+                    index--;
+                }
 				break;
 			}
 			case Direction::SOUTH:
 			{
-				menuStructure.down();
+				if (index < nrOfItems - 1) {
+                    index++;
+                }
 				break;
 			}
 			case Direction::EAST:
 			{
-                // Here: Need to exit if we did call a function!
-				menuStructure.select();
                 screen.clear();
-                if (old_state != (uint8_t)fsm.getCurrentState())
-                {
-                    return;
+                switch (index) {
+                    case 0:
+                        fsm.handleEvent(EV_START_GAME);
+                        break;
+                    case 1:
+                        fsm.handleEvent(EV_START_GAME_NRF);
+                        break;
+                    case 2:
+                        fsm.handleEvent(EV_START_DISPLAY);
+                        break;
+                    case 3:
+                    fsm.handleEvent(EV_START_SNAKE);
                 }
-				break;
-			}
-			case Direction::WEST:
-			{
-				menuStructure.back();
-				screen.clear();
-				break;
+                return;
 			}
 			default:
 			{
@@ -119,8 +102,8 @@ void menuLoop()
 		}
         screen.render();
 	}
-
 }
+
 
 void gameLoop()
 {
@@ -133,32 +116,20 @@ void gameLoop()
     // Send msg to node 2 that the game is starting
     CanMessage msg;
     CanMessage recv;
-
-
-    msg.id = CAN_ID_RESET;
-    msg.length = CAN_LENGTH_RESET;
-    msg.data[0] = 0;
-    bool ack;   
-    do{
-        can.transmit(&msg);
-        ack = checkForACK();
-        
-    } while(ack == false);
-    printf("Got Reset ACK");
+    bool ack;
 
     msg.id = CAN_ID_START_GAME;
     do{
         can.transmit(&msg);
         ack = checkForACK();
     } while(ack == false); 
-    printf("Got Start ACK");
+    printf("Got Start ACK - running game\n");
 
     int8_t joystick_x;
     int8_t joystick_y;
     int8_t slider_x;
     bool slider_button_pressed = false;
 
-    printf("Running game\n");
         while (true) 
         {
             // In game
@@ -235,6 +206,7 @@ void displayLoop()
     FSM & fsm = FSM::getInstance();
     // todo add some awesome graphic stuff here!
     fsm.handleEvent(EV_DISPLAY_END);
+    _delay_ms(500); // Remove when actual display stuff is added.
 }
 
 void gameNRFLoop()
