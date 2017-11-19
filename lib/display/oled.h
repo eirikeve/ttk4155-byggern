@@ -5,24 +5,12 @@ extern "C" {
 
 class OLED
 {
-
-
-private:
-    const uint8_t* dataAddr = (uint8_t *)0x1200;
-    const uint8_t* commandAddr = (uint8_t *)0x1000;
-    OLED();
+  private:
+    volatile uint8_t *dataAddr;
+    volatile uint8_t *commandAddr;
 
   public:
-        static OLED& getInstance()
-    {
-        static OLED instance;
-        return instance;
-    }
-    // Deleted due to singleton design pattern
-    OLED(OLED const&) = delete;
-    // Deleted due to singleton design pattern
-    void operator=(OLED const&) = delete;
-
+    OLED();
     void write_c(uint8_t command);
     void write(uint8_t c);
 
