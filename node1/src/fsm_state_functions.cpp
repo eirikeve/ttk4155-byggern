@@ -1,11 +1,91 @@
 #include "fsm_state_functions.h"
+void playStartupVideo()
+{
+    Screen s1 = Screen();
 
+    // Animated apple logo
+    const unsigned char appleLogo[8] =
+	{0b00000000, 0b01111000, 0b11111100, 0b11111110, 0b11001101, 0b01001000,0b00000000,0b00000000};
+	s1.clear();
+	s1.goTo(1,61);
+	for (int i= 0; i < 8; ++i)
+	{
+		s1.write(appleLogo[i]);
+    }
+    s1.render((uint8_t*)AVR_VRAM_1);
+	_delay_ms(300);
+	char letter = '-';
+    uint8_t max_char_on_screen = 21;
+	for (int i = 0; i < 30; ++i)
+	{
+		switch (letter)
+		{
+			case '-':
+				letter = '\\';
+				break;
+			case '\\':
+				letter = '|';
+				break;
+			case '|':
+				letter = '/';
+				break;
+			case '/':
+				letter = '-';
+				break;
+		}
+		s1.goTo(3, 29);
+		s1.writeString("Initializing ");
+		s1.writeChar(letter);
+		s1.goTo(4, 0);
+		for (int j = 0; j <= i; ++j)
+		{
+            if (j <= max_char_on_screen)
+            {
+                s1.writeChar( '-' );
+            }
+		}
+        s1.goTo(5, 0);
+		for (int j = 0; j <= i; ++j)
+		{
+            if (j > 2 && j - 3 <= max_char_on_screen)
+            {
+                s1.writeChar( '-' );
+            }
+
+		}
+        s1.goTo(6, 0);
+		for (int j = 0; j <= i; ++j)
+		{
+            if (j > 5 && j - 6 <= max_char_on_screen)
+            {
+                s1.writeChar( '-' );
+            }
+		}
+        s1.goTo(7, 0);
+		for (int j = 0; j <= i; ++j)
+		{
+            if (j > 8 && j - 9 <= max_char_on_screen)
+            {
+                s1.writeChar( '-' );
+            }
+		}
+		s1.render();
+		_delay_ms(50);
+		
+	}
+    s1.goTo(3, 29);
+	s1.writeString("Initializing *");
+    s1.render();
+    _delay_ms(250);
+}
 
 void startupLoop()
-{
+{   
     // Reset timer blink period here, in case of reset after ERROR.
     Timer& timer = Timer::getInstance(0);
     timer.setInterruptPeriod(500);
+
+    playStartupVideo();
 
     FSM & fsm = FSM::getInstance();
     CAN & can = CAN::getInstance();
@@ -82,6 +162,7 @@ void menuLoop() {
 			case Direction::EAST:
 			{
                 screen.clear();
+                screen.render();
                 switch (index) {
                     case 0:
                         fsm.handleEvent(EV_START_GAME);
