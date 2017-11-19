@@ -54,3 +54,5 @@ void testMenuCallback();
 void testMenu();
 // Test snake
 void testSnake();
+// Test eeprom
+void testEEPROM();

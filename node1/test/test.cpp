@@ -40,7 +40,7 @@
 #endif
 
 #ifndef TEST_MENU
-#define TEST_MENU 1
+#define TEST_MENU 0
 #endif
 
 #ifndef TEST_TIMER
@@ -75,6 +75,10 @@
 #define TEST_SNAKE 0
 #endif
 
+
+#ifndef TEST_EEPROM
+#define TEST_EEPROM 1
+#endif
 
 
 #if TEST_UART
@@ -1026,3 +1030,45 @@ void testFSM()
 }
 
 #endif
+
+
+#if TEST_EEPROM
+void testEEPROM()
+{
+    printf("Starting EEPROM test\n");
+    seed = 0;
+    uint8_t data_in;
+    uint8_t data_out;
+    uint16_t write_errors = 0;
+    uint16_t retrieval_errors = 0;
+
+    // Test write
+    srand(seed)
+    for (uint16_t adddress = 0; address < 512; ++address)
+    {
+        data_in = rand % UINT8_MAX;
+        eepromWrite(address, data_in);
+        data_out = eepromRead(address);
+        if (data_in != data_out)
+        {
+            printf("Write err: EEPROM[%3d] = %02X (should be %02X)\n", i,retreived_value, some_value);
+            ++write_errors;
+        }
+    }
+
+    // Test Retrieve
+    srand(seed)
+    for (uint16_t adddress = 0; address < 512; ++address)
+    {
+        data_in = rand % UINT8_MAX;
+
+        data_out = eepromRead(address);
+        if (data_in != data_out)
+        {
+            printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", i,retreived_value, some_value);
+            ++retrieval_errors;
+        }
+    }
+    printf("Finished. %3d write err, %3d read err\n", write_errors, retrieval_errors);
+}
+#endif //TEST_EEPROM
