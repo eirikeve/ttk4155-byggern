@@ -58,7 +58,7 @@ void c3DCube::drawToVram()
 
     // Draw upper cube
     // Version 1: No flex considered
-   /*for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
+    for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
     {
         for (uint8_t y = hi_upper_coord + y_offset; y < hi_lower_coord + y_offset + 1; ++y)
         {
@@ -67,7 +67,7 @@ void c3DCube::drawToVram()
     }
     
 
-
+    /*
 
     // Version 2: Flex considered
     // Place pixels with Y flex
