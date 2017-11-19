@@ -18,7 +18,6 @@ void runGame(){
     
     printf("Running game\n");
     while (true) {
-        printf("Looping..\n");
         if (ir.blocked())
         {
             printf("IR Blocked. Sending STOP\n");
@@ -35,6 +34,8 @@ void runGame(){
                 // Try to retransmit once if msg didn't go through
                 can.transmit(&msg);
             }
+            motor.run(0); // Stop motor and reset servo!
+            servo.setAngle(0);
             return;
         }
 
@@ -42,7 +43,7 @@ void runGame(){
 
         if (recv.id == CAN_ID_SEND_USR_INPUT) 
         {
-            printf("Recv usr input. Joystick %d\n", recv.data[0]);
+            printf("Recv usr input. JS %d, SL %d, BTN %d\n", (int8_t)recv.data[0],(int8_t)recv.data[1],recv.data[2]);
 			// input to motor, from joystick
             motor.run((int8_t)recv.data[0]);
 

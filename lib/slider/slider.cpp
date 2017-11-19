@@ -27,7 +27,7 @@ void Slider::initialize(ADC *adc, PIN *buttonPin) {
 
 int8_t Slider::read()
 {
-    return this->readRaw() - 127;
+    return (this->readRaw() - 127);
 }
 
 uint8_t Slider::readRaw()

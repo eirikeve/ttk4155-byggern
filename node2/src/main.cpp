@@ -33,7 +33,7 @@ int main(void)
     can.initialize(&spi, false);
 
     Servo& servo = Servo::getInstance();
-    servo.initialize(90);
+    servo.initialize(45);
 
     TWI_Master_Initialise();
     sei();
@@ -61,6 +61,15 @@ int main(void)
     CanMessage recv;
     CanMessage msg;
 
+    printf("Sending RESET\n");
+    msg.id = CAN_ID_RESET;
+    msg.length = CAN_LENGTH_RESET;
+    msg.data[0] = 0b0;
+    can.transmit(&msg);
+    bool ack = checkForACK();
+    printf("ACK for reset? %d\n", ack);
+
+
     msg.id = CAN_ID_ACK;
     msg.length = CAN_LENGTH_ACK;
     msg.data[0] = 0b0;
@@ -80,6 +89,7 @@ int main(void)
             printf("Recvd START, sending ACK\n");
             can.transmit(&msg);
 			runGame();
+            printf("Back to Main Loop\n");
         }
 	}
 }

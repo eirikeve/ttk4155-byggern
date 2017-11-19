@@ -66,9 +66,9 @@ int main(void)
     Joystick & joystick = Joystick::getInstance();
     joystick.initialize(&adc, 10, &pb3);
     printf("SUCCESSS\n");
-    Slider & slider0 = Slider::getInstance(0);
-    
-    slider0.initialize(&adc, &pb2);
+
+    //Slider & slider0 = Slider::getInstance(0);
+    //slider0.initialize(&adc, &pb2);
 
     Slider & slider1 = Slider::getInstance(1);
     slider1.initialize(&adc, &pb1);
@@ -112,7 +112,6 @@ int main(void)
             printf("ACK for startGame? %d\n", ack);
         } while(ack == false);
 
-        int i = 0;
         int8_t joystick_x;
         int8_t joystick_y;
         int8_t slider_x = 0;
@@ -120,10 +119,11 @@ int main(void)
         printf("Running game\n");
             while (true) 
             {
-                i += 5;
-                //int8_t joystick_x = ((i % 99) - 49);
+                // In game
                 // Transmit control data, and check for END_GAME event
                 joystick.read(&joystick_x, &joystick_y);
+                slider_x = slider1.read();
+                slider_button_pressed = slider1.buttonPressed();
 
                 //printf("x: %d, y: %d, dir: %d\n", x, y, dir);
                 msg.id = CAN_ID_SEND_USR_INPUT;
@@ -133,7 +133,7 @@ int main(void)
                 msg.data[2] = (int8_t)slider_button_pressed;
                 can.transmit(&msg);
                 _delay_ms(100);
-                printf("Sending id %d Joystick.x %d\n", msg.id, joystick_x);
+                printf("Sending id %d, JS %d, SL %d, BTN %d\n", msg.id, joystick_x, slider_x, slider_button_pressed);
 
                 recv = can.receive();
                 if (recv.id == CAN_ID_STOP_GAME)
@@ -144,7 +144,12 @@ int main(void)
                     msg.data[0] = 0b0;
 
                     can.transmit(&msg);
-                    return 0; // return to main while loop, where new onStateLoop will run
+                    break; // return to main while loop
+                }
+                else if (recv.id == CAN_ID_RESET)
+                {
+                    printf("Recvd Node2 startup! Exiting Loop\n");
+                    break;
                 }
             }
             printf("Restarting loop in..\n3\n");
