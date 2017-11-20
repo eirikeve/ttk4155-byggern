@@ -71,6 +71,7 @@ void cubeMenu()
 
     bottom.writeString("Note: Select an option by moving the joystick RIGHT.\nExit a demo by PRESSING the joystick button.");
 
+    bottom.render();
     screen.render();
 
     c3DCube cube;
