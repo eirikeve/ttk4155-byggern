@@ -42,11 +42,78 @@ void toggle_led() {
 }
 
 
+
+void loopUntilRIGHT(Joystick * joystick)
+{
+    Direction dir;
+    int8_t x; int8_t y;
+    do{
+        _delay_ms(20);
+        dir = joystick->read(&x, &y);
+    } while (dir != NEUTRAL);
+    do{
+        _delay_ms(20);
+        dir = joystick->read(&x, &y);
+    } while (dir != EAST);
+
+}
+
+void displayFunction()
+{
+    Joystick & joystick = Joystick::getInstance();
+
+    Screen s1 = Screen();
+    s1.writeString("This is a display demonstration. Push the joystick RIGHT to advance.");
+    s1.render();
+    Screen s2 = Screen();
+    Screen s3 = Screen();
+
+    loopUntilRIGHT(&joystick);
+
+    s1.addSubScreen(&s2, 4, Orientation::LOWER);
+    s1.goToStart();
+    s2.goToStart();
+    s3.goToStart();
+
+    s1.writeString("We can split the display into subdisplays. This is display 1.");
+    s2.writeString("This is display 2.");
+    s1.render();
+
+    loopUntilRIGHT(&joystick);
+    s1.clear();
+    s2.clear();
+    s1.writeString("Here you see the split between the displays.");
+    
+    s2.writeString("This is display 2.");
+    s1.addBorderLines();
+    s2.addBorderLines();
+    s3.addBorderLines();
+
+    s1.render();
+    
+    loopUntilRIGHT(&joystick);
+
+    s2.addSubScreen(&s3, 64, RIGHT);
+
+    s2.writeString("There can be tons of small displays!");
+    s3.writeString("It's pretty cool!");
+    s1.render();
+    loopUntilRIGHT(&joystick);
+
+    s1.removeSubScreen(); // removes all subscreens
+
+    s1.addSubScreen(&s2, 7, LOWER);
+    s1.writeString("This can also be used to add headers.");
+    s2.writeString("You can even se an animated header in the main menu!");
+
+}
+
+
 void cubeMenu()
 {
 
-    const uint8_t nrOfItems = 2;
-    char* menu[] = {"With FLEX", "Without FLEX"};
+    const uint8_t nrOfItems = 3;
+    char* menu[] = {"With FLEX", "Without FLEX", "Screen Example"};
     uint8_t index = 0;
 
     Joystick & joystick = Joystick::getInstance();
@@ -160,6 +227,9 @@ void cubeMenu()
                     case 1:
                         cube.run(false);
                         break;
+                    case 2:
+                        displayFunction();
+                        break;
                 }
 			}
 			default:
@@ -170,8 +240,6 @@ void cubeMenu()
         screen.render();
 	}
 }
-
-
 
 
 int main(void)
