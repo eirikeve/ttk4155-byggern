@@ -63,6 +63,7 @@ void displayFunction()
     Joystick & joystick = Joystick::getInstance();
 
     Screen s1 = Screen();
+	s1.clear();
     s1.writeString("This is a display demonstration. Push the joystick RIGHT to advance.");
     s1.render();
     Screen s2 = Screen();
@@ -99,12 +100,17 @@ void displayFunction()
     s3.writeString("It's pretty cool!");
     s1.render();
     loopUntilRIGHT(&joystick);
+	s1.clear();
 
     s1.removeSubScreen(); // removes all subscreens
 
     s1.addSubScreen(&s2, 7, LOWER);
-    s1.writeString("This can also be used to add headers.");
+    s1.writeString("This is a header!");
     s2.writeString("You can even se an animated header in the main menu!");
+	s1.updateBorderLines();
+	s1.render();
+
+	loopUntilRIGHT(&joystick);
 
 }
 
@@ -143,8 +149,8 @@ void cubeMenu()
     int8_t x;   
     int8_t y;
     
-	Direction currentDir = Direction::NEUTRAL;
-    Direction lastDir = Direction::NEUTRAL;
+	Direction currentDir = joystick.read(&x, &y);
+    Direction lastDir = currentDir;
     
     //uint8_t old_state = (uint8_t)fsm.getCurrentState();
     char* scrolling_text = "3DCube Demo!         Run the 3DCube with, or without FLEX PHYSICS (TM)!  ";
@@ -177,7 +183,7 @@ void cubeMenu()
         {
             top_line.writeChar(scrolling_text[i % scrolling_text_length]);
         }
-        top_line.updateBorderLines();
+        
         
         screen.clear();
         bottom.clear();
@@ -237,6 +243,9 @@ void cubeMenu()
 			}
 			}
 		}
+		top_line.updateBorderLines();
+		screen.updateBorderLines();
+		bottom.updateBorderLines();
         screen.render();
 	}
 }
