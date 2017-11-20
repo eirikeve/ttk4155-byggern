@@ -20,12 +20,13 @@ void c3DCube::run()
     bool btnPress;
     int8_t joystick_x;
     int8_t joystick_y;
-    //btnPress = joystick.buttonPressed();
+    btnPress = joystick.buttonPressed();
+    _delay_ms(20);
     do{
         //printf("Loop! Jsx %d, Jsy %d\n", joystick_x, joystick_y);
         joystick_x = joystick.readX();
         joystick_y = -joystick.readY(); // Up reads as positive, but pixel index increase downwards
-        btnPress = false;//joystick.buttonPressed();
+        btnPress = joystick.buttonPressed();//joystick.buttonPressed();
         s.clear();
         //printf("Clr\n");
         runTimeStep(joystick_x, joystick_y);
