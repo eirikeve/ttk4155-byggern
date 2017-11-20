@@ -233,10 +233,16 @@ void testControlServoOverCan() {
 }
 
 #if TEST_NRF
+
+void callbackSPITimer() {
+    PORTB ^= (1 << PB0);
+}
 void testNrf() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
+    Timer& timer1 = Timer::getInstance(1);
+    timer1.initialize(1000, &callbackSPITimer, &pb0);
 
     SPI& spi = SPI::getInstance(1);
     uint8_t val;
