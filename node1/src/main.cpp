@@ -87,10 +87,11 @@ void cubeMenu()
 
         top_line.clear();
 
-        for (uint8_t i = scrolling_text_index; i < 25; ++i)
+        for (uint8_t i = scrolling_text_index; i < scrolling_text_index + 25; ++i)
         {
             top_line.writeChar(scrolling_text[i % scrolling_text_length]);
         }
+        top_line.updateBorderLines();
         
         screen.clear();
 		lastDir = currentDir;
