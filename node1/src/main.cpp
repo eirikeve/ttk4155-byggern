@@ -42,6 +42,112 @@ void toggle_led() {
 }
 
 
+void cubeMenu()
+{
+
+    const uint8_t nrOfItems = 2;
+    char* menu[] = {"With FLEX", "Without FLEX"};
+    uint8_t index = 0;
+
+    Joystick & joystick = Joystick::getInstance();
+
+    Screen top_line = Screen();
+
+    Screen screen = Screen();
+    top_line.addSubScreen(&screen, 7, LOWER);
+    screen.addBorderLines();
+    top_line.addBorderLines();
+    screen.clear();
+    top_line.clear();
+
+    screen.render((uint8_t*)AVR_VRAM_1);
+
+    c3DCube cube;
+
+    int8_t x;
+    int8_t y;
+    
+	Direction currentDir = Direction::NEUTRAL;
+    Direction lastDir = Direction::NEUTRAL;
+    
+    //uint8_t old_state = (uint8_t)fsm.getCurrentState();
+    char* scrolling_text = "3DCube Demo!          Run the 3DCube with, or without FLEX PHYSICS (TM)!          ";
+    uint8_t scrolling_text_length = 82;
+    uint8_t scrolling_text_index_counter = 0;
+    uint8_t scrolling_text_index = 0;
+
+	while (true)
+	{
+        ++scrolling_text_index_counter;
+        if (scrolling_text_index_counter > 829)
+        {
+            scrolling_text_index_counter = 0;
+        }
+        scrolling_text_index = scrolling_text_index_counter / 10;
+
+        top_line.clear();
+
+        for (uint8_t i = scrolling_text_index; i < 25; ++i)
+        {
+            top_line.writeChar(scrolling_text[i % scrolling_text_length]);
+        }
+        
+        screen.clear();
+		lastDir = currentDir;
+        currentDir = joystick.read(&x, &y);
+
+        for (int i = 0; i < nrOfItems; i++) {
+            if (i == index) {
+                screen.writeChar('>');
+            }
+            else {
+                screen.writeChar(' ');
+            }
+            screen.writeString(menu[i]);
+            screen.writeChar('\n');
+        }
+
+		if (lastDir == Direction::NEUTRAL)
+		{
+			switch (currentDir)
+			{
+			case Direction::NORTH:
+			{
+				if (index > 0) {
+                    index--;
+                }
+				break;
+			}
+			case Direction::SOUTH:
+			{
+				if (index < nrOfItems - 1) {
+                    index++;
+                }
+				break;
+			}
+			case Direction::EAST:
+			{
+                screen.clear();
+                screen.render();
+                switch (index) {
+                    case 0:
+                        cube.run(true);
+                        break;
+                    case 1:
+                        cube.run(false);
+                        break;
+                }
+			}
+			default:
+			{
+			}
+			}
+		}
+        screen.render();
+	}
+}
+
+
 
 
 int main(void)
@@ -89,6 +195,9 @@ int main(void)
     uart.initialize(9600);
     enablePrintfWithUart();
     
-    c3DCube cube;
-    cube.run();
+    ADC& adc = ADC::getInstance();
+    Joystick & joystick = Joystick::getInstance();
+    joystick.initialize(&adc, 10, &pb3);
+    
+    cubeMenu();
 }
