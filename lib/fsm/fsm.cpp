@@ -32,7 +32,7 @@ void FSM::reset()
 
 void FSM::transitionTo(uint8_t s)
 {
-    printf("New state %d\n", s);
+    // printf("New state %d\n", s);
     // Change state, set onState function, perform transition function
     current_state = s;
     stateLoopFunction = stateFunctionsArray[s].stateLoopFunction;
