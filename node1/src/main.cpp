@@ -59,7 +59,7 @@ void cubeMenu()
 
 
     top_line.addSubScreen(&screen, 7, LOWER);
-    screen.addSubScreen(&bottom, 4, LOWER);
+    screen.addSubScreen(&bottom, 3, LOWER);
 
     screen.addBorderLines();
     top_line.addBorderLines();
@@ -71,7 +71,7 @@ void cubeMenu()
 
     bottom.writeString("Note: Select an option by moving the joystick RIGHT.\nExit a demo by PRESSING the joystick button.");
 
-    screen.render((uint8_t*)AVR_VRAM_1);
+    screen.render();
 
     c3DCube cube;
 
@@ -115,6 +115,7 @@ void cubeMenu()
         top_line.updateBorderLines();
         
         screen.clear();
+        screen.goToPage(1);
 		lastDir = currentDir;
         currentDir = joystick.read(&x, &y);
 
