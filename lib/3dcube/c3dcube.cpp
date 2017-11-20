@@ -94,7 +94,7 @@ void c3DCube::drawToVram()
             int8_t x_line_offset_here = calcLineOffset(y - (hi_upper_coord + y_offset), x_flex);
             if (x_line_offset_here < 0)
             {
-                for (uint8_t x = hi_left_coord + x_offset + x_line_offset_here; x < hi_left_coord + x_offset + 2; ++x)
+                for (uint8_t x = hi_left_coord + x_offset + x_line_offset_here; x < hi_left_coord + x_offset + 1; ++x)
                 {
                     putPixel(x,y);
                 }
