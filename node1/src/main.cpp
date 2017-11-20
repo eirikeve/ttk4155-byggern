@@ -73,7 +73,7 @@ void cubeMenu()
     //uint8_t old_state = (uint8_t)fsm.getCurrentState();
     char* scrolling_text = "3DCube Demo!          Run the 3DCube with, or without FLEX PHYSICS (TM)!          ";
     uint8_t scrolling_text_length = 82;
-    uint8_t scrolling_text_index_counter = 0;
+    uint16_t scrolling_text_index_counter = 0;
     uint8_t scrolling_text_index = 0;
 
 	while (true)
