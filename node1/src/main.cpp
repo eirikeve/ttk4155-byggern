@@ -59,7 +59,7 @@ void cubeMenu()
 
 
     top_line.addSubScreen(&screen, 7, LOWER);
-    screen.addScreen(&bottom, 4, LOWER);
+    screen.addSubScreen(&bottom, 4, LOWER);
 
     screen.addBorderLines();
     top_line.addBorderLines();
@@ -75,7 +75,7 @@ void cubeMenu()
 
     c3DCube cube;
 
-    int8_t x;
+    int8_t x;   
     int8_t y;
     
 	Direction currentDir = Direction::NEUTRAL;
