@@ -96,11 +96,7 @@ void c3DCube::drawToVram()
                 int8_t x_line_offset_here = calcLineOffset(y - (hi_upper_coord + y_offset), x_flex);
                 if (x_line_offset_here < 0)
                 {
-<<<<<<< HEAD
-                    for (uint8_t x = hi_left_coord + x_offset + x_line_offset_here -1; x < hi_left_coord + x_offset; ++x)
-=======
                     for (uint8_t x = hi_left_coord + x_offset + x_line_offset_here - 1; x < hi_left_coord + x_offset; ++x)
->>>>>>> aaabde91f261ebae1d7ed8b5f844088759d52291
                     {
                         putPixel(x,y);
                     }
@@ -111,11 +107,7 @@ void c3DCube::drawToVram()
                 }
                 else
                 {
-<<<<<<< HEAD
-                    for (uint8_t x = hi_left_coord + x_offset-1; x < hi_left_coord + x_offset + x_line_offset_here; ++x)
-=======
                     for (uint8_t x = hi_left_coord + x_offset - 1; x < hi_left_coord + x_offset + x_line_offset_here; ++x)
->>>>>>> aaabde91f261ebae1d7ed8b5f844088759d52291
                     {
                         remPixel(x,y);
                     }
