@@ -21,6 +21,7 @@ void c3DCube::run()
         joystick_x = joystick.readX();
         joystick_y = joystick.readY();
         btnPress = joystick.buttonPressed();
+        s.clear();
         runTimeStep(joystick_x, joystick_y);
         s.render();
     } while (!btnPress);
