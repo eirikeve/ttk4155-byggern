@@ -16,6 +16,7 @@ class c3DCube
 private:
     Joystick & joystick = Joystick::getInstance();
     Screen s;
+    bool flex;
 
     uint8_t hi_upper_coord = 15; // Pixel # 16, counted from above
     uint8_t hi_lower_coord = 47; 
@@ -31,12 +32,7 @@ private:
     int8_t x_offset = 0;
 
     int8_t y_flex = 0;
-    int8_t y_flex_spd = 0;
-    int8_t y_flex_accel = 0;
-
     int8_t x_flex = 0;
-    int8_t x_flex_spd = 0;
-    int8_t x_flex_accel = 0;
 
     int8_t x_flex_max = 0;
     int8_t y_flex_max = 0;
@@ -69,7 +65,7 @@ private:
 // Public methods
 public:
     c3DCube();
-    void run();
+    void run(bool flexOn = false);
 
 
 };

@@ -15,8 +15,9 @@ c3DCube::c3DCube()
     s.clear();
 }
 
-void c3DCube::run()
+void c3DCube::run(bool flexOn)
 {
+    flex = flexOn;
     bool btnPress;
     int8_t joystick_x;
     int8_t joystick_y;
@@ -31,7 +32,7 @@ void c3DCube::run()
         //printf("Clr\n");
         runTimeStep(joystick_x, joystick_y);
         s.render();
-        _delay_ms(10);
+        _delay_ms(5);
         //printf("render\n");
     } while (!btnPress);
 }
@@ -40,8 +41,10 @@ void c3DCube::runTimeStep(int8_t joystick_x, int8_t joystick_y)
 {
     y_offset = joystick_y / 6;
     x_offset = joystick_x / 6;
-    simFlex(joystick_x, joystick_y);
-    //printf("Flex x: %d, Flex y: %d\n", x_flex, y_flex);
+    if (flex)
+    {
+        simFlex(joystick_x, joystick_y);
+    }
     drawToVram();
     
 }
@@ -63,79 +66,66 @@ void c3DCube::drawToVram()
         } 
     }*/
 
-    /*drawLine(hi_right_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_upper_coord + y_offset);
+    if ( !(flex) )
+    {
+    drawLine(hi_right_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_upper_coord + y_offset);
     drawLine(hi_left_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_lower_coord + y_offset);
     drawLine(hi_left_coord + x_offset, hi_lower_coord + y_offset, hi_right_coord + x_offset, hi_lower_coord + y_offset);
     drawLine(hi_right_coord + x_offset, hi_lower_coord + y_offset, hi_right_coord + x_offset, hi_upper_coord + y_offset);
-    */
-    
-
-    
-
-    // Version 2: Flex considered
-    // Place pixels with Y flex
-    for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset; ++x)
-    {
-        int8_t y_line_offset_here = calcLineOffset(x - (hi_left_coord + x_offset), y_flex);
-        int8_t y0 = hi_upper_coord + y_offset + y_line_offset_here;
-        if (y0 < 0) y0 = 0;
-        int8_t y1 = hi_lower_coord + y_offset + y_line_offset_here + 1;
-        if (y1 > OLED_PIXELS_HEIGHT) y1 = OLED_PIXELS_HEIGHT;
-        //printf("x: %d, y:line_offset %d\n", x, y_line_offset_here);
-        for (uint8_t y = y0; y < y1; ++y)
-        {
-            putPixel(x,y);
-        }
     }
-    // Place pixels with X flex, remove pixels that are flexed away
-    for (uint8_t y = 0; y < OLED_PIXELS_HEIGHT; ++y)
+    else // Flex on; draw surface which bounces as the upper square
     {
-        if (y < hi_lower_coord + y_offset && y >= hi_upper_coord + y_offset)
+        for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset; ++x)
         {
-            int8_t x_line_offset_here = calcLineOffset(y - (hi_upper_coord + y_offset), x_flex);
-            if (x_line_offset_here < 0)
+            int8_t y_line_offset_here = calcLineOffset(x - (hi_left_coord + x_offset), y_flex);
+            int8_t y0 = hi_upper_coord + y_offset + y_line_offset_here;
+            if (y0 < 0) y0 = 0;
+            int8_t y1 = hi_lower_coord + y_offset + y_line_offset_here + 1;
+            if (y1 > OLED_PIXELS_HEIGHT) y1 = OLED_PIXELS_HEIGHT;
+            //printf("x: %d, y:line_offset %d\n", x, y_line_offset_here);
+            for (uint8_t y = y0; y < y1; ++y)
             {
-                for (uint8_t x = hi_left_coord + x_offset + x_line_offset_here; x < hi_left_coord + x_offset + 1; ++x)
-                {
-                    putPixel(x,y);
-                }
-                for (uint8_t x = hi_right_coord + x_offset + x_line_offset_here; x < hi_right_coord + x_offset + 1; ++x)
-                {
-                    remPixel(x,y);
-                }
+                putPixel(x,y);
             }
-            else
+        }
+        // Place pixels with X flex, remove pixels that are flexed away
+        for (uint8_t y = 0; y < OLED_PIXELS_HEIGHT; ++y)
+        {
+            if (y < hi_lower_coord + y_offset && y >= hi_upper_coord + y_offset)
             {
-                for (uint8_t x = hi_left_coord + x_offset; x < hi_left_coord + x_offset + x_line_offset_here + 1; ++x)
+                int8_t x_line_offset_here = calcLineOffset(y - (hi_upper_coord + y_offset), x_flex);
+                if (x_line_offset_here < 0)
                 {
-                    remPixel(x,y);
+                    for (uint8_t x = hi_left_coord + x_offset + x_line_offset_here; x < hi_left_coord + x_offset + 1; ++x)
+                    {
+                        putPixel(x,y);
+                    }
+                    for (uint8_t x = hi_right_coord + x_offset + x_line_offset_here; x < hi_right_coord + x_offset + 1; ++x)
+                    {
+                        remPixel(x,y);
+                    }
                 }
-                for (uint8_t x = hi_right_coord + x_offset; x < hi_right_coord + x_offset + x_line_offset_here + 1; ++x)
+                else
                 {
-                    putPixel(x,y);
-                }
-            } 
-            
+                    for (uint8_t x = hi_left_coord + x_offset; x < hi_left_coord + x_offset + x_line_offset_here + 1; ++x)
+                    {
+                        remPixel(x,y);
+                    }
+                    for (uint8_t x = hi_right_coord + x_offset; x < hi_right_coord + x_offset + x_line_offset_here + 1; ++x)
+                    {
+                        putPixel(x,y);
+                    }
+                } 
+
+            }
         }
     }
 
-
-        // Draw lower cube
+    // Draw lower cube
     drawLine(lo_left_coord, lo_upper_coord, lo_right_coord, lo_upper_coord);
     drawLine(lo_left_coord, lo_upper_coord, lo_left_coord, lo_lower_coord);
     drawLine(lo_right_coord, lo_lower_coord, lo_left_coord, lo_lower_coord);
     drawLine(lo_right_coord, lo_lower_coord, lo_right_coord, lo_upper_coord);
-    // Replaced that with this:
-    /*for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
-    {
-        putPixel(x, lo_upper_coord);
-        putPixel(x, lo_lower_coord);
-    }
-    for (uint8_t y = lo_upper_coord; y < lo_lower_coord + 1; ++y)
-    {
-        putPixel(lo_left_coord, y);
-        putPixel(lo_right_coord,y);
-    } */
 
     // Draw lines between the lower and upper corners, to simulate 3d effect
     drawLine(lo_left_coord, lo_upper_coord, hi_left_coord + x_offset, hi_upper_coord + y_offset);
