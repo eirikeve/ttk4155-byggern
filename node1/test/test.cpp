@@ -243,15 +243,16 @@ void testNrf() {
     enablePrintfWithUart();
     Timer& timer1 = Timer::getInstance(1);
     timer1.initialize(1000, &callbackSPITimer, &pb0);
+    timer1.start();
 
-    SPI& spi = SPI::getInstance(0);
+    SPI& spi = SPI::getInstance(1);
     uint8_t val;
 
     while (true) {
-        // spi.selectSlave();
-        // val = spi.receive();
-        // printf("Value read from NRF: %d\n", val);
-        // spi.deselectSlave();
+        spi.selectSlave();
+        val = spi.receive();
+        printf("Value read from NRF: %d\n", val);
+        spi.deselectSlave();
     }
 }
 #endif // TEST_NRF
