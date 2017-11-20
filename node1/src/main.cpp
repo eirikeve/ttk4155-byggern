@@ -114,7 +114,7 @@ void cubeMenu()
         
         screen.clear();
         bottom.clear();
-        bottom.writeString("Note: Select an option by moving the joystick RIGHT.\nExit a demo by PRESSING the joystick button.");
+        bottom.writeString("Note:\nSelect: RIGHT\nExit Demo: PRESS");
 
         screen.goToPage(1);
 		lastDir = currentDir;
