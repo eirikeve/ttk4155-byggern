@@ -26,14 +26,15 @@ class Motor
 
         void run(int8_t speed);
 
-        Encoder* encoder;
+        
+
     private:
 
         // Private due to singleton design pattern
         Motor() {};
 
         // Encoder
-        
+        Encoder* encoder;
 
         // DAC
         DAC* dac;
@@ -47,13 +48,7 @@ class Motor
         // Reference point
         int16_t ref;
 
-        float processValue;
-
-        
-
-        float u;
-        int16_t enc;
-
+        // Pid
         PID pid;
 
         void setSpeed(uint8_t speed);
@@ -74,8 +69,6 @@ class Motor
         void operator=(Motor const&)  = delete;
 
         friend void controller();
-        friend void testTuneMotor();
-
-        int16_t getInput() {return this->u;}
+        friend void runGame();
 
 };

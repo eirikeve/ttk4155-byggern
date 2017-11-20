@@ -193,11 +193,12 @@ void testIRDetector() {
     ADC_internal& adc = ADC_internal::getInstance();
 
     IR_detector& ir = IR_detector::getInstance();
-    ir.initialize(&adc, NULL, 4);
+    ir.initialize(&adc, NULL, 1);
     while (true) {
         if(ir.blocked()) {
             printf("Beam blocked\n");
         }
+        _delay_ms(100);
     }
 }
 
