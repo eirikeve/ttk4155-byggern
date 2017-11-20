@@ -35,6 +35,7 @@
 #include "../lib/can/canmsg.h"
 #include "../lib/utilities/eeprom.h"
 #include "fsm_state_functions.h"
+#include "../lib/3dcube/c3dcube.h"
 
 void toggle_led() {
     PORTB ^= 0b1;
@@ -46,7 +47,7 @@ void toggle_led() {
 int main(void)
 {
     // clr_bit(DDRE, 0);  
-	UART & uart = UART::getInstance();
+	/*UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
 
@@ -81,5 +82,13 @@ int main(void)
 	while (true)
 	{
         fsm.runStateLoop();
-	}
+    }*/
+
+
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+    
+    c3DCube cube;
+    cube.run();
 }
