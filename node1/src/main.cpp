@@ -94,8 +94,8 @@ void cubeMenu()
         }
         else
         {
-            zero_delay_counter = 1;
-            ++scrolling_text_index_counter;
+            zero_delay_counter = 128;
+            scrolling_text_index_counter += 1;
         }
         
         if (scrolling_text_index_counter > 739)
