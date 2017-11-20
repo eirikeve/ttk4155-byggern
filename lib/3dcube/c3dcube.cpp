@@ -6,6 +6,10 @@
 #include "c3dcube.h"
 #include <util/delay.h>
 
+#define DIR_INCREASE 1
+#define DIR_DECREASE -1
+#define DIR_NONE 0
+
 c3DCube::c3DCube() 
 {
     s.clear();
@@ -18,15 +22,16 @@ void c3DCube::run()
     int8_t joystick_y;
     //btnPress = joystick.buttonPressed();
     do{
-        printf("Loop! Jsx %d\n", joystick_x);
+        //printf("Loop! Jsx %d, Jsy %d\n", joystick_x, joystick_y);
         joystick_x = joystick.readX();
         joystick_y = -joystick.readY(); // Up reads as positive, but pixel index increase downwards
         btnPress = false;//joystick.buttonPressed();
         s.clear();
-        printf("Clr\n");
+        //printf("Clr\n");
         runTimeStep(joystick_x, joystick_y);
         s.render();
-        printf("render\n");
+        _delay_ms(10);
+        //printf("render\n");
     } while (!btnPress);
 }
 
@@ -34,15 +39,86 @@ void c3DCube::runTimeStep(int8_t joystick_x, int8_t joystick_y)
 {
     y_offset = joystick_y / 6;
     x_offset = joystick_x / 6;
-    //simFlex(joystick_x, joystick_y);
+    simFlex(joystick_x, joystick_y);
+    //printf("Flex x: %d, Flex y: %d\n", x_flex, y_flex);
     drawToVram();
+    
 }
 
 
 
 void c3DCube::drawToVram()
 {
-    // Draw lower cube
+
+
+
+    // Draw upper cube
+    // Version 1: No flex considered
+    /*for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
+    {
+        for (uint8_t y = hi_upper_coord + y_offset; y < hi_lower_coord + y_offset + 1; ++y)
+        {
+            putPixel(x,y);
+        } 
+    }*/
+
+    /*drawLine(hi_right_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_upper_coord + y_offset);
+    drawLine(hi_left_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_lower_coord + y_offset);
+    drawLine(hi_left_coord + x_offset, hi_lower_coord + y_offset, hi_right_coord + x_offset, hi_lower_coord + y_offset);
+    drawLine(hi_right_coord + x_offset, hi_lower_coord + y_offset, hi_right_coord + x_offset, hi_upper_coord + y_offset);
+    */
+    
+
+    
+
+    // Version 2: Flex considered
+    // Place pixels with Y flex
+    for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset; ++x)
+    {
+        int8_t y_line_offset_here = calcLineOffset(x - (hi_left_coord + x_offset), y_flex);
+        int8_t y0 = hi_upper_coord + y_offset + y_line_offset_here;
+        if (y0 < 0) y0 = 0;
+        int8_t y1 = hi_lower_coord + y_offset + y_line_offset_here + 1;
+        if (y1 > OLED_PIXELS_HEIGHT) y1 = OLED_PIXELS_HEIGHT;
+        //printf("x: %d, y:line_offset %d\n", x, y_line_offset_here);
+        for (uint8_t y = y0; y < y1; ++y)
+        {
+            putPixel(x,y);
+        }
+    }
+    // Place pixels with X flex, remove pixels that are flexed away
+    for (uint8_t y = 0; y < OLED_PIXELS_HEIGHT; ++y)
+    {
+        if (y < hi_lower_coord + y_offset && y >= hi_upper_coord + y_offset)
+        {
+            int8_t x_line_offset_here = calcLineOffset(y - (hi_upper_coord + y_offset), x_flex);
+            if (x_line_offset_here < 0)
+            {
+                for (uint8_t x = hi_left_coord + x_offset + x_line_offset_here; x < hi_left_coord + x_offset + 1; ++x)
+                {
+                    putPixel(x,y);
+                }
+                for (uint8_t x = hi_right_coord + x_offset + x_line_offset_here; x < hi_right_coord + x_offset + 1; ++x)
+                {
+                    remPixel(x,y);
+                }
+            }
+            else
+            {
+                for (uint8_t x = hi_left_coord + x_offset; x < hi_left_coord + x_offset + x_line_offset_here + 1; ++x)
+                {
+                    remPixel(x,y);
+                }
+                for (uint8_t x = hi_right_coord + x_offset; x < hi_right_coord + x_offset + x_line_offset_here + 1; ++x)
+                {
+                    putPixel(x,y);
+                }
+            } 
+            
+        }
+    }
+
+        // Draw lower cube
     drawLine(lo_left_coord, lo_upper_coord, lo_right_coord, lo_upper_coord);
     drawLine(lo_left_coord, lo_upper_coord, lo_left_coord, lo_lower_coord);
     drawLine(lo_right_coord, lo_lower_coord, lo_left_coord, lo_lower_coord);
@@ -66,79 +142,17 @@ void c3DCube::drawToVram()
     drawLine(lo_right_coord, lo_lower_coord, hi_right_coord + x_offset, hi_lower_coord + y_offset);
 
 
-    // Draw upper cube
-    // Version 1: No flex considered
-    /*for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
-    {
-        for (uint8_t y = hi_upper_coord + y_offset; y < hi_lower_coord + y_offset + 1; ++y)
-        {
-            putPixel(x,y);
-        } 
-    }*/
-    drawLine(hi_right_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_upper_coord + y_offset);
-    drawLine(hi_left_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_lower_coord + y_offset);
-    drawLine(hi_left_coord + x_offset, hi_lower_coord + y_offset, hi_right_coord + x_offset, hi_lower_coord + y_offset);
-    drawLine(hi_right_coord + x_offset, hi_lower_coord + y_offset, hi_right_coord + x_offset, hi_upper_coord + y_offset);
-
-    
-
-    /*
-
-    // Version 2: Flex considered
-    // Place pixels with Y flex
-    for (uint8_t x = 0; x < OLED_PIXELS_WIDTH; ++x)
-    {
-        if (x < hi_right_coord + x_offset && x > hi_left_coord + x_offset)
-        {
-            int8_t y_line_offset_here = calcLineOffset(x - (hi_upper_coord + x_offset), y_flex);
-            for (uint8_t y = hi_upper_coord + y_offset + y_line_offset_here; y < hi_lower_coord + y_offset + y_line_offset_here + 1; ++y)
-            {
-                putPixel(x,y);
-            }
-        }
-    }
-    // Place pixels with X flex, remove pixels that are flexed away
-    for (uint8_t y = 0; y < OLED_PIXELS_HEIGHT; ++y)
-    {
-        if (y < hi_lower_coord + y_offset && y > hi_upper_coord + y_offset)
-        {:run()
-            int8_t x_line_offset_here = calcLineOffset(y - (hi_upper_coord + y_offset), x_flex);
-            if (x_line_offset_here < 0)
-            {
-                for (uint8_t x = hi_left_coord + x_offset + x_line_offset_here; x < hi_left_coord + x_offset + 1; ++x)
-                {
-                    putPixel(x,y);
-                }
-                for (uint8_t x = hi_right_coord + x_offset + x_line_offset_here; x < hi_right_coord + x_offset + 1; ++x)
-                {
-                    remPixel(x,y);
-                }
-            }
-            else
-            {
-                for (uint8_t x = hi_left_coord + x_offset; x < hi_left_coord + x_offset + x_line_offset_here + 1; ++x)
-                {
-                    remPixel(x,y);
-                }
-                for (uint8_t x = hi_right_coord + x_offset; x < hi_right_coord + x_offset + x_line_offset_here + 1; ++x)
-                {
-                    putPixel(x,y);
-                }
-            }
-            
-        }
-    }*/
-
-
     return;
 }
 int8_t c3DCube::calcLineOffset(uint8_t a_coord, int8_t opposite_dim_flex)
 {
+    if (a_coord <= 0 || a_coord >= 31) return 0;
     // Height and with is 32 pixels
     opposite_dim_flex /= 16; // Max abs of 8
 
     int8_t length = 32;
     int8_t base_offset = ((a_coord*(32-a_coord))/16); // Max abs 16
+    //printf("Coord %d, Base offset %d\n", a_coord, base_offset);
     return (base_offset * opposite_dim_flex) / 8; // Max abs 16
 }
 
@@ -161,21 +175,146 @@ void c3DCube::remPixel(uint8_t x, uint8_t y)
 
 void c3DCube::simFlex(int8_t joystick_x, int8_t joystick_y)
 {
-    int8_t delta_joystick_x = (joystick_x/2 - last_joystick_x/2);
-    int8_t delta_joystick_y = (joystick_y/2 - last_joystick_y/2);
+    
+    int16_t delta_joystick_x = (joystick_x - last_joystick_x);
+    int16_t delta_joystick_y = (joystick_y - last_joystick_y);
+    //printf("DeltaX %d, DeltaY %d\n", delta_joystick_x, delta_joystick_y);
     last_joystick_x = joystick_x;
     last_joystick_y = joystick_y;
+    int8_t threshold = 5;
 
-    y_flex_accel = (- delta_joystick_y / 64 - y_flex / 64 - y_flex_spd/32);
-    y_flex_spd += y_flex_accel;
-    y_flex += y_flex_spd;
+    // Determine new flex directions and max flex
+    if (delta_joystick_x > threshold || delta_joystick_x < -threshold)
+    {
+        int8_t x_factor = delta_joystick_x/2;
+        
+        
+        if (x_flex_max < 0)
+        {
+        if ( x_factor < x_flex) 
+            {
+                x_flex_max = x_factor;
+                x_flex_dir = DIR_DECREASE;
+            }
+            else if( x_factor > threshold)
+            {
+                x_flex_max = x_factor;
+                x_flex_dir = DIR_INCREASE;
+            }
+        }
+        else if (x_flex_max > 0) 
+        {
+            if (x_factor > x_flex)
+            {
+            x_flex_max = x_factor;
+            x_flex_dir = DIR_INCREASE;
+            }
+            else if (x_factor < -threshold)
+            {
+                x_flex_max = x_factor;
+                x_flex_dir = DIR_DECREASE;
+            }
+        }
+        else
+        {
+            x_flex_max = x_factor;
+            if (x_factor > 0) x_flex_dir = DIR_INCREASE;
+            else x_flex_dir = DIR_DECREASE;
+        }
+    }
+    if (delta_joystick_y > threshold || delta_joystick_y < -threshold)
+    {
+        int8_t y_factor = delta_joystick_y/2;
+        if (y_flex_max < 0) 
+        {
+            if (y_factor < y_flex)
+            {
+                y_flex_max = y_factor;
+                y_flex_dir = DIR_DECREASE;
+            }
+            else if (y_factor > threshold)
+            {
+                y_flex_max = y_factor;
+                y_flex_dir = DIR_INCREASE;
+            }
 
-    x_flex_accel = (- delta_joystick_x / 64 - x_flex / 64 - x_flex_spd/32);
-    x_flex_spd += x_flex_accel;
-    x_flex += x_flex_spd;
+        }
+        else if (y_flex_max > 0) 
+        {
+            if (y_factor > y_flex)
+            {
+                y_flex_max = y_factor;
+                y_flex_dir = DIR_INCREASE;
+            }
+            else if (y_factor < -threshold)
+            {
+
+            }
+
+        }
+        else
+        {
+            y_flex_max = y_factor;
+            if (y_factor > 0) y_flex_dir = DIR_INCREASE;
+            else y_flex_dir = DIR_DECREASE;
+        }
+    }
+
+
+    // Find new flex values
+    updateFlex(x_flex, x_flex_max, x_flex_dir);
+    updateFlex(y_flex, y_flex_max, y_flex_dir);
+
+    
 
     return;
 }
+
+void c3DCube::updateFlex(int8_t &current_flex, int8_t &max_flex, int8_t &current_dir)
+{
+    max_flex = max_flex < -50 ? -50 : max_flex;
+    max_flex = max_flex >  50 ?  50 : max_flex;
+
+    if (current_dir == DIR_INCREASE)
+    {
+        if (current_flex == 0 && max_flex < 0)
+        {
+            current_dir = DIR_NONE;
+        }
+        else if (current_flex > 0 && current_flex >= max_flex)
+        {
+            current_dir = DIR_DECREASE;
+        }
+        else
+        {
+            current_flex+= 15;
+
+        }
+    }
+    else if (current_dir == DIR_DECREASE)
+    {
+        if (current_flex == 0 && max_flex > 0)
+        {
+            current_dir = DIR_NONE;
+        }
+        else if (current_flex < 0 && current_flex <= max_flex)
+        {
+            current_dir = DIR_INCREASE;
+        }
+        else
+        {
+            current_flex-= 15;
+        }
+    }
+    else
+    {
+        current_dir = DIR_NONE;
+        max_flex = 0;
+        current_flex = 0;
+    }
+
+}
+
 /*
 Bresenham's Line Algorithm, based on this:
 http://raspberrycompote.blogspot.no/2014/04/low-level-graphics-on-raspberry-pi.html

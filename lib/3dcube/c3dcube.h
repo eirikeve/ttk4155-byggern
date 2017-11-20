@@ -38,6 +38,11 @@ private:
     int8_t x_flex_spd = 0;
     int8_t x_flex_accel = 0;
 
+    int8_t x_flex_max = 0;
+    int8_t y_flex_max = 0;
+    int8_t x_flex_dir = 0;
+    int8_t y_flex_dir = 0;
+
     int8_t last_joystick_x = 0;
     int8_t last_joystick_y = 0;
 
@@ -55,6 +60,7 @@ private:
     void drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
     void putPixel(uint8_t x, uint8_t y);
     void remPixel(uint8_t x, uint8_t y);
+    void updateFlex(int8_t &current_flex, int8_t &max_flex, int8_t &current_dir);
 
 
 
