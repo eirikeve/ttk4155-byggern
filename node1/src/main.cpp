@@ -71,15 +71,25 @@ void cubeMenu()
     Direction lastDir = Direction::NEUTRAL;
     
     //uint8_t old_state = (uint8_t)fsm.getCurrentState();
-    char* scrolling_text = "3DCube Demo!          Run the 3DCube with, or without FLEX PHYSICS (TM)!          ";
-    uint8_t scrolling_text_length = 82;
+    char* scrolling_text = "3DCube Demo!         Run the 3DCube with, or without FLEX PHYSICS (TM)!  ";
+    uint8_t scrolling_text_length = 73;
     uint16_t scrolling_text_index_counter = 0;
     uint8_t scrolling_text_index = 0;
+    uint8_t zero_delay_counter = 1;
 
 	while (true)
 	{
-        ++scrolling_text_index_counter;
-        if (scrolling_text_index_counter > 829)
+        if (scrolling_text_index_counter == 0 && zero_delay_counter > 0)
+        {
+            ++zero_delay_counter; // Will overflow
+        }
+        else
+        {
+            zero_delay_counter = 1;
+            ++scrolling_text_index_counter;
+        }
+        
+        if (scrolling_text_index_counter > 739)
         {
             scrolling_text_index_counter = 0;
         }
@@ -87,7 +97,7 @@ void cubeMenu()
 
         top_line.clear();
 
-        for (uint8_t i = scrolling_text_index; i < scrolling_text_index + 50; ++i)
+        for (uint8_t i = scrolling_text_index; i < scrolling_text_index + 25; ++i)
         {
             top_line.writeChar(scrolling_text[i % scrolling_text_length]);
         }
