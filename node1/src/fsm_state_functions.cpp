@@ -85,8 +85,6 @@ void startupLoop()
     Timer& timer = Timer::getInstance(0);
     timer.setInterruptPeriod(500);
 
-    playStartupVideo();
-
     FSM & fsm = FSM::getInstance();
     CAN & can = CAN::getInstance();
 
