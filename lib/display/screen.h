@@ -27,7 +27,13 @@ private:
   Screen *superScreen;
   Screen *subScreen;
 
-  
+  uint8_t page0;
+  uint8_t page1;
+  uint8_t col0;
+  uint8_t col1;
+
+  uint8_t pagesize;
+  uint8_t colsize;
 
   uint8_t loc_page;
   uint8_t loc_col;
@@ -43,14 +49,6 @@ private:
   void copyVRAMtoCurrentBuffer();
   
 public:
-  uint8_t page0;
-  uint8_t page1;
-  uint8_t col0;
-  uint8_t col1;
-
-  uint8_t pagesize;
-  uint8_t colsize;
-
   Screen();
   Screen(Screen *superscreen, uint8_t sz, Orientation o);
   ~Screen();
