@@ -69,9 +69,6 @@ void cubeMenu()
     top_line.clear();
     bottom.clear();
 
-    
-
-    bottom.render
     screen.render();
 
     c3DCube cube;
@@ -118,7 +115,7 @@ void cubeMenu()
         screen.clear();
         bottom.clear();
         bottom.writeString("Note: Select an option by moving the joystick RIGHT.\nExit a demo by PRESSING the joystick button.");
-        
+
         screen.goToPage(1);
 		lastDir = currentDir;
         currentDir = joystick.read(&x, &y);
