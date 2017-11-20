@@ -14,6 +14,10 @@
 #include "lib/spi/spi.h"
 #include "lib/can/can.h"
 
+#ifndef TEST_NRF
+#define TEST_NRF 1
+#endif
+
     
 void testUartTransmit() {
     UART & uart = UART::getInstance();
@@ -227,3 +231,21 @@ void testControlServoOverCan() {
         can.transmit(&msg);
     }
 }
+
+#if TEST_NRF
+void testNrf() {
+    UART & uart = UART::getInstance();
+    uart.initialize(9600);
+    enablePrintfWithUart();
+
+    SPI& spi = SPI::getInstance(1);
+    uint8_t val;
+
+    while (true) {
+        spi.selectSlave();
+        val = spi.receive();
+        printf("Value read from NRF: %d\n", val);
+        spi.deselectSlave();
+    }
+}
+#endif // TEST_NRF

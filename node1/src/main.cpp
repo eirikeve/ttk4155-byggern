@@ -97,5 +97,5 @@
 
 int main(void)
 {
-	testControlServoOverCan();
+	testNrf();
 }
