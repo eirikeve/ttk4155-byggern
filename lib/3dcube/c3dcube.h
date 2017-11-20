@@ -1,8 +1,7 @@
-// 3dcube.h
+// c3dcube.h
 // 19/11/2017
 
-#ifndef _3DCUBE_H_
-#define _3DCUBE_H_
+#pragma once
 
 #include "../utilities/utilities.h"
 #include <stdint.h>
@@ -18,13 +17,13 @@ private:
     Joystick & joystick = Joystick::getInstance();
     Screen s;
 
-    uint8_t hi_upper_coord = 16; // Pixel # 17, counted from above
-    uint8_t hi_lower_coord = 48; 
+    uint8_t hi_upper_coord = 15; // Pixel # 16, counted from above
+    uint8_t hi_lower_coord = 47; 
     uint8_t hi_left_coord = 48; // Pixel # 49, counted from the left
     uint8_t hi_right_coord = 80;
 
-    uint8_t lo_upper_coord = 20; // Pixel # 17, counted from above
-    uint8_t lo_lower_coord = 44; 
+    uint8_t lo_upper_coord = 19; // Pixel # 20, counted from above
+    uint8_t lo_lower_coord = 43; 
     uint8_t lo_left_coord = 52; // Pixel # 49, counted from the left
     uint8_t lo_right_coord = 76;
     
@@ -54,8 +53,9 @@ private:
     int8_t calcLineOffset(uint8_t a_coord, int8_t opposite_dim_flex);
     void simFlex(int8_t joystick_x, int8_t joystick_y);
     void drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
-    void putPixel(uint8_t x, uint8_t y) {vram[(y%OLED_PIXELS_HEIGHT)/8 + (x%OLED_PIXELS_WIDTH)] |= (0b1<<((y%OLED_PIXELS_HEIGHT)%8));}
-    void remPixel(uint8_t x, uint8_t y) {vram[(y%OLED_PIXELS_HEIGHT)/8 + (x%OLED_PIXELS_WIDTH)] &= (0x11111110<<((y%OLED_PIXELS_HEIGHT)%8));}
+    void putPixel(uint8_t x, uint8_t y);
+    void remPixel(uint8_t x, uint8_t y);
+
 
 
 
@@ -67,5 +67,3 @@ public:
 
 
 };
-
-#endif //_3DCUBE_H_

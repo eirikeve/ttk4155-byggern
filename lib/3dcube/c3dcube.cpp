@@ -13,17 +13,20 @@ c3DCube::c3DCube()
 
 void c3DCube::run()
 {
-    Joystick & joystick = Joystick::getInstance();
     bool btnPress;
     int8_t joystick_x;
     int8_t joystick_y;
+    //btnPress = joystick.buttonPressed();
     do{
+        printf("Loop! Jsx %d\n", joystick_x);
         joystick_x = joystick.readX();
-        joystick_y = joystick.readY();
-        btnPress = joystick.buttonPressed();
+        joystick_y = -joystick.readY(); // Up reads as positive, but pixel index increase downwards
+        btnPress = false;//joystick.buttonPressed();
         s.clear();
+        printf("Clr\n");
         runTimeStep(joystick_x, joystick_y);
         s.render();
+        printf("render\n");
     } while (!btnPress);
 }
 
@@ -57,21 +60,26 @@ void c3DCube::drawToVram()
     } */
 
     // Draw lines between the lower and upper corners, to simulate 3d effect
-    drawLine(lo_left_coord, lo_upper_coord, hi_left_coord, hi_upper_coord);
-    drawLine(lo_right_coord, lo_upper_coord, hi_right_coord, hi_upper_coord);
-    drawLine(lo_left_coord, lo_lower_coord, hi_left_coord, hi_lower_coord);
-    drawLine(lo_right_coord, lo_lower_coord, hi_right_coord, hi_lower_coord);
+    drawLine(lo_left_coord, lo_upper_coord, hi_left_coord + x_offset, hi_upper_coord + y_offset);
+    drawLine(lo_right_coord, lo_upper_coord, hi_right_coord + x_offset, hi_upper_coord + y_offset);
+    drawLine(lo_left_coord, lo_lower_coord, hi_left_coord + x_offset, hi_lower_coord + y_offset);
+    drawLine(lo_right_coord, lo_lower_coord, hi_right_coord + x_offset, hi_lower_coord + y_offset);
 
 
     // Draw upper cube
     // Version 1: No flex considered
-    for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
+    /*for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
     {
         for (uint8_t y = hi_upper_coord + y_offset; y < hi_lower_coord + y_offset + 1; ++y)
         {
             putPixel(x,y);
         } 
-    }
+    }*/
+    drawLine(hi_right_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_upper_coord + y_offset);
+    drawLine(hi_left_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_lower_coord + y_offset);
+    drawLine(hi_left_coord + x_offset, hi_lower_coord + y_offset, hi_right_coord + x_offset, hi_lower_coord + y_offset);
+    drawLine(hi_right_coord + x_offset, hi_lower_coord + y_offset, hi_right_coord + x_offset, hi_upper_coord + y_offset);
+
     
 
     /*
@@ -93,7 +101,7 @@ void c3DCube::drawToVram()
     for (uint8_t y = 0; y < OLED_PIXELS_HEIGHT; ++y)
     {
         if (y < hi_lower_coord + y_offset && y > hi_upper_coord + y_offset)
-        {
+        {:run()
             int8_t x_line_offset_here = calcLineOffset(y - (hi_upper_coord + y_offset), x_flex);
             if (x_line_offset_here < 0)
             {
@@ -133,6 +141,24 @@ int8_t c3DCube::calcLineOffset(uint8_t a_coord, int8_t opposite_dim_flex)
     int8_t base_offset = ((a_coord*(32-a_coord))/16); // Max abs 16
     return (base_offset * opposite_dim_flex) / 8; // Max abs 16
 }
+
+void c3DCube::putPixel(uint8_t x, uint8_t y) 
+    {
+        if ( x < 0 || x >= OLED_PIXELS_WIDTH || y < 0 || y >= OLED_PIXELS_HEIGHT)
+        {
+            return;
+        }
+        vram[((y%OLED_PIXELS_HEIGHT)/8)*OLED_PIXELS_WIDTH + (x%OLED_PIXELS_WIDTH)] |= (0b1<<((y%OLED_PIXELS_HEIGHT)%8));
+    }
+void c3DCube::remPixel(uint8_t x, uint8_t y) 
+    {
+        if ( x < 0 || x >= OLED_PIXELS_WIDTH || y < 0 || y >= OLED_PIXELS_HEIGHT)
+        {
+            return;
+        }
+        vram[((y%OLED_PIXELS_HEIGHT)/8)*OLED_PIXELS_WIDTH + (x%OLED_PIXELS_WIDTH)] &= (0x11111110<<((y%OLED_PIXELS_HEIGHT)%8));
+    }
+
 void c3DCube::simFlex(int8_t joystick_x, int8_t joystick_y)
 {
     int8_t delta_joystick_x = (joystick_x/2 - last_joystick_x/2);
