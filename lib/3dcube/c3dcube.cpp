@@ -118,6 +118,7 @@ void c3DCube::drawToVram()
         }
     }
 
+
         // Draw lower cube
     drawLine(lo_left_coord, lo_upper_coord, lo_right_coord, lo_upper_coord);
     drawLine(lo_left_coord, lo_upper_coord, lo_left_coord, lo_lower_coord);
