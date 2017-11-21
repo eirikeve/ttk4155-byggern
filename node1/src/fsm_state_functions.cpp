@@ -1,9 +1,37 @@
 #include "fsm_state_functions.h"
 
+#include "lib/utilities/utilities.h"
+#include "lib/utilities/eeprom.h"
+
 namespace {
     // PID values
     uint8_t values[] = {60, 100, 1};
 }
+
+void readPIDValuesFromEEPROM()
+{
+    // Kp
+    values[0] = eepromRead((uint16_t)EEPROM_PID_P_ADDR);
+
+    // Ti
+    values[1] = eepromRead((uint16_t)EEPROM_PID_I_ADDR);
+
+    // Td
+    values[2] = eepromRead((uint16_t)EEPROM_PID_D_ADDR);
+}
+
+void storePIDValuesInEEPROM()
+{
+    // Kp
+    eepromWrite((uint16_t)EEPROM_PID_P_ADDR, values[0]);
+
+    // Ti
+    eepromWrite((uint16_t)EEPROM_PID_I_ADDR, values[1]);
+
+    // Td
+    eepromWrite((uint16_t)EEPROM_PID_D_ADDR, values[2]);
+}
+
 void playStartupVideo()
 {
     Screen s1 = Screen();
@@ -92,6 +120,13 @@ void startupLoop()
 
     FSM & fsm = FSM::getInstance();
     CAN & can = CAN::getInstance();
+
+    // storePIDValuesInEEPROM();
+    // _delay_ms(100);
+    // values[0] = 50;
+    // values[1] = 90;
+    // values[2] = 10;
+    readPIDValuesFromEEPROM();
 
     // If all state functions are loaded into the fsm, go to the menu state
     if (fsm.checkAllStateFunctionsExist())
@@ -316,7 +351,14 @@ void tunePID_loop(){
 
     Screen screen = Screen();
 	screen.clear();
-    screen.render((uint8_t*)AVR_VRAM_1);
+    screen.render();
+
+    screen.clear();
+    screen.writeString("Reading from EEPROM..");
+    screen.render();
+    _delay_ms(1000);
+    readPIDValuesFromEEPROM();
+    screen.clear();
 
     int8_t x;
 	int8_t y;
@@ -379,6 +421,11 @@ void tunePID_loop(){
                     screen.clear();
                     screen.render();
                     if (index == nrOfItems - 1) {
+                        screen.clear();
+                        screen.writeString("Storing in EEPROM..");
+                        screen.render();
+                        _delay_ms(1000);
+                        storePIDValuesInEEPROM();
                         fsm.handleEvent(EV_STOP_TUNE_PID);
                         screen.clear();
                         return;
