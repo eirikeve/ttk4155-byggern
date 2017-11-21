@@ -64,7 +64,7 @@ int main(void)
      
     ADC& adc = ADC::getInstance();
     Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 10, &pb3);
+    joystick.initialize(&adc, 20, &pb3);
 
     Slider & slider0 = Slider::getInstance(0);
     slider0.initialize(&adc, &pb2);

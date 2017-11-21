@@ -1,5 +1,9 @@
 #include "fsm_state_functions.h"
 
+namespace {
+    // PID values
+    uint8_t values[] = {80, 100000, 0};
+}
 
 void playStartupVideo()
 {
@@ -107,9 +111,9 @@ void startupLoop()
 }
 
 void menuLoop() {
-    const uint8_t nrOfItems = 4;
+    const uint8_t nrOfItems = 3;
 
-    char* menu[] = {"Play game", "BLE demo", "Display demo", "Snake"};
+    char* menu[] = {"Play game", "Tune PID", "Snake"};
     uint8_t index = 0;
 
     Joystick & joystick = Joystick::getInstance();
@@ -121,8 +125,8 @@ void menuLoop() {
 
     int8_t x;
 	int8_t y;
-	Direction currentDir = Direction::NEUTRAL;
-    Direction lastDir = Direction::NEUTRAL;
+	Direction currentDir = joystick.read(&x, &y);
+    Direction lastDir = currentDir;
     
     //uint8_t old_state = (uint8_t)fsm.getCurrentState();
 
@@ -170,13 +174,10 @@ void menuLoop() {
                         fsm.handleEvent(EV_START_GAME);
                         break;
                     case 1:
-                        fsm.handleEvent(EV_START_GAME_NRF);
+                        fsm.handleEvent(EV_START_TUNE_PID);
                         break;
                     case 2:
-                        fsm.handleEvent(EV_START_DISPLAY);
-                        break;
-                    case 3:
-                    fsm.handleEvent(EV_START_SNAKE);
+                        fsm.handleEvent(EV_START_SNAKE);
                 }
                 return;
 			}
@@ -203,6 +204,17 @@ void gameLoop()
     CanMessage msg;
     CanMessage recv;
     bool ack;
+
+    msg.id = CAN_ID_CHANGE_PID_PARAMETERS;
+    msg.length = CAN_LENGTH_CHANGE_PID_PARAMETERS;
+    msg.data[0] = values[0];
+    msg.data[1] = values[1];
+    msg.data[2] = values[2];
+    do{
+        can.transmit(&msg);
+        ack = checkForACK();
+    } while(ack == false); 
+    printf("Got PID ACK\n");
 
     msg.id = CAN_ID_START_GAME;
     do{
@@ -262,10 +274,11 @@ void snakeLoop()
     FSM & fsm = FSM::getInstance();
 
     // The snake game runs until exit is requested by user.
+    // printf("Started snek\n");
 	Snake sn;
-    printf("Started snek\n");
+    
     sn.run();
-    printf("Snek finished\n");
+    // printf("Snek finished\n");
     // Highscore is stored in the EEPROM, so we check if the new score is higher than the current highscore.
     /*uint16_t highscore = (uint16_t)sn.getHighScore();
     uint8_t current_highscore_L = eepromRead(EEPROM_SNAKE_HIGHSCORE_ADDR_L);
@@ -287,19 +300,103 @@ void snakeLoop()
 }
 
 
-void displayLoop()
-{
-    FSM & fsm = FSM::getInstance();
-    // todo add some awesome graphic stuff here!
-    fsm.handleEvent(EV_DISPLAY_END);
-    _delay_ms(500); // Remove when actual display stuff is added.
-}
+// void displayLoop()
+// {
+//     FSM & fsm = FSM::getInstance();
+//     // todo add some awesome graphic stuff here!
+//     fsm.handleEvent(EV_DISPLAY_END);
+//     _delay_ms(500); // Remove when actual display stuff is added.
+// }
 
-void gameNRFLoop()
-{
+void tunePID_loop(){
+    const uint8_t nrOfItems = 4;
+    char* menu[] = {"Kp", "Ti", "Td", "Exit"};
+    
+    uint8_t index = 0;
+
+    Joystick & joystick = Joystick::getInstance();
     FSM & fsm = FSM::getInstance();
-    // todo add the NRF functionality
-    fsm.handleEvent(EV_GAME_NRF_END);
+
+    Screen screen = Screen();
+	screen.clear();
+    screen.render((uint8_t*)AVR_VRAM_1);
+
+    int8_t x;
+	int8_t y;
+	Direction currentDir = joystick.read(&x, &y);
+    Direction lastDir = currentDir;
+
+    char value[6];
+    
+    //uint8_t old_state = (uint8_t)fsm.getCurrentState();
+
+	while (true)
+	{
+        screen.clear();
+		lastDir = currentDir;
+        currentDir = joystick.read(&x, &y);
+
+        for (int i = 0; i < nrOfItems; i++) {
+            if (i == index) {
+                screen.writeChar('>');
+            }
+            else {
+                screen.writeChar(' ');
+            }
+            screen.writeString(menu[i]);
+
+            if (i != nrOfItems -1) {
+                screen.writeString(": ");
+                screen.writeString(itoa(values[i], value, 10));
+            } 
+
+            
+            screen.writeChar('\n');
+        }
+
+		if (lastDir == Direction::NEUTRAL)
+		{
+			switch (currentDir)
+			{
+                case Direction::NORTH:
+                {
+                    if (index > 0) {
+                        index--;
+                    }
+                    break;
+                }
+                case Direction::SOUTH:
+                {
+                    if (index < nrOfItems - 1) {
+                        index++;
+                    }
+                    break;
+                }
+                case Direction::WEST:
+                    if (index != nrOfItems - 1) {
+                        values[index]--;
+                    }
+                    break;
+                case Direction::EAST:
+                {
+                    screen.clear();
+                    screen.render();
+                    if (index == nrOfItems - 1) {
+                        fsm.handleEvent(EV_STOP_TUNE_PID);
+                        screen.clear();
+                        return;
+                    }
+                    values[index]++;
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+			}
+		}
+        screen.render();
+	}
 }
 
 void errorLoop()
@@ -354,14 +451,14 @@ void loadStateFunctionsToFSM()
     s_fun.stateLoopFunction     = snakeLoop;
     fsm.addStateFunctions(s_fun);
 
-    s_fun.state = STATE_DISPLAY;
-    // s_fun.transitionFunction    = nothingHappens;
-    s_fun.stateLoopFunction     = displayLoop;
-    fsm.addStateFunctions(s_fun);
+    // s_fun.state = STATE_DISPLAY;
+    // // s_fun.transitionFunction    = nothingHappens;
+    // s_fun.stateLoopFunction     = displayLoop;
+    // fsm.addStateFunctions(s_fun);
 
-    s_fun.state = STATE_GAME_NRF;
+    s_fun.state = STATE_TUNE_PID;
     // s_fun.transitionFunction    = nothingHappens;
-    s_fun.stateLoopFunction     = gameNRFLoop;
+    s_fun.stateLoopFunction     = tunePID_loop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_ERROR;

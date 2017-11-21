@@ -62,7 +62,9 @@ int main(void)
     CanMessage msg;
 
     printf("Sending RESET Until ACK\n");
-    sendResetUntilACK();
+    msg.id = CAN_ID_RESET;
+    msg.length = CAN_LENGTH_RESET;
+    msg.data[0] = 0;
 
 
     msg.id = CAN_ID_ACK;
@@ -85,6 +87,12 @@ int main(void)
             can.transmit(&msg);
 			runGame();
             printf("Back to Main Loop\n");
+        }
+        else if (recv.id == CAN_ID_CHANGE_PID_PARAMETERS) {
+            printf("Recvd PID, sending ACK\n");
+            can.transmit(&msg);
+            motor.setPIDparameters(recv.data[0] / 100.0, recv.data[1], recv.data[2]);
+            printf("Set new PID parameters to, Kp = %d ( actually 1/100) the value, Ti = %d, Td = %d\n", recv.data[0], recv.data[1], recv.data[2]);
         }
 	}
 }
