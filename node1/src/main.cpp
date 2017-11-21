@@ -40,12 +40,8 @@ void toggle_led() {
     PORTB ^= 0b1;
 }
 
-
-
-
 int main(void)
 {
-    // clr_bit(DDRE, 0);  
 	UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
@@ -64,7 +60,7 @@ int main(void)
      
     ADC& adc = ADC::getInstance();
     Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 20, &pb3);
+    joystick.initialize(&adc, 30, &pb3);
 
     Slider & slider0 = Slider::getInstance(0);
     slider0.initialize(&adc, &pb2);

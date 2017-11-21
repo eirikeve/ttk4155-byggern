@@ -11,12 +11,17 @@ void IR_detector::initialize(ADC_internal* adc, uint8_t threshold, uint8_t filte
     }
     else {
         uint8_t valueUnblocked = adc->read();
+        printf("Startup value IR: %d\n", valueUnblocked);
         this->threshold =(uint8_t)  valueUnblocked / 2.0;
     }
 }
 
 bool IR_detector::blocked() {
-    uint8_t value = this->adc->read();
+    float value = 0.0;
+
+    for (int i = 0; i < this->filterDegree; i++) {
+        value += ((float) this->adc->read()) / this->filterDegree;
+    }
 
     if (value < this->threshold) {
         if (!this->beamBlocked) {
@@ -28,6 +33,6 @@ bool IR_detector::blocked() {
         }
     }
     this->beamBlocked = false;
-    return beamBlocked;
+return beamBlocked;
 
 }
