@@ -54,15 +54,6 @@ void c3DCube::drawToVram()
 
 
     // Draw upper cube
-    // Version 1: No flex considered
-    /*for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
-    {
-        for (uint8_t y = hi_upper_coord + y_offset; y < hi_lower_coord + y_offset + 1; ++y)
-        {
-            putPixel(x,y);
-        } 
-    }*/
-
     if ( !(flex) )
     {
     drawLine(hi_right_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_upper_coord + y_offset);
@@ -72,6 +63,7 @@ void c3DCube::drawToVram()
     }
     else // Flex on; draw surface which bounces as the upper square
     {
+        // Draws the first part of the upper square. The left/right edges are straight, while the upper/lower edges can be bent.
         for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
         {
             int8_t y_line_offset_here = calcLineOffset(x - (hi_left_coord + x_offset), y_flex);
@@ -84,7 +76,7 @@ void c3DCube::drawToVram()
                 putPixel(x,y);
             }
         }
-        // Place pixels with X flex, remove pixels that are flexed away
+        // Here, we make the left/right edges bent. So we "carve" a bend on one side, and add a bend on the other.
         for (uint8_t y = 0; y < OLED_PIXELS_HEIGHT; ++y)
         {
             if (y < hi_lower_coord + y_offset && y >= hi_upper_coord + y_offset)
