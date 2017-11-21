@@ -25,6 +25,13 @@
 // font5 index to a black square we added
 #define INDEX_SQUARE 96
 
+// EEPROM addresses for PID parameters
+#define EEPROM_PID_P_ADDR 10
+#define EEPROM_PID_I_ADDR 11
+#define EEPROM_PIR_D_ADDR 12
+
+// EEPROM address for Snake highscore
+#define EEPROM_SNAKE_ADDR 15
 
 /**
  * Below: Some useful macros

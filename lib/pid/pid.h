@@ -11,7 +11,6 @@ class PID
         void setParameters(float P_Factor, float I_Factor, float D_Factor);
         int8_t controller(float reference, float processValue);
 
-        friend void testTuneMotor();
     private:
 
     //! Last process value, used to find derivative of process value.

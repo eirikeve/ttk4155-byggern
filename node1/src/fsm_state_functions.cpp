@@ -2,9 +2,8 @@
 
 namespace {
     // PID values
-    uint8_t values[] = {80, 100000, 0};
+    uint8_t values[] = {50, 100, 0};
 }
-
 void playStartupVideo()
 {
     Screen s1 = Screen();
@@ -272,8 +271,8 @@ void snakeLoop()
 	Snake sn;
     
     sn.run();
-    
 
+    
     fsm.handleEvent(EV_SNAKE_OVER);
     
 }
@@ -344,7 +343,7 @@ void tunePID_loop(){
                     break;
                 }
                 case Direction::WEST:
-                    if (index != nrOfItems - 1) {
+                    if (index != nrOfItems - 1 && values[index] > 0) {
                         values[index]--;
                     }
                     break;

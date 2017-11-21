@@ -17,13 +17,9 @@ class Slider
                 static Slider instance(0);
                 return instance;
             }
-            else if (id == 1){
+            else {
                 static Slider instance(1);
                 return instance;
-            }
-            else {
-                return NULL;
-
             }
         }
         void initialize(ADC *adc, PIN *buttonPin);

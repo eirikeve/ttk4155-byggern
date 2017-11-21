@@ -18,7 +18,6 @@
 #include <util/delay.h>
 #include <stdint.h>
 
-#include "test.h"
 #include "lib/utilities/printf.h"
 #include "lib/pins/pins.h"
 #include "lib/uart/uart.h"
@@ -30,7 +29,6 @@
 #include "../lib/slider/slider.h"
 #include "../lib/fsm/fsm.h"
 #include "../lib/display/screen.h"
-//#include "../lib/display/screenhandler.h"
 #include "../lib/menu/menu.h"
 #include "../lib/can/canmsg.h"
 #include "../lib/utilities/eeprom.h"

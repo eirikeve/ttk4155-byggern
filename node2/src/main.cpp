@@ -26,8 +26,7 @@ int main(void)
 	UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
-    printf("Node2 startup\n");
-
+    
     SPI& spi = SPI::getInstance(0);
     CAN& can = CAN::getInstance();
     can.initialize(&spi, false);
@@ -61,7 +60,6 @@ int main(void)
     CanMessage recv;
     CanMessage msg;
 
-    printf("Sending RESET Until ACK\n");
     msg.id = CAN_ID_RESET;
     msg.length = CAN_LENGTH_RESET;
     msg.data[0] = 0;
@@ -71,28 +69,22 @@ int main(void)
     msg.length = CAN_LENGTH_ACK;
     msg.data[0] = 0b0;
 
-    printf("Node2 starting loop\n");
 	
 	while(1){
         recv = can.receive();
         // RESET is transmitted by node1 upon startup. Respond with ACK to show that node2 is running.
         if (recv.id == CAN_ID_RESET)
         {
-            printf("Revcd RESET\n");
             can.transmit(&msg);
         }
         else if (recv.id == CAN_ID_START_GAME)
         {
-            printf("Recvd START, sending ACK\n");
             can.transmit(&msg);
 			runGame();
-            printf("Back to Main Loop\n");
         }
         else if (recv.id == CAN_ID_CHANGE_PID_PARAMETERS) {
-            printf("Recvd PID, sending ACK\n");
             can.transmit(&msg);
             motor.setPIDparameters(recv.data[0] / 100.0, recv.data[1], recv.data[2]);
-            printf("Set new PID parameters to, Kp = %d ( actually 1/100) the value, Ti = %d, Td = %d\n", recv.data[0], recv.data[1], recv.data[2]);
         }
 	}
 }

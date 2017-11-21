@@ -73,6 +73,7 @@ int main(void)
     sendResetUntilACK();
 
     playStartupVideo();
+    
 	while (true)
 	{
         fsm.runStateLoop();
