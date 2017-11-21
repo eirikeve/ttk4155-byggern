@@ -7,18 +7,28 @@
 
 #pragma once
 
+// Address to Node 1's ADC
 #define ADC_ADDR    0x1400
+// Address to start of Node 1's first SRAM vram buffer
 #define AVR_VRAM_1  0x1800
+// Address to start of Node 1's second SRAM vram buffer
 #define AVR_VRAM_2  0x1C00
+// Frequency of ScreenHandler's interrupt routine
 #define OLED_UPDATE_FPS 20
+
 #define OLED_PIXELS_WIDTH 128
 #define OLED_PIXELS_HEIGHT 64
 #define OLED_PAGES_HEIGHT 8
+
+// font5 index to an apple character we added
 #define INDEX_APPLE 95
+// font5 index to a black square we added
 #define INDEX_SQUARE 96
 
-#define EEPROM_SNAKE_HIGHSCORE_ADDR_L 0
-#define EEPROM_SNAKE_HIGHSCORE_ADDR_H 1
+
+/**
+ * Below: Some useful macros
+ **/
 
 #define set_bit(reg, bit) (reg |= (1 << (bit)))
 #define set_bit_value(reg, bit, val) (reg |= (val << (bit)))
