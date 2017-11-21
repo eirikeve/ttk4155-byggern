@@ -46,6 +46,7 @@ void runGame(){
             printf("\tRecv usr input. JS %d, SL %d, BTN %d\n", (int8_t)recv.data[0],(int8_t)recv.data[1],recv.data[2]);
 			// input to motor, from joystick
             motor.run((int8_t)recv.data[0]);
+            //printf("Encoder value: %d\n", (int16_t) motor.processValue);
 
 			// activate solenoid
             if (recv.data[2]) {

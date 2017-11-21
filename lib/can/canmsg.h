@@ -28,3 +28,6 @@
 #define CAN_ID_STOP_SOUND 50
 #define CAN_LENGTH_STOP_SOUND 1 // Data does not matter
 
+#define CAN_ID_CHANGE_PID_PARAMETERS 60
+#define CAN_LENGTH_CHANGE_PID_PARAMETERS 3
+
