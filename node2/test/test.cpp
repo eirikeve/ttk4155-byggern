@@ -397,7 +397,6 @@ void testTuneMotor() {
     while (true) {
         CanMessage recv = can.receive();
         if (recv.id != NULL) {
-            printf("u: %d\n", motor.pid.debug);
             motor.run((int8_t) recv.data[0]);
         }
     }

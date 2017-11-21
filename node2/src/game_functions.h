@@ -68,7 +68,6 @@ void runGame(){
             msg.length = CAN_LENGTH_ACK;
             msg.data[0] = 0b0;
             can.transmit(&msg);
-            playSound(PLAY_GAME, false);
             return;
         }
 

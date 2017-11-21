@@ -295,6 +295,17 @@ void gameLoop()
                 return;
                
             }
+
+            if (joystick.buttonPressed()) {
+                
+                // Force exit on joystick button pressed down
+                msg.id = CAN_ID_RESET;
+                msg.length = CAN_LENGTH_RESET;
+                msg.data[0] = 0;
+                can.transmit(&msg);
+                fsm.handleEvent(EV_GAME_OVER);
+                return;
+            }
         }
     // Should not ever reach this, but added just in case
     fsm.handleEvent(EV_GAME_OVER);
