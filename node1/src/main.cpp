@@ -35,27 +35,21 @@
 #include "../lib/can/canmsg.h"
 #include "../lib/utilities/eeprom.h"
 #include "fsm_state_functions.h"
+#include "../lib/3dcube/c3dcube.h"
 
 void toggle_led() {
     PORTB ^= 0b1;
 }
 
-
-
-
 int main(void)
 {
-    // clr_bit(DDRE, 0);  
 	UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
 
-    printf("Node 1 startup\n");
     Timer& timer0 = Timer::getInstance(0);
     timer0.initialize(500, toggle_led, &pb0);
     timer0.start();
-
-    
 
     SPI& spi = SPI::getInstance(0);
     CAN& can = CAN::getInstance();
@@ -76,10 +70,11 @@ int main(void)
     loadStateFunctionsToFSM();
 
     sendResetUntilACK();
-    printf("Node1 Starting\n");
+
     playStartupVideo();
 	while (true)
 	{
         fsm.runStateLoop();
-	}
+    }
+
 }
