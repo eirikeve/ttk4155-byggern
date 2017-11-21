@@ -1,8 +1,7 @@
 /*
  * canmsg.h
- * Defines IDs and LENGTHs for all CAN messages used in the project
+ * Defines IDs and LENGTHs for CAN messages used in the project
  * IDs have some space between them, in case other messages are added
- * All lengths are >= 1, as it is necessary in our CanMessage implementation
  */
 
 #pragma once

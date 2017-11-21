@@ -4,6 +4,7 @@ namespace {
     // PID values
     uint8_t values[] = {80, 100000, 0};
 }
+
 void playStartupVideo()
 {
     Screen s1 = Screen();
@@ -89,6 +90,8 @@ void startupLoop()
     // Reset timer blink period here, in case of reset after ERROR.
     Timer& timer = Timer::getInstance(0);
     timer.setInterruptPeriod(500);
+
+    playStartupVideo();
 
     FSM & fsm = FSM::getInstance();
     CAN & can = CAN::getInstance();

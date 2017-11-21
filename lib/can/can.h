@@ -7,6 +7,9 @@
 #include "mcp2515.h"
 #include "lib/spi/spi.h"
 
+/**
+ * Implements CAN messages for use with the CAN class.
+ * */
 struct CanMessage{
 	uint8_t id;
 	uint8_t length;
@@ -26,6 +29,11 @@ namespace {
 }
 
 ISR(MCP2515_vect);
+
+/**
+ * Class for sending and receiving CAN messages.
+ * Used in both Node 1 and Node 2.
+ * */
 class CAN
 {
     public:

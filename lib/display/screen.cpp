@@ -323,8 +323,8 @@ void Screen::writeChar(unsigned char c)
 
 void Screen::writeString(char *string)
 {
-    int i = 0;
-    while (string[i] != '\0')
+    uint8_t i = 0;
+    while (string[i] != '\0' && i  < 255);
     {
         writeChar(string[i++]);
     }

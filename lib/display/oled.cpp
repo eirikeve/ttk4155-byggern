@@ -63,22 +63,7 @@ void OLED::write(uint8_t c)
     *this->dataAddr = c;
 }
 
-void OLED::writeChar(unsigned char c)
-{
-    for (int i = 0; i < 5; i++)
-    {
-        this->write(pgm_read_word(&font5[c - ' '][i]));
-        // printf("%d\n", font8[33][i]);
-    }
-}
 
-void OLED::writeString(char *string)
-{
-    for (int i = 0; string[i] != '\0'; i++)
-    {
-        this->writeChar(string[i]);
-    }
-}
 
 void OLED::goToPage(uint8_t page)
 {
@@ -97,7 +82,5 @@ void OLED::goTo(uint8_t page, uint8_t col)
     goToColumn(col);
 }
 
-void OLED::clear()
-{
-}
+
 #endif

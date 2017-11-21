@@ -52,7 +52,6 @@ private:
 	
 public:
 	Snake() {}
-	// ~Snake() {s1.clear(); free(map);}
 	// initial run function 
 	void run();
 	// returns highscore, used to save the highscore for later
