@@ -22,7 +22,6 @@ extern "C" {
 
 int main(void)
 {
-    testIRDetector();
 	// initilize everything
 	UART & uart = UART::getInstance();
     uart.initialize(9600);
@@ -57,7 +56,7 @@ int main(void)
     
 
 
-    motor.initialize(&dac, &timer, &encoder, 50, 100, 0, 5);
+    motor.initialize(&dac, &timer, &encoder, 1, 1, 1, 5);
 
     // Initialize pins used for buzzer
     set_bit(DDRB, DDB6); //12   høy snake
@@ -100,7 +99,7 @@ int main(void)
         else if (recv.id == CAN_ID_CHANGE_PID_PARAMETERS) {
             printf("Recvd PID, sending ACK\n");
             can.transmit(&msg);
-            // motor.setPIDparameters(recv.data[0], recv.data[1], recv.data[2]);
+            motor.setPIDparameters(recv.data[0], recv.data[1], recv.data[2]);
             printf("Set new PID parameters to, Kp = %d ( actually 1/100000) the value, Ti = %d, (actually 100) the value Td = %d\n", recv.data[0], recv.data[1], recv.data[2]);
         } 
         else if (recv.id == CAN_ID_SEND_SOUND) {

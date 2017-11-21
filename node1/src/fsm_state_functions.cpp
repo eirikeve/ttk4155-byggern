@@ -2,7 +2,7 @@
 
 namespace {
     // PID values
-    uint8_t values[] = {50, 100, 0};
+    uint8_t values[] = {60, 100, 1};
 }
 void playStartupVideo()
 {

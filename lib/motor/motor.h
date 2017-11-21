@@ -69,6 +69,5 @@ class Motor
         void operator=(Motor const&)  = delete;
 
         friend void controller();
-        friend void runGame();
 
 };

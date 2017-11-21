@@ -16,8 +16,8 @@ ADC_internal::ADC_internal() {
     ADCSRA |= (1 << ADPS2);
 
     // Select channel for internal adc. Default is ADC0
-    ADMUX |= (1 << MUX0);
-    ADMUX |= (1 << MUX1);
+    ADMUX &= ~(1 << MUX0);
+    ADMUX &= ~(1 << MUX1);
     ADMUX &= ~(1 << MUX2);
 }
 
