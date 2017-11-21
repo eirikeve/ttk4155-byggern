@@ -6,6 +6,7 @@
 #include "../lib/motor/motor.h"
 #include "../lib/solenoid/solenoid.h"
 #include "../lib/ir_detector/ir_detector.h"
+#include "lib/utilities/sound.h"
 
 
 void runGame(){
@@ -18,6 +19,7 @@ void runGame(){
     
     printf("\tRunning game\n");
     while (true) {
+        _delay_ms(15);
         if (ir.blocked())
         {
             printf("\tIR Blocked. Sending STOP\n");
@@ -66,7 +68,11 @@ void runGame(){
             msg.length = CAN_LENGTH_ACK;
             msg.data[0] = 0b0;
             can.transmit(&msg);
+            playSound(PLAY_GAME, false);
             return;
         }
+
+        
     }
 }
+

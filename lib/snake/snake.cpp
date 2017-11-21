@@ -2,6 +2,8 @@
 #pragma once
 #include "snake.h"
 #include <stdlib.h>
+#include "../lib/utilities/eeprom.h"
+
 
 // Code inspired by https://codereview.stackexchange.com/questions/66481/snake-game-in-c
 // All functions have been changed, some have been removed and some added
@@ -27,7 +29,13 @@ void Snake::run(){
 
 	}
 	// show score for 2 seconds before ending the game
-	this->printScore();
+	uint8_t best_highscore = eepromRead((uint16_t)EEPROM_SNAKE_ADDR);
+    if (snakeLength - 3 > best_highscore)
+    {
+		eepromWrite((uint16_t)EEPROM_SNAKE_ADDR, snakeLength-3);
+	}
+	
+	this->printScore(best_highscore);
 	_delay_ms(2000);
 	return;
 	
@@ -189,7 +197,7 @@ void Snake::printMap(){
 	s1.render();
 }
 
-void Snake::printScore(){
+void Snake::printScore(uint8_t best_highscore){
 	// screen init
 	s1.clear();
     s1.goTo(3,32);
@@ -201,6 +209,18 @@ void Snake::printScore(){
 	s1.writeString("SCORE: ");
 	itoa(snakeLength-3, score, 10);
 	s1.writeString(score);
+	s1.goTo(5,32);
+	if (best_highscore < snakeLength - 3)
+	{
+		s1.writeString("NEW HIGHSCORE!");
+	}
+	else
+	{
+		s1.writeString("HIGHSCORE: ");
+		itoa(best_highscore, score, 10);
+		s1.writeString(score);
+	}
+
 	
 	// set new highscore
 	if (snakeLength -3 > highscore) highscore = snakeLength -3;
