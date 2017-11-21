@@ -1,7 +1,7 @@
 #ifdef __AVR_ATmega162__
 #pragma once
 #include "snake.h"
-#include "utilities/eeprom.h"
+#include "lib/utilities/eeprom.h"
 #include <stdlib.h>
 
 // Code inspired by https://codereview.stackexchange.com/questions/66481/snake-game-in-c
@@ -29,9 +29,9 @@ void Snake::run(){
 	}
 	// show score for 2 seconds before ending the game
 	uint8_t best_highscore = eepromRead((uint16_t)EEPROM_SNAKE_ADDR);
-    if (score > best_highscore)
+    if (snakeLength - 3 > best_highscore)
     {
-		best_highscore == score;
+		best_highscore == snakeLength - 3;
 		eepromWrite((uint16_t)EEPROM_SNAKE_ADDR, best_highscore);
 	}
 	
@@ -212,15 +212,15 @@ void Snake::printScore(uint8_t best_highscore){
 	itoa(snakeLength-3, score, 10);
 	s1.writeString(score);
 	s1.goTo(5,32);
-	if (best_highscore == score)
+	if (best_highscore == snakeLength - 3)
 	{
 		s1.writeString("NEW HIGHSCORE!");
 	}
 	else
 	{
 		s1.writeString("HIGHSCORE: ");
-		itoa(snakeLength-3, best_highscore, 10);
-		s1.writeString(best_highscore);
+		itoa(snakeLength-3, score, 10);
+		s1.writeString(score);
 	}
 
 	

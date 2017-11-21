@@ -35,7 +35,6 @@
 #include "../lib/can/canmsg.h"
 #include "../lib/utilities/eeprom.h"
 #include "fsm_state_functions.h"
-#include "../lib/3dcube/c3dcube.h"
 
 
 void toggle_led() {
@@ -44,6 +43,7 @@ void toggle_led() {
 
 int main(void)
 {
+    // Initialize instances
 	UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
@@ -68,14 +68,19 @@ int main(void)
     slider1.initialize(&adc, &pb1);
 
     FSM & fsm = FSM::getInstance();
+
+    // Initialize FSM
     loadStateFunctionsToFSM();
 
+    // Ensure Node 2 resets
     sendResetUntilACK();
 
+    // Displays a video upon startup
     playStartupVideo();
-    
+
 	while (true)
 	{
+        // Runs the stateLoop. These are defined in fsm_state_functions.cpp
         fsm.runStateLoop();
     }
 

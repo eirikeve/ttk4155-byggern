@@ -18,12 +18,30 @@ class Motor
             return instance;
         }
 
+        /**
+         * Initializes the instance with the specified objects.
+         * @param dac: DAC object pointer
+         * @param timer: Timer object pointer
+         * @param encoder: Encoder object pointer
+         * @param Kp: Kp value for PID controller
+         * @param Ki: Ti value for the PID controller
+         * @param Kd: Td value for the PID controller
+         * @param T: Sampling time
+         **/
         void initialize(DAC* dac, Timer* timer, Encoder* encoder, float Kp, float Ki, float Kd, uint8_t T);
 
+        /**
+         * Sets the PID parameters of the motor
+         * @param Kp: PID Kp
+         * @param Ti: PID Ti
+         * @param Td: PID Td
+         **/
         void setPIDparameters(float Kp, float Ti, float Td);
 
-        float getEncoderValue();
-
+        /**
+         * Set the reference speed of the PID controller
+         * @param speed: [-127, 127], dir depends on sign, while spd depends on abs value.
+         **/
         void run(int8_t speed);
 
         
@@ -69,6 +87,6 @@ class Motor
         void operator=(Motor const&)  = delete;
 
         friend void controller();
-        friend void runGame();
+
 
 };

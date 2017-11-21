@@ -28,7 +28,7 @@
 // EEPROM addresses for PID parameters
 #define EEPROM_PID_P_ADDR 10
 #define EEPROM_PID_I_ADDR 11
-#define EEPROM_PIR_D_ADDR 12
+#define EEPROM_PID_D_ADDR 12
 
 // EEPROM address for Snake highscore
 #define EEPROM_SNAKE_ADDR 15

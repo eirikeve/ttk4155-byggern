@@ -13,7 +13,6 @@ enum state_node1_t
     STATE_MENU,
     STATE_GAME,
     STATE_SNAKE,
-    // STATE_DISPLAY,
     STATE_TUNE_PID,
     STATE_ERROR
 };
@@ -27,8 +26,6 @@ enum ev_node1_t
     EV_GAME_OVER,
     EV_START_SNAKE,
     EV_SNAKE_OVER,
-    // EV_START_DISPLAY,
-    // EV_DISPLAY_END,
     EV_START_TUNE_PID,
     EV_STOP_TUNE_PID,
     EV_NO_CAN_ACK,

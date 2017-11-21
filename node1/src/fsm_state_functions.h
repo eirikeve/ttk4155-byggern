@@ -17,22 +17,50 @@
 #include "../lib/slider/slider.h"
 #include "../lib/fsm/fsm.h"
 #include "../lib/display/screen.h"
-//#include "../lib/display/screenhandler.h"
 #include "../lib/menu/menu.h"
 #include "../lib/can/canmsg.h"
 #include "../lib/slider/slider.h"
 #include "../lib/utilities/eeprom.h"
 #include "../lib/snake/snake.h"
+#include "../lib/utilities/utilities.h"
 
 
-
+/**
+ * Plays an animated startup video
+ **/
 void playStartupVideo();
+
+/**
+ * State loop for STATE_STARTUP1
+ **/
 void startupLoop();
+
+/**
+ * State loop for STATE_MENU
+ **/
 void menuLoop();
+
+/**
+ * State loop for STATE_GAME
+ **/
 void gameLoop();
+
+/**
+ * State loop for STATE_SNAKE
+ **/
 void snakeLoop();
-void displayLoop();
-void gameNRFLoop();
+
+/**
+ * State loop for STATE_TUNE_PID
+ **/
+void tunePID_loop();
+
+/**
+ * State loop called exactly once when transitioning to STATE_ERROR
+ * */
 void errorLoop();
-void errorTransition();
+
+/**
+ * Helper function to load the above functions to the FSM
+ **/
 void loadStateFunctionsToFSM();

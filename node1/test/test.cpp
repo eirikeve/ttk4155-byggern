@@ -78,7 +78,7 @@
 
 
 #ifndef TEST_EEPROM
-#define TEST_EEPROM 1
+#define TEST_EEPROM 0
 #endif
 
 
@@ -441,14 +441,8 @@ void testSubScreen()
     s2.goToStart();
     s3.goToStart();
 
-    //
 
-
-
-    //
-
-
-    /*s1.writeString("Writing to 2 displays. This is display 1.");
+    s1.writeString("Writing to 2 displays. This is display 1.");
     s2.writeString("This is display 2.");
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
@@ -478,11 +472,11 @@ void testSubScreen()
     s2.clear();
     s2.addSubScreen(&s3, 64, Orientation::RIGHT);
     s3.addBorderLines();
-    //s1.writeString("A third subscreen has been added.");
-    //s3.writeString("Screen 3");
+    s1.writeString("A third subscreen has been added.");
+    s3.writeString("Screen 3");
     s3.updateBorderLines();
     s1.render();
-    //_delay_ms(3000);
+    _delay_ms(3000);
 
     s1.clear();
     s2.clear();
@@ -501,40 +495,16 @@ void testSubScreen()
     s3.updateBorderLines();
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
-    //
-    
-/*
-    printf("S1 page0: %d\n", s1.page0);
-    printf("S1 page1: %d\n", s1.page1);
-    printf("S1 col0: %d\n", s1.col0);
-    printf("S1 col1: %d\n", s1.col1);
 
-    printf("S2 page0: %d\n", s2.page0);
-    printf("S2 page1: %d\n", s2.page1);
-    printf("S2 col0: %d\n", s2.col0);
-    printf("S2 col1: %d\n", s2.col1);
-
-    printf("S3 page0: %d\n", s3.page0);
-    printf("S3 page1: %d\n", s3.page1);
-    printf("S3 col0: %d\n", s3.col0);
-    printf("S3 col1: %d\n", s3.col1);
-    printf("S3 pagesize: %d\n", s3.pagesize);
-    printf("S3 colsize: %d\n", s3.colsize);
-*/
-
-/*
-    //
     s2.removeSubScreen();
     s1.clear();
     s2.clear();
-    //
     s1.writeString("Removed Subscreen 3");
     s2.writeString("Only these two subscreens are currently in use");
     s1.render((uint8_t*)AVR_VRAM_1);
     _delay_ms(3000);
     s2.clear();
     s1.clear();
-    */
 }
 
 
@@ -1073,32 +1043,32 @@ void testEEPROM()
         }
     }
 
-    // // Test Retrieve
-    // srand(seed); // Reset rand with same seed
-    // for (uint16_t address = 0; address < 512; ++address)
-    // {
-    //     data_in = address % UINT8_MAX;
+    // Test Retrieve
+    srand(seed); // Reset rand with same seed
+    for (uint16_t address = 0; address < 512; ++address)
+    {
+        data_in = address % UINT8_MAX;
 
-    //     data_out = eepromRead(address);
-    //     if (data_in != data_out)
-    //     {
-    //         printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
-    //         ++retrieval_errors;
-    //     }
-    // }
-    // printf("Finished. %3d write err, %3d read err\n", write_errors, retrieval_errors);
+        data_out = eepromRead(address);
+        if (data_in != data_out)
+        {
+            printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
+            ++retrieval_errors;
+        }
+    }
+    printf("Finished. %3d write err, %3d read err\n", write_errors, retrieval_errors);
 
-    // for (uint16_t address = 0; address < 512; ++address)
-    // {
-    //     data_in = address % UINT8_MAX;
+    for (uint16_t address = 0; address < 512; ++address)
+    {
+        data_in = address % UINT8_MAX;
 
-    //     data_out = eepromRead(address);
-    //     if (data_in != data_out)
-    //     {
-    //         printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
-    //         ++retrieval_errors;
-    //     }
-    // }
+        data_out = eepromRead(address);
+        if (data_in != data_out)
+        {
+            printf("Read err: EEPROM[%3d] = %02X (should be %02X)\n", address,data_out, data_in);
+            ++retrieval_errors;
+        }
+    }
     printf("Finished. %3d write err, %3d read err\n", write_errors, retrieval_errors);
 }
 #endif //TEST_EEPROM

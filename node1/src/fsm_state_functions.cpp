@@ -1,8 +1,8 @@
 #include "fsm_state_functions.h"
 
 namespace {
-    // PID values
-    uint8_t values[] = {50, 100, 0};
+    // PID values       Kp      Ti      Td
+    uint8_t values[] = {50,     100,    0};
 }
 void playStartupVideo()
 {
@@ -84,6 +84,30 @@ void playStartupVideo()
     _delay_ms(250);
 }
 
+void readPIDValuesFromEEPROM()
+{
+    // Kp
+    values[0] = eepromRead((uint16_t)EEPROM_PID_P_ADDR);
+
+    // Ti
+    values[1] = eepromRead((uint16_t)EEPROM_PID_I_ADDR);
+
+    // Td
+    values[2] = eepromRead((uint16_t)EEPROM_PID_D_ADDR);
+}
+
+void storePIDValuesInEEPROM()
+{
+    // Kp
+    eepromWrite((uint16_t)EEPROM_PID_P_ADDR, values[0]);
+
+    // Ti
+    eepromWrite((uint16_t)EEPROM_PID_I_ADDR, values[1]);
+
+    // Td
+    eepromWrite((uint16_t)EEPROM_PID_P_ADDR, values[2]);
+}
+
 void startupLoop()
 {   
     // Reset timer blink period here, in case of reset after ERROR.
@@ -109,7 +133,13 @@ void startupLoop()
 
 }
 
+    /**
+     * Note: We originally implemented a dynamic Menu (see menu.h and menuNode.h).
+     * However, due to memory issues (perhaps due to calling calloc/malloc repeatedly during runtime),
+     * we decided to implement a static menu instead.
+    **/
 void menuLoop() {
+
     const uint8_t nrOfItems = 3;
 
     char* menu[] = {"Play game", "Tune PID", "Snake"};
@@ -282,6 +312,8 @@ void tunePID_loop(){
     const uint8_t nrOfItems = 4;
     char* menu[] = {"Kp", "Ti", "Td", "Exit"};
     
+    
+    
     uint8_t index = 0;
 
     Joystick & joystick = Joystick::getInstance();
@@ -290,6 +322,15 @@ void tunePID_loop(){
     Screen screen = Screen();
 	screen.clear();
     screen.render((uint8_t*)AVR_VRAM_1);
+
+    screen.clear();
+    screen.writeString("Reading from EEPROM..");
+    screen.render();
+    _delay_ms(1000);
+    readPIDValuesFromEEPROM();
+    screen.clear();
+    
+    
 
     int8_t x;
 	int8_t y;
@@ -352,6 +393,11 @@ void tunePID_loop(){
                     screen.clear();
                     screen.render();
                     if (index == nrOfItems - 1) {
+                        screen.clear();
+                        screen.writeString("Storing in EEPROM..");
+                        screen.render();
+                        _delay_ms(1000);
+                        storePIDValuesInEEPROM();
                         fsm.handleEvent(EV_STOP_TUNE_PID);
                         screen.clear();
                         return;
@@ -378,22 +424,6 @@ void errorLoop()
     return;
 }
 
-void errorTransition()
-{
-    // Broadcast RESET to other nodes
-    CAN & can = CAN::getInstance();
-    CanMessage msg;
-    msg.id = CAN_ID_RESET;
-    msg.length = CAN_LENGTH_RESET;
-    msg.data[0] = 0b0;
-    can.transmit(&msg);
-    if(!(checkForACK()))
-    {
-        // Try twice
-        can.transmit(&msg);
-    }
-
-}
 
 void loadStateFunctionsToFSM()
 {
@@ -402,37 +432,26 @@ void loadStateFunctionsToFSM()
     stateFunctions s_fun;
 
     s_fun.state = STATE_STARTUP1;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = startupLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_MENU;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = menuLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_GAME;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = gameLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_SNAKE;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = snakeLoop;
     fsm.addStateFunctions(s_fun);
 
-    // s_fun.state = STATE_DISPLAY;
-    // // s_fun.transitionFunction    = nothingHappens;
-    // s_fun.stateLoopFunction     = displayLoop;
-    // fsm.addStateFunctions(s_fun);
-
     s_fun.state = STATE_TUNE_PID;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = tunePID_loop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_ERROR;
-    // s_fun.transitionFunction    = errorTransition;
     s_fun.stateLoopFunction     = errorLoop;
     fsm.addStateFunctions(s_fun);
 }
