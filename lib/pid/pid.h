@@ -23,8 +23,6 @@ class PID
 	float I_Factor;
 	//! The Derivative tuning constant
 	float D_Factor;
-
-    int16_t debug;
         
         
 
