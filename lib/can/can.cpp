@@ -8,10 +8,8 @@
 // #include "../CAN/MCP2515.h"
 
 ISR(MCP2515_vect) {
-    // printf("Recieved\n");
     CAN& can = CAN::getInstance();
     uint8_t reg = can.mcp2515Read(MCP_CANINTF);
-    // printf("Interrupt\n");
     // Check if message have been received
 	if (reg & 1) {
 		can.canMessageReceived = true;
@@ -34,7 +32,6 @@ void CAN::initialize(SPI* spi, bool enableLoopbackMode) {
     uint8_t value = this->mcp2515Read(MCP_CANSTAT);
     // uint8_t value = mcp2515_read(MCP_CANSTAT);
     if ((value & MODE_MASK) != MODE_CONFIG)	{
-        //printf("MCP2515 error: NOT in configuration mode after reset!\n");
         return;
     }
 
@@ -86,7 +83,6 @@ void CAN::transmit(CanMessage* msg) {
     // Check if buffer is ready for transmission
 	uint8_t is_clear = this->mcp2515Read(MCP_TXB0CTRL);
 	if (bit_is_set(is_clear, 3)) {
-		printf("CAN transmit error: Buffer0 is already pending transmission when sending message with id: %d\n", msg->id);
 		return;
     }
     // Write ID

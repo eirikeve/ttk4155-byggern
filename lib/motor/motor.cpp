@@ -20,7 +20,6 @@ void controller() {
     // motor.processValue += value;
     
     int8_t u = motor.pid.controller(motor.ref, value);
-    // printf("Input: %d\n", u);
     motor.u = u;
     motor.enc = value;
 
@@ -84,23 +83,11 @@ void Motor::goLeft() {
 
 void Motor::run(int8_t speed) {
     if (speed > 100 || speed < -100) {
-        //printf("Motor error: Max value in motor::run is 100, got %d\n", speed);
         return;
     }
 
     this->ref = speed;
-    // motor.setDirection(u);
-    // if (u & (1 << 8)) {
-    //     u = ((~u) + 1);
-    // }
-    // motor.setSpeed((uint8_t) u);
 
-    // if (u == 0) {
-    //     clr_bit(*EN_PIN.port, EN_PIN.nr);
-    // }
-    // else {
-    //     set_bit(*EN_PIN.port, EN_PIN.nr);
-    // }
 }
 
 

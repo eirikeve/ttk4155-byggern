@@ -28,9 +28,8 @@ void Snake::run(){
 	}
 	// show score for 2 seconds before ending the game
 	this->printScore();
-	// printf("Finished run in snake1\n");
 	_delay_ms(2000);
-	//printf("Finished run in snake2\n");
+
 	return;
 	
 }

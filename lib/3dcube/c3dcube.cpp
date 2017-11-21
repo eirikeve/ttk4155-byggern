@@ -24,16 +24,13 @@ void c3DCube::run(bool flexOn)
     btnPress = joystick.buttonPressed();
     _delay_ms(20);
     do{
-        //printf("Loop! Jsx %d, Jsy %d\n", joystick_x, joystick_y);
         joystick_x = joystick.readX();
         joystick_y = -joystick.readY(); // Up reads as positive, but pixel index increase downwards
         btnPress = joystick.buttonPressed();//joystick.buttonPressed();
         s.clear();
-        //printf("Clr\n");
         runTimeStep(joystick_x, joystick_y);
         s.render();
         _delay_ms(5);
-        //printf("render\n");
     } while (!btnPress);
 }
 
@@ -82,7 +79,6 @@ void c3DCube::drawToVram()
             if (y0 < 0) y0 = 0;
             int8_t y1 = hi_lower_coord + y_offset + y_line_offset_here + 1;
             if (y1 > OLED_PIXELS_HEIGHT) y1 = OLED_PIXELS_HEIGHT;
-            //printf("x: %d, y:line_offset %d\n", x, y_line_offset_here);
             for (uint8_t y = y0; y < y1; ++y)
             {
                 putPixel(x,y);
@@ -144,7 +140,6 @@ int8_t c3DCube::calcLineOffset(uint8_t a_coord, int8_t opposite_dim_flex)
 
     int8_t length = 32;
     int8_t base_offset = ((a_coord*(32-a_coord))/16); // Max abs 16
-    //printf("Coord %d, Base offset %d\n", a_coord, base_offset);
     return (base_offset * opposite_dim_flex) / 8; // Max abs 16
 }
 
@@ -170,7 +165,6 @@ void c3DCube::simFlex(int8_t joystick_x, int8_t joystick_y)
     
     int16_t delta_joystick_x = (joystick_x - last_joystick_x);
     int16_t delta_joystick_y = (joystick_y - last_joystick_y);
-    //printf("DeltaX %d, DeltaY %d\n", delta_joystick_x, delta_joystick_y);
     last_joystick_x = joystick_x;
     last_joystick_y = joystick_y;
     int8_t threshold = 5;

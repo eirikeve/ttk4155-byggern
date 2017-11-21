@@ -22,8 +22,8 @@ class Slider
                 return instance;
             }
             else {
-                //printf("Slider error: Maximum number of instances are: 2, with the highest id: 1. Trying to access Slider id: %d\n", id);
-                assert(false);
+                return NULL;
+
             }
         }
         void initialize(ADC *adc, PIN *buttonPin);
