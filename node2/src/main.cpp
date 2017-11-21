@@ -102,11 +102,5 @@ int main(void)
             motor.setPIDparameters(recv.data[0], recv.data[1], recv.data[2]);
             printf("Set new PID parameters to, Kp = %d ( actually 1/100000) the value, Ti = %d, (actually 100) the value Td = %d\n", recv.data[0], recv.data[1], recv.data[2]);
         } 
-        else if (recv.id == CAN_ID_SEND_SOUND) {
-            playSound((Sound) recv.data[0], true);
-        }
-        else if (recv.id == CAN_ID_STOP_SOUND) {
-            playSound((Sound)recv.data[0], false);
-        }
 	}
 }

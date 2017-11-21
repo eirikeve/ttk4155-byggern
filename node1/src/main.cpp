@@ -74,6 +74,7 @@ int main(void)
     sendResetUntilACK();
     printf("Node1 Starting\n");
     playStartupVideo();
+
 	while (true)
 	{
         fsm.runStateLoop();

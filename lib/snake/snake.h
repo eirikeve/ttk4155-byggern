@@ -48,7 +48,7 @@ private:
 	// prints map to oled screen
 	void printMap();
 	// prints ending score screen
-	void printScore();
+	void printScore(uint8_t best_highscore);
 	
 public:
 	Snake() {}
