@@ -68,7 +68,7 @@ $ sudo apt-add-repository ppa:ubuntuhandbook1/apps && \
 * For OSX see
 http://maxembedded.com/2015/06/setting-up-avr-gcc-toolchain-on-linux-and-mac-os-x/
 
-* For Windows, download the required programs and add to path, or just use an UNIX based OS.
+* For Windows, download the required programs and add to path, or just use a real UNIX based OS such as Linux.
 ### Compiling and flashing
 
 __Node 1__ was flashed via a JTAG interface with Atmel ICE, while __Node 2__ was flashed directly using a serial interface.
