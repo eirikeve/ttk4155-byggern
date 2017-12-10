@@ -18,8 +18,3 @@ After node2 is flashed, the serial monitor can be opened again, and the same ste
 
 If using another computer and getting an error saying that you don't have access to the serial port, enter the command
 $ sudo chmod 777 /dev/ttyACM0
-
-If using the normal computer, we have 3 different instances of the repo cloned locally:
-~/Documents/Byggern/:   The "Official" repo where we do our main development, branch: /feature/finished_game. (You should be here when working on the main game). 
-~/1asd/Byggern/: This repo is at the feature/display_sram branch, and used for testing of the display.
-~/temp/Byggern/ (I believe this is the correct path):   Repo we used for development of snake, branch: feature/snake.

@@ -4,8 +4,7 @@ The following text provides a guide to the general workflow for developing code 
 1. Check out to a new branch
 2. Develop new features / fix bugs in the branch
 3. Write unit tests to check that the developed code works as expected
-4. Check that the latest build is green on the [Buildserver](https://drone.viestinta.eu/)
-5. Open pull request to merge branch back to master
+4. Open pull request to merge branch back to master
 
 
 ## Checking out new branch
