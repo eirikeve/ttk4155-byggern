@@ -32,7 +32,7 @@ void FSM::reset()
 
 void FSM::transitionTo(uint8_t s)
 {
-    printf("New state %d\n", s);
+    // printf("New state %d\n", s);
     // Change state, set onState function, perform transition function
     current_state = s;
     stateLoopFunction = stateFunctionsArray[s].stateLoopFunction;
@@ -101,33 +101,33 @@ void FSM::handleEvent(uint8_t event)
                 
                 break;
             }
-            case EV_START_DISPLAY:
+            // case EV_START_DISPLAY:
+            // {
+            //     if (current_state == STATE_MENU)
+            //     {
+            //         transitionTo(STATE_DISPLAY);
+            //     }
+            //     break;
+            // }
+            // case EV_DISPLAY_END:
+            // {
+            //     if (current_state == STATE_DISPLAY)
+            //     {
+            //         transitionTo(STATE_MENU);
+            //     }
+            //     break;
+            // }
+            case EV_START_TUNE_PID:
             {
                 if (current_state == STATE_MENU)
                 {
-                    transitionTo(STATE_DISPLAY);
+                    transitionTo(STATE_TUNE_PID);
                 }
                 break;
             }
-            case EV_DISPLAY_END:
+            case EV_STOP_TUNE_PID:
             {
-                if (current_state == STATE_DISPLAY)
-                {
-                    transitionTo(STATE_MENU);
-                }
-                break;
-            }
-            case EV_START_GAME_NRF:
-            {
-                if (current_state == STATE_MENU)
-                {
-                    transitionTo(STATE_GAME_NRF);
-                }
-                break;
-            }
-            case EV_GAME_NRF_END:
-            {
-                if (current_state == STATE_GAME_NRF)
+                if (current_state == STATE_TUNE_PID)
                 {
                     transitionTo(STATE_MENU);
                 }

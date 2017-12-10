@@ -35,6 +35,11 @@ int main(void)
     Servo& servo = Servo::getInstance();
     servo.initialize(45);
 
+    ADC_internal& adc = ADC_internal::getInstance();
+
+    IR_detector& ir = IR_detector::getInstance();
+    ir.initialize(&adc, NULL, 1);
+
     TWI_Master_Initialise();
     sei();
     
@@ -48,21 +53,26 @@ int main(void)
 
     Solenoid & solenoid = Solenoid::getInstance();
 
-    ADC_internal & adc = ADC_internal::getInstance();
+    
 
-    IR_detector& ir = IR_detector::getInstance();
-    ir.initialize(&adc, NULL, 4);
 
-    float Kp = 0.008;
-    float Ti = 100000;
-    float Td = 0;
-    motor.initialize(&dac, &timer, &encoder, Kp,Ti,Td, 5);
+    motor.initialize(&dac, &timer, &encoder, 1, 1, 1, 5);
+
+    // Initialize pins used for buzzer
+    set_bit(DDRB, DDB6); //12   høy snake
+    set_bit(DDRG, DDG5); //5    høy slange spiser
+    set_bit(DDRE, DDE5); //4    høy spill
+    clr_bit(PORTE, PE5);
+    clr_bit(PORTB, PB6);
+    clr_bit(PORTG, DDG5);
 
     CanMessage recv;
     CanMessage msg;
 
     printf("Sending RESET Until ACK\n");
-    sendResetUntilACK();
+    msg.id = CAN_ID_RESET;
+    msg.length = CAN_LENGTH_RESET;
+    msg.data[0] = 0;
 
 
     msg.id = CAN_ID_ACK;
@@ -86,5 +96,11 @@ int main(void)
 			runGame();
             printf("Back to Main Loop\n");
         }
+        else if (recv.id == CAN_ID_CHANGE_PID_PARAMETERS) {
+            printf("Recvd PID, sending ACK\n");
+            can.transmit(&msg);
+            motor.setPIDparameters(recv.data[0], recv.data[1], recv.data[2]);
+            printf("Set new PID parameters to, Kp = %d ( actually 1/100000) the value, Ti = %d, (actually 100) the value Td = %d\n", recv.data[0], recv.data[1], recv.data[2]);
+        } 
 	}
 }

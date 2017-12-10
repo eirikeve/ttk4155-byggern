@@ -48,12 +48,15 @@ private:
 	// prints map to oled screen
 	void printMap();
 	// prints ending score screen
-	void printScore();
+	void printScore(uint8_t best_highscore);
 	
 public:
+	Snake() {}
+	// ~Snake() {s1.clear(); free(map);}
 	// initial run function 
 	void run();
 	// returns highscore, used to save the highscore for later
 	inline uint8_t getHighScore() const {return highscore;} 
+
 
 };

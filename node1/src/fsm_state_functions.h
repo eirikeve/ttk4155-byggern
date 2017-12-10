@@ -26,7 +26,7 @@
 
 
 
-
+void playStartupVideo();
 void startupLoop();
 void menuLoop();
 void gameLoop();

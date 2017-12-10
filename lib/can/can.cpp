@@ -4,14 +4,14 @@
 #include "canmsg.h"
 
 #include "can.h"
+#include "lib/utilities/utilities.h"
 // #include "../CAN/SPI.h"
 // #include "../CAN/MCP2515.h"
 
 ISR(MCP2515_vect) {
-    // printf("Recieved\n");
     CAN& can = CAN::getInstance();
     uint8_t reg = can.mcp2515Read(MCP_CANINTF);
-    // printf("Interrupt\n");
+
     // Check if message have been received
 	if (reg & 1) {
 		can.canMessageReceived = true;
@@ -61,6 +61,9 @@ void CAN::initialize(SPI* spi, bool enableLoopbackMode) {
         this->mcp2515BitModify(MCP_CANCTRL, MODE_MASK, MODE_NORMAL);
     }
     
+    // Clear interrupt flag
+    this->mcp2515BitModify(MCP_CANINTF, 0x01, 0x00); 
+
     // Enable GP interrupt on MCP2515
     this->mcp2515BitModify(MCP_CANINTE, 0x1, 0xFF);
     
@@ -76,8 +79,16 @@ void CAN::initialize(SPI* spi, bool enableLoopbackMode) {
     // Enable global interrupts
     sei();
 
+
     // No messages have been received
     this->canMessageReceived = false;
+
+    uint8_t reg = mcp2515Read(MCP_CANINTF);
+    // printf("Interrupt\n");
+    // Check if message have been received
+	if (reg & 1) {
+		canMessageReceived = true;
+	}
 }
 
 void CAN::transmit(CanMessage* msg) {
@@ -111,6 +122,7 @@ CanMessage CAN::receive() {
 
     // Check if message is received
 	if (this->canMessageReceived) {
+        // printf("interrupt has been detected\n");
         
 		// Get message id
 		msg.id =  this->mcp2515Read(MCP_RXB0SIDH) << 3;
