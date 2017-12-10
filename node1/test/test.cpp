@@ -53,7 +53,7 @@
 #endif
 
 #ifndef TEST_SERVO
-#define TEST_SERVO 0
+#define TEST_SERVO 1
 #endif
 
 #ifndef TEST_SLIDER
@@ -78,7 +78,7 @@
 
 
 #ifndef TEST_EEPROM
-#define TEST_EEPROM 1
+#define TEST_EEPROM 0
 #endif
 
 

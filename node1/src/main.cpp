@@ -35,29 +35,16 @@
 #include "../lib/can/canmsg.h"
 #include "../lib/utilities/eeprom.h"
 #include "fsm_state_functions.h"
+#include "../lib/3dcube/c3dcube.h"
 
 
 void toggle_led() {
     PORTB ^= 0b1;
 }
 
-void sendResetUntilACK()
-{
-    CAN & can = CAN::getInstance();
-    CanMessage msg;
-    msg.id = CAN_ID_RESET;
-    msg.length = CAN_LENGTH_RESET;
-    msg.data[0] = 0b0;
-    do{
-        can.transmit(&msg);
-    } while(!(checkForACK()));
-}
-
-
 int main(void)
 {
-    // clr_bit(DDRE, 0);  
-	UART & uart = UART::getInstance();
+	  UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
 
@@ -75,7 +62,7 @@ int main(void)
      
     ADC& adc = ADC::getInstance();
     Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 10, &pb3);
+    joystick.initialize(&adc, 30, &pb3);
 
     Slider & slider0 = Slider::getInstance(0);
     slider0.initialize(&adc, &pb2);
@@ -87,10 +74,11 @@ int main(void)
     loadStateFunctionsToFSM();
 
     sendResetUntilACK();
-
     printf("Node1 Starting\n");
+    playStartupVideo();
+
 	while (true)
 	{
         fsm.runStateLoop();
-	}
+  }
 }

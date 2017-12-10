@@ -17,8 +17,13 @@
 #define INDEX_APPLE 95
 #define INDEX_SQUARE 96
 
-#define EEPROM_SNAKE_HIGHSCORE_ADDR_L 0
-#define EEPROM_SNAKE_HIGHSCORE_ADDR_H 1
+// EEPROM addresses for PID parameters
+#define EEPROM_PID_P_ADDR 10
+#define EEPROM_PID_I_ADDR 11
+#define EEPROM_PID_D_ADDR 12
+
+// EEPROM address for Snake highscore
+#define EEPROM_SNAKE_ADDR 15
 
 #define set_bit(reg, bit) (reg |= (1 << (bit)))
 #define set_bit_value(reg, bit, val) (reg |= (val << (bit)))

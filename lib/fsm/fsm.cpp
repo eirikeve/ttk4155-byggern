@@ -32,7 +32,7 @@ void FSM::reset()
 
 void FSM::transitionTo(uint8_t s)
 {
-    printf("New state %d\n", s);
+    // printf("New state %d\n", s);
     // Change state, set onState function, perform transition function
     current_state = s;
     stateLoopFunction = stateFunctionsArray[s].stateLoopFunction;
@@ -48,12 +48,14 @@ void FSM::handleEvent(uint8_t event)
     {
             case EV_RESET:
             {
+                // Always occurs after getting a reset CAN msg, respond with ACK
                 transitionTo(STATE_STARTUP1);
                 // Send ACK after RESET recv
                 CAN & can = CAN::getInstance();
                 CanMessage msg;
                 msg.length = 1;
                 msg.id = CAN_ID_ACK;
+                can.transmit(&msg);
 
                 break;
             }
@@ -99,66 +101,62 @@ void FSM::handleEvent(uint8_t event)
                 
                 break;
             }
-            case EV_START_DISPLAY:
+            // case EV_START_DISPLAY:
+            // {
+            //     if (current_state == STATE_MENU)
+            //     {
+            //         transitionTo(STATE_DISPLAY);
+            //     }
+            //     break;
+            // }
+            // case EV_DISPLAY_END:
+            // {
+            //     if (current_state == STATE_DISPLAY)
+            //     {
+            //         transitionTo(STATE_MENU);
+            //     }
+            //     break;
+            // }
+            case EV_START_TUNE_PID:
             {
                 if (current_state == STATE_MENU)
                 {
-                    transitionTo(STATE_DISPLAY);
+                    transitionTo(STATE_TUNE_PID);
                 }
                 break;
             }
-            case EV_DISPLAY_END:
+            case EV_STOP_TUNE_PID:
             {
-                if (current_state == STATE_DISPLAY)
-                {
-                    transitionTo(STATE_MENU);
-                }
-                break;
-            }
-            case EV_START_GAME_NRF:
-            {
-                if (current_state == STATE_MENU)
-                {
-                    transitionTo(STATE_GAME_NRF);
-                }
-                break;
-            }
-            case EV_GAME_NRF_END:
-            {
-                if (current_state == STATE_GAME_NRF)
+                if (current_state == STATE_TUNE_PID)
                 {
                     transitionTo(STATE_MENU);
                 }
                 break;
             }
             case EV_NO_CAN_ACK:
-                {
-                    if (current_state != STATE_ERROR)
-                    {
-                        transitionTo(STATE_ERROR);
-                    }
-                    break;
-                }
             case EV_MISSING_STATE_FUNCTIONS:
-            {
-                if (current_state != STATE_ERROR)
-                {
-                    transitionTo(STATE_ERROR);
-                }
-                break;
-            }
             default:
+            {
+                // Some error occurred.
                 transitionTo(STATE_ERROR);
-                break;
+                // Set LED Blinking to very fast
+                stateLoopFunction();
+                // Send RESET to other nodes
+                sendResetUntilACK();
+                // If we ever get ACK, goto startup
+                transitionTo(STATE_STARTUP1);
+                
+            }
+
     }
 
 }
 
 void FSM::runStateLoop()
 {
-    if (stateLoopFunction != nothingHappens   && 
-        stateLoopFunction != NULL             &&
-        current_state != (uint8_t)STATE_ERROR)
+    if (stateLoopFunction != nothingHappens && 
+        stateLoopFunction != NULL           &&
+        current_state     != STATE_ERROR)
     {
         stateLoopFunction();
     }
@@ -208,4 +206,5 @@ void _fsm_extern_handle_event(uint8_t event)
     FSM & fsm = FSM::getInstance();
     fsm.handleEvent(event);
 }
+
 #endif // __AVR_ATmega162__

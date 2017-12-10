@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#define NUM_STATES_NODE1 7
+#define NUM_STATES_NODE1 6
 
 
 //#ifdef __AVR_ATmega162__
@@ -15,8 +15,8 @@ enum state_node1_t
     STATE_MENU,
     STATE_GAME,
     STATE_SNAKE,
-    STATE_DISPLAY,
-    STATE_GAME_NRF,
+    // STATE_DISPLAY,
+    STATE_TUNE_PID,
     STATE_ERROR
 };
 
@@ -29,10 +29,10 @@ enum ev_node1_t
     EV_GAME_OVER,
     EV_START_SNAKE,
     EV_SNAKE_OVER,
-    EV_START_DISPLAY,
-    EV_DISPLAY_END,
-    EV_START_GAME_NRF,
-    EV_GAME_NRF_END,
+    // EV_START_DISPLAY,
+    // EV_DISPLAY_END,
+    EV_START_TUNE_PID,
+    EV_STOP_TUNE_PID,
     EV_NO_CAN_ACK,
     EV_MISSING_STATE_FUNCTIONS
 };
@@ -139,6 +139,7 @@ private:
     // Private due to singleton design pattern
     FSM();
     void init();
+
 
 public:
     // Deleted due to singleton design pattern
