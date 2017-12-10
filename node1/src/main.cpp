@@ -35,6 +35,8 @@
 #include "../lib/can/canmsg.h"
 #include "../lib/utilities/eeprom.h"
 #include "fsm_state_functions.h"
+#include "../lib/3dcube/c3dcube.h"
+
 
 
 void toggle_led() {
@@ -59,7 +61,7 @@ int main(void)
      
     ADC& adc = ADC::getInstance();
     Joystick & joystick = Joystick::getInstance();
-    joystick.initialize(&adc, 20, &pb3);
+    joystick.initialize(&adc, 30, &pb3);
 
     Slider & slider0 = Slider::getInstance(0);
     slider0.initialize(&adc, &pb2);

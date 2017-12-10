@@ -293,7 +293,6 @@ void c3DCube::updateFlex(int8_t &current_flex, int8_t &max_flex, int8_t &current
 
 }
 
-
 void c3DCube::drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
 {
     int8_t dx = x1 - x0;

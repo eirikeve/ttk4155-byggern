@@ -1,0 +1,3 @@
+[submodule "ble_spi_service/ble_app_spi"]
+	path = ble_spi_service/ble_app_spi
+	url = https://github.com/aasmune/ble_app_spi

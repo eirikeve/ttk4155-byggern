@@ -88,5 +88,4 @@ class Motor
 
         friend void controller();
 
-
 };

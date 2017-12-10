@@ -8,33 +8,6 @@
 #include "../lib/ir_detector/ir_detector.h"
 #include "lib/utilities/sound.h"
 
-void playSound(Sound soundSelect, bool enable) {
-    switch (soundSelect) {
-        case PLAY_GAME:
-            if (enable) {
-                set_bit(PORTE, PE5);
-            }
-            else {
-                clr_bit(PORTE, PE5);
-            }
-            break;
-        case PLAY_SNAKE:
-            if (enable) {
-                set_bit(PORTB, PB6);
-            }
-            else {
-                clr_bit(PORTB, PB6);
-            }
-            break;
-        case SNAKE_EAT:
-            set_bit(PORTG, DDG5);
-            _delay_ms(5);
-            clr_bit(PORTG, DDG5);
-            break;
-        default:
-            break;
-    }
-}
 
 void runGame(){
     CAN& can = CAN::getInstance();
@@ -62,7 +35,6 @@ void runGame(){
             }
             motor.run(0); // Stop motor and reset servo!
             servo.setAngle(0);
-            playSound(PLAY_GAME, false);
             return;
         }
 
@@ -90,7 +62,6 @@ void runGame(){
             msg.length = CAN_LENGTH_ACK;
             msg.data[0] = 0b0;
             can.transmit(&msg);
-            playSound(PLAY_GAME, false);
             return;
         }
 

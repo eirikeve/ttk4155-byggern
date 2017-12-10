@@ -4,12 +4,12 @@
 #include "canmsg.h"
 
 #include "can.h"
-// #include "../CAN/SPI.h"
-// #include "../CAN/MCP2515.h"
+#include "lib/utilities/utilities.h"
 
 ISR(MCP2515_vect) {
     CAN& can = CAN::getInstance();
     uint8_t reg = can.mcp2515Read(MCP_CANINTF);
+
     // Check if message have been received
 	if (reg & 1) {
 		can.canMessageReceived = true;
@@ -22,15 +22,13 @@ void CAN::initialize(SPI* spi, bool enableLoopbackMode) {
 
     // Reset MCP2515
     this->mcp2515Reset();
-    // mcp2515_reset();
 
     // Put MCP2515 in config mode for configuring can
     this->mcp2515BitModify(MCP_CANCTRL, MODE_MASK, MODE_CONFIG);
-    // mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, MODE_CONFIG);
 
     // Check that MCP2515 is in config mode before continuing
     uint8_t value = this->mcp2515Read(MCP_CANSTAT);
-    // uint8_t value = mcp2515_read(MCP_CANSTAT);
+
     if ((value & MODE_MASK) != MODE_CONFIG)	{
         return;
     }
@@ -58,6 +56,9 @@ void CAN::initialize(SPI* spi, bool enableLoopbackMode) {
         this->mcp2515BitModify(MCP_CANCTRL, MODE_MASK, MODE_NORMAL);
     }
     
+    // Clear interrupt flag
+    this->mcp2515BitModify(MCP_CANINTF, 0x01, 0x00); 
+
     // Enable GP interrupt on MCP2515
     this->mcp2515BitModify(MCP_CANINTE, 0x1, 0xFF);
     
@@ -73,8 +74,15 @@ void CAN::initialize(SPI* spi, bool enableLoopbackMode) {
     // Enable global interrupts
     sei();
 
+
     // No messages have been received
     this->canMessageReceived = false;
+
+    uint8_t reg = mcp2515Read(MCP_CANINTF);
+    // Check if message have been received
+	if (reg & 1) {
+		canMessageReceived = true;
+	}
 }
 
 void CAN::transmit(CanMessage* msg) {
@@ -107,6 +115,7 @@ CanMessage CAN::receive() {
 
     // Check if message is received
 	if (this->canMessageReceived) {
+        // printf("interrupt has been detected\n");
         
 		// Get message id
 		msg.id =  this->mcp2515Read(MCP_RXB0SIDH) << 3;

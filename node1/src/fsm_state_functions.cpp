@@ -1,9 +1,37 @@
 #include "fsm_state_functions.h"
 
+#include "lib/utilities/utilities.h"
+#include "lib/utilities/eeprom.h"
+
 namespace {
-    // PID values       Kp      Ti      Td
-    uint8_t values[] = {50,     100,    0};
+    // PID values
+    uint8_t values[] = {60, 100, 1};
 }
+
+void readPIDValuesFromEEPROM()
+{
+    // Kp
+    values[0] = eepromRead((uint16_t)EEPROM_PID_P_ADDR);
+
+    // Ti
+    values[1] = eepromRead((uint16_t)EEPROM_PID_I_ADDR);
+
+    // Td
+    values[2] = eepromRead((uint16_t)EEPROM_PID_D_ADDR);
+}
+
+void storePIDValuesInEEPROM()
+{
+    // Kp
+    eepromWrite((uint16_t)EEPROM_PID_P_ADDR, values[0]);
+
+    // Ti
+    eepromWrite((uint16_t)EEPROM_PID_I_ADDR, values[1]);
+
+    // Td
+    eepromWrite((uint16_t)EEPROM_PID_D_ADDR, values[2]);
+}
+
 void playStartupVideo()
 {
     Screen s1 = Screen();
@@ -118,6 +146,13 @@ void startupLoop()
 
     FSM & fsm = FSM::getInstance();
     CAN & can = CAN::getInstance();
+
+    // storePIDValuesInEEPROM();
+    // _delay_ms(100);
+    // values[0] = 50;
+    // values[1] = 90;
+    // values[2] = 10;
+    readPIDValuesFromEEPROM();
 
     // If all state functions are loaded into the fsm, go to the menu state
     if (fsm.checkAllStateFunctionsExist())
@@ -287,6 +322,17 @@ void gameLoop()
                 return;
                
             }
+
+            if (joystick.buttonPressed()) {
+                
+                // Force exit on joystick button pressed down
+                msg.id = CAN_ID_RESET;
+                msg.length = CAN_LENGTH_RESET;
+                msg.data[0] = 0;
+                can.transmit(&msg);
+                fsm.handleEvent(EV_GAME_OVER);
+                return;
+            }
         }
     // Should not ever reach this, but added just in case
     fsm.handleEvent(EV_GAME_OVER);
@@ -321,7 +367,14 @@ void tunePID_loop(){
 
     Screen screen = Screen();
 	screen.clear();
-    screen.render((uint8_t*)AVR_VRAM_1);
+    screen.render();
+
+    screen.clear();
+    screen.writeString("Reading from EEPROM..");
+    screen.render();
+    _delay_ms(1000);
+    readPIDValuesFromEEPROM();
+    screen.clear();
 
     screen.clear();
     screen.writeString("Reading from EEPROM..");

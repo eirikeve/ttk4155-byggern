@@ -3,6 +3,8 @@
 #include "snake.h"
 #include "lib/utilities/eeprom.h"
 #include <stdlib.h>
+#include "../lib/utilities/eeprom.h"
+
 
 // Code inspired by https://codereview.stackexchange.com/questions/66481/snake-game-in-c
 // All functions have been changed, some have been removed and some added
@@ -212,14 +214,14 @@ void Snake::printScore(uint8_t best_highscore){
 	itoa(snakeLength-3, score, 10);
 	s1.writeString(score);
 	s1.goTo(5,32);
-	if (best_highscore == snakeLength - 3)
+	if (best_highscore < snakeLength - 3)
 	{
 		s1.writeString("NEW HIGHSCORE!");
 	}
 	else
 	{
 		s1.writeString("HIGHSCORE: ");
-		itoa(snakeLength-3, score, 10);
+		itoa(best_highscore, score, 10);
 		s1.writeString(score);
 	}
 

@@ -34,6 +34,11 @@ int main(void)
     Servo& servo = Servo::getInstance();
     servo.initialize(45);
 
+    ADC_internal & adc = ADC_internal::getInstance();
+
+    IR_detector& ir = IR_detector::getInstance();
+    ir.initialize(&adc, NULL, 4);
+
     TWI_Master_Initialise();
     sei();
     
@@ -47,10 +52,7 @@ int main(void)
 
     Solenoid & solenoid = Solenoid::getInstance();
 
-    ADC_internal & adc = ADC_internal::getInstance();
-
-    IR_detector& ir = IR_detector::getInstance();
-    ir.initialize(&adc, NULL, 4);
+    motor.initialize(&dac, &timer, &encoder, 1, 1, 1, 5);
 
     float Kp = 0.008;
     float Ti = 100000;
@@ -84,7 +86,8 @@ int main(void)
         }
         else if (recv.id == CAN_ID_CHANGE_PID_PARAMETERS) {
             can.transmit(&msg);
-            motor.setPIDparameters(recv.data[0] / 100.0, recv.data[1], recv.data[2]);
-        }
+            motor.setPIDparameters(recv.data[0], recv.data[1], recv.data[2]);
+            printf("Set new PID parameters to, Kp = %d ( actually 1/100000) the value, Ti = %d, (actually 100) the value Td = %d\n", recv.data[0], recv.data[1], recv.data[2]);
+        } 
 	}
 }
