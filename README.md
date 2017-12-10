@@ -1,7 +1,9 @@
 # Byggern
 
 Project repository for TTK 4155 - Embedded and Industrial Computer Systems Design, Autumn 2017.  
+
 Group: Håvard Borge (__Howiezi__ @ GitHub), Åsmund Eek (__aasmune__ @ GitHub), Eirik Vesterkjær (__eirikeve__ @ GitHub)  
+
 
 https://github.com/eirikeve/Byggern.git
 
@@ -56,3 +58,4 @@ In no specific order, here are the main features implemented in this embedded co
 [0x1800, 0x1FFF] 2kB
     - VRAM 1: [0x1800, 0x1BFF]
     - VRAM 2: [0x1C00, 0x1FFF]
+
