@@ -1,6 +1,7 @@
 #ifdef __AVR_ATmega162__
 #pragma once
 #include "snake.h"
+#include "lib/utilities/eeprom.h"
 #include <stdlib.h>
 #include "../lib/utilities/eeprom.h"
 
@@ -32,11 +33,14 @@ void Snake::run(){
 	uint8_t best_highscore = eepromRead((uint16_t)EEPROM_SNAKE_ADDR);
     if (snakeLength - 3 > best_highscore)
     {
-		eepromWrite((uint16_t)EEPROM_SNAKE_ADDR, snakeLength-3);
+		best_highscore == snakeLength - 3;
+		eepromWrite((uint16_t)EEPROM_SNAKE_ADDR, best_highscore);
 	}
 	
 	this->printScore(best_highscore);
 	_delay_ms(2000);
+
+
 	return;
 	
 }
@@ -226,6 +230,7 @@ void Snake::printScore(uint8_t best_highscore){
 	if (snakeLength -3 > highscore) highscore = snakeLength -3;
 	s1.render();
 }
+
 
 
 #endif

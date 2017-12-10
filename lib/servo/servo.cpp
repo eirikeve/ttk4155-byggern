@@ -65,7 +65,6 @@ void Servo::setAnglePercentage(int8_t percentage) {
 }
 
 void Servo::setDutyCycle(float ms) { 
-    // printf("ms: %d\n", (int) (ms * 100));
     if (ms >= 1.0 && ms <= 2.0) {
         uint16_t foo = (ms*ICR1)/20;
         OCR1A = foo;

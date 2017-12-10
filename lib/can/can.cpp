@@ -5,8 +5,6 @@
 
 #include "can.h"
 #include "lib/utilities/utilities.h"
-// #include "../CAN/SPI.h"
-// #include "../CAN/MCP2515.h"
 
 ISR(MCP2515_vect) {
     CAN& can = CAN::getInstance();
@@ -24,17 +22,14 @@ void CAN::initialize(SPI* spi, bool enableLoopbackMode) {
 
     // Reset MCP2515
     this->mcp2515Reset();
-    // mcp2515_reset();
 
     // Put MCP2515 in config mode for configuring can
     this->mcp2515BitModify(MCP_CANCTRL, MODE_MASK, MODE_CONFIG);
-    // mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, MODE_CONFIG);
 
     // Check that MCP2515 is in config mode before continuing
     uint8_t value = this->mcp2515Read(MCP_CANSTAT);
-    // uint8_t value = mcp2515_read(MCP_CANSTAT);
+
     if ((value & MODE_MASK) != MODE_CONFIG)	{
-        //printf("MCP2515 error: NOT in configuration mode after reset!\n");
         return;
     }
 
@@ -84,7 +79,6 @@ void CAN::initialize(SPI* spi, bool enableLoopbackMode) {
     this->canMessageReceived = false;
 
     uint8_t reg = mcp2515Read(MCP_CANINTF);
-    // printf("Interrupt\n");
     // Check if message have been received
 	if (reg & 1) {
 		canMessageReceived = true;
@@ -97,7 +91,6 @@ void CAN::transmit(CanMessage* msg) {
     // Check if buffer is ready for transmission
 	uint8_t is_clear = this->mcp2515Read(MCP_TXB0CTRL);
 	if (bit_is_set(is_clear, 3)) {
-		printf("CAN transmit error: Buffer0 is already pending transmission when sending message with id: %d\n", msg->id);
 		return;
     }
     // Write ID

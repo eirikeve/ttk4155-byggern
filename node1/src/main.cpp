@@ -38,22 +38,21 @@
 #include "../lib/3dcube/c3dcube.h"
 
 
+
 void toggle_led() {
     PORTB ^= 0b1;
 }
 
 int main(void)
 {
-	  UART & uart = UART::getInstance();
+    // Initialize instances
+	UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
 
-    printf("Node 1 startup\n");
     Timer& timer0 = Timer::getInstance(0);
     timer0.initialize(500, toggle_led, &pb0);
     timer0.start();
-
-    
 
     SPI& spi = SPI::getInstance(0);
     CAN& can = CAN::getInstance();
@@ -71,14 +70,20 @@ int main(void)
     slider1.initialize(&adc, &pb1);
 
     FSM & fsm = FSM::getInstance();
+
+    // Initialize FSM
     loadStateFunctionsToFSM();
 
+    // Ensure Node 2 resets
     sendResetUntilACK();
-    printf("Node1 Starting\n");
+
+    // Displays a video upon startup
     playStartupVideo();
 
 	while (true)
 	{
+        // Runs the stateLoop. These are defined in fsm_state_functions.cpp
         fsm.runStateLoop();
-  }
+    }
+
 }

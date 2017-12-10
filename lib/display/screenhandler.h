@@ -6,52 +6,81 @@
 #include "screen.h"
 #include "../timer/timer.h"
 
+/**
+ * ScreenHandler implements interrupt-based rendering and dual buffering to SRAM
+ **/
 class ScreenHandler
 {
-// Private variables
+
 private:
-    const uint8_t max_num_screens = 5; // Number of screens in handler
+    // We limit the number of screens in the handler to 5, to avoid using dynamic memory
+    const uint8_t max_num_screens = 5; 
+    // Current number of screens in the handler
     uint8_t num_screens;
-    uint8_t array_size;
+    // Currently used SRAM buffer
     uint8_t* currentBuffer;
+    // Array of screens in
     Screen * screens[5];
 
-// Public variables
-public:
-
-// Private methods
 private:
+    // Standard constructor
     ScreenHandler();
-    
+    // Renders the SRAM
     void _render();
-    void _addScreenToArray(Screen * s);
+    // Changes VRAM buffer for the screens in screenhandler.
     void _changeVRAMBuffer();
+    // Clears ready_to_render flags for screens in the handler, usually not called!
     void _clearRenderFlags();
 
-// Public methods
 public:
+    // Singleton implementation
     static ScreenHandler& getInstance()
     {
         static ScreenHandler instance;
         return instance;
     }
-    
-
-    void addScreen(Screen * s);
-    void removeScreen(Screen * s);
-    uint8_t getNumScreens() const;
-    Screen* getScreenPtr(uint8_t screen_index);
-    bool isReadyToRender();
-    
-    void _interruptHandlerRoutine();
 
     // Deleted due to singleton design pattern
     ScreenHandler(ScreenHandler const&)    = delete;
     
     // Deleted due to singleton design pattern
     void operator=(ScreenHandler const&)  = delete;
-};
 
+    /**
+     * Adds screen to the Handler if there is space. (max 4 screens in it already)
+     * @param s: Screen object pointer
+     **/
+    void addScreen(Screen * s);
+
+    /**
+     * Removes that screen from the handler if it is in the array.
+     * @param s:  Screen object pointer
+     **/
+    void removeScreen(Screen * s);
+
+    // Number of screens currently in handler.
+    uint8_t getNumScreens() const;
+
+    /**
+     * Returns a pointer to element # screen_index in the handler's array
+     * @param screen_index: Element # in array
+    **/
+    Screen* getScreenPtr(uint8_t screen_index);
+
+    /**
+     * Returns true if at least one screen in the handler is ready to render
+     **/
+    bool isReadyToRender();
+    
+    /**
+     * Called each interrupt to render the screens
+     **/
+    void _interruptHandlerRoutine();
+
+};
+/**
+ * Calls _interruptHandlerRoutine
+**/
 void ScreenHandlerTimerInterrupt();
 
 

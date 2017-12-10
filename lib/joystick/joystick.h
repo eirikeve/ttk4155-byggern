@@ -65,20 +65,6 @@ class Joystick
     int8_t readY();
 
     /**
-         * Read raw value of joystick signal in x direction.
-         * Values are not formatted, and in range 0 to 255.
-         * @return value in x direction.
-         * */
-    uint8_t readRawX();
-
-    /**
-         * Read raw value of joystick signal in y direction.
-         * Values are not formatted, and in range 0 to 255.
-         * @return value in y direction.
-         * */
-    uint8_t readRawY();
-
-    /**
          * Get direction of last read.
          * @return last direction of joystick.
          * 
@@ -86,18 +72,6 @@ class Joystick
          * in a single direction. Use instead getDirX/y
          * */
     Direction getDir();
-
-    /**
-         * Get direction of last read in x direction.
-         * @return last direction of joystick (EAST / WEST).
-         * */
-    Direction getDirX();
-
-    /**
-         * Get direction of last read in y direction.
-         * @return last direction of joystick (SOUTH / NORTH).
-         * */
-    Direction getDirY();
 
     /**
          * Check if button is pressed.

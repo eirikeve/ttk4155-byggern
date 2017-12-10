@@ -13,7 +13,7 @@ enum CHANNEL {
 
 /**
  * Class for reading analog signal using an external ADC accessed via
- * an external addres in the memory map.
+ * an external addres in the memory map, for Node 1.
  * */
 class ADC
 {

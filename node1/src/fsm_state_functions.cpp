@@ -112,11 +112,37 @@ void playStartupVideo()
     _delay_ms(250);
 }
 
+void readPIDValuesFromEEPROM()
+{
+    // Kp
+    values[0] = eepromRead((uint16_t)EEPROM_PID_P_ADDR);
+
+    // Ti
+    values[1] = eepromRead((uint16_t)EEPROM_PID_I_ADDR);
+
+    // Td
+    values[2] = eepromRead((uint16_t)EEPROM_PID_D_ADDR);
+}
+
+void storePIDValuesInEEPROM()
+{
+    // Kp
+    eepromWrite((uint16_t)EEPROM_PID_P_ADDR, values[0]);
+
+    // Ti
+    eepromWrite((uint16_t)EEPROM_PID_I_ADDR, values[1]);
+
+    // Td
+    eepromWrite((uint16_t)EEPROM_PID_P_ADDR, values[2]);
+}
+
 void startupLoop()
 {   
     // Reset timer blink period here, in case of reset after ERROR.
     Timer& timer = Timer::getInstance(0);
     timer.setInterruptPeriod(500);
+
+    playStartupVideo();
 
     FSM & fsm = FSM::getInstance();
     CAN & can = CAN::getInstance();
@@ -142,7 +168,13 @@ void startupLoop()
 
 }
 
+    /**
+     * Note: We originally implemented a dynamic Menu (see menu.h and menuNode.h).
+     * However, due to memory issues (perhaps due to calling calloc/malloc repeatedly during runtime),
+     * we decided to implement a static menu instead.
+    **/
 void menuLoop() {
+
     const uint8_t nrOfItems = 3;
 
     char* menu[] = {"Play game", "Tune PID", "Snake"};
@@ -246,14 +278,12 @@ void gameLoop()
         can.transmit(&msg);
         ack = checkForACK();
     } while(ack == false); 
-    printf("Got PID ACK\n");
 
     msg.id = CAN_ID_START_GAME;
     do{
         can.transmit(&msg);
         ack = checkForACK();
     } while(ack == false); 
-    printf("Got Start ACK - running game\n");
 
     int8_t joystick_x;
     int8_t joystick_y;
@@ -267,7 +297,7 @@ void gameLoop()
             joystick.read(&joystick_x, &joystick_y);
             slider_x = slider1.read();
             slider_button_pressed = slider1.buttonPressed();
-            //printf("x: %d, y: %d, dir: %d\n", x, y, dir);
+
             msg.id = CAN_ID_SEND_USR_INPUT;
             msg.length = 3;
             msg.data[0] = joystick_x;
@@ -279,7 +309,6 @@ void gameLoop()
             recv = can.receive();
             if (recv.id == CAN_ID_STOP_GAME)
             {
-                printf("\tRecvd STOP. Sending ACK.\n");
                 msg.id = CAN_ID_ACK;
                 msg.length = CAN_LENGTH_ACK;
                 msg.data[0] = 0b0;
@@ -289,8 +318,6 @@ void gameLoop()
             }
             else if (recv.id == CAN_ID_RESET)
             {
-                printf("\tRecvd Reset! Exiting Loop\n");
-                // Usually, trigger event here.
                 fsm.handleEvent(EV_RESET);
                 return;
                
@@ -317,43 +344,21 @@ void snakeLoop()
     FSM & fsm = FSM::getInstance();
 
     // The snake game runs until exit is requested by user.
-    // printf("Started snek\n");
 	Snake sn;
     
     sn.run();
-    // printf("Snek finished\n");
-    // Highscore is stored in the EEPROM, so we check if the new score is higher than the current highscore.
-    /*uint16_t highscore = (uint16_t)sn.getHighScore();
-    uint8_t current_highscore_L = eepromRead(EEPROM_SNAKE_HIGHSCORE_ADDR_L);
-    uint8_t current_highscore_H = eepromRead(EEPROM_SNAKE_HIGHSCORE_ADDR_H);
-    uint16_t current_highscore = (uint16_t)current_highscore_L | ((uint16_t)current_highscore_H << 8);
-    if (highscore > current_highscore)
-    {
-        current_highscore_H = (uint8_t)((highscore >> 8) & 0xFF);
-        current_highscore_L = (uint8_t)(highscore & 0xFF);
-        eepromWrite(EEPROM_SNAKE_HIGHSCORE_ADDR_H, current_highscore_H);
-        eepromWrite(EEPROM_SNAKE_HIGHSCORE_ADDR_L, current_highscore_L);
 
-        // Todo: Add a nice splash screen which congratulates the user!
-    }
-    */
-
+    
     fsm.handleEvent(EV_SNAKE_OVER);
     
 }
 
 
-// void displayLoop()
-// {
-//     FSM & fsm = FSM::getInstance();
-//     // todo add some awesome graphic stuff here!
-//     fsm.handleEvent(EV_DISPLAY_END);
-//     _delay_ms(500); // Remove when actual display stuff is added.
-// }
-
 void tunePID_loop(){
     const uint8_t nrOfItems = 4;
     char* menu[] = {"Kp", "Ti", "Td", "Exit"};
+    
+    
     
     uint8_t index = 0;
 
@@ -370,6 +375,15 @@ void tunePID_loop(){
     _delay_ms(1000);
     readPIDValuesFromEEPROM();
     screen.clear();
+
+    screen.clear();
+    screen.writeString("Reading from EEPROM..");
+    screen.render();
+    _delay_ms(1000);
+    readPIDValuesFromEEPROM();
+    screen.clear();
+    
+    
 
     int8_t x;
 	int8_t y;
@@ -463,22 +477,6 @@ void errorLoop()
     return;
 }
 
-void errorTransition()
-{
-    // Broadcast RESET to other nodes
-    CAN & can = CAN::getInstance();
-    CanMessage msg;
-    msg.id = CAN_ID_RESET;
-    msg.length = CAN_LENGTH_RESET;
-    msg.data[0] = 0b0;
-    can.transmit(&msg);
-    if(!(checkForACK()))
-    {
-        // Try twice
-        can.transmit(&msg);
-    }
-
-}
 
 void loadStateFunctionsToFSM()
 {
@@ -487,37 +485,26 @@ void loadStateFunctionsToFSM()
     stateFunctions s_fun;
 
     s_fun.state = STATE_STARTUP1;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = startupLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_MENU;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = menuLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_GAME;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = gameLoop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_SNAKE;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = snakeLoop;
     fsm.addStateFunctions(s_fun);
 
-    // s_fun.state = STATE_DISPLAY;
-    // // s_fun.transitionFunction    = nothingHappens;
-    // s_fun.stateLoopFunction     = displayLoop;
-    // fsm.addStateFunctions(s_fun);
-
     s_fun.state = STATE_TUNE_PID;
-    // s_fun.transitionFunction    = nothingHappens;
     s_fun.stateLoopFunction     = tunePID_loop;
     fsm.addStateFunctions(s_fun);
 
     s_fun.state = STATE_ERROR;
-    // s_fun.transitionFunction    = errorTransition;
     s_fun.stateLoopFunction     = errorLoop;
     fsm.addStateFunctions(s_fun);
 }

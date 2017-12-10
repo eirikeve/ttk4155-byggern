@@ -85,18 +85,7 @@ void Motor::run(int8_t speed) {
     }
 
     this->ref = speed;
-    // motor.setDirection(u);
-    // if (u & (1 << 8)) {
-    //     u = ((~u) + 1);
-    // }
-    // motor.setSpeed((uint8_t) u);
 
-    // if (u == 0) {
-    //     clr_bit(*EN_PIN.port, EN_PIN.nr);
-    // }
-    // else {
-    //     set_bit(*EN_PIN.port, EN_PIN.nr);
-    // }
 }
 
 
