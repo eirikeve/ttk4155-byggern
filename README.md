@@ -5,6 +5,7 @@ Group: Håvard Borge (__Howiezi__ @ GitHub), Åsmund Eek (__aasmune__ @ GitHub),
 
 https://github.com/eirikeve/Byggern.git
 
+We forgot to take a nice top-down picture of the project - so here's an image showing the corner of our breadboard while we were in the process of tearing everything apart.
 ![Breadboard](/images/byggern_img_readme.png)
 
 ## Project Overview
@@ -42,6 +43,17 @@ In no specific order, here are the main features implemented in this embedded co
 * __Custom BLE service on NRF52__ with passthrough of GATT characteristic to an SPI master (not implemented in final version due to an SPI bug we didn't have time to figure out).  
 * __Dynamic menu system__ (not included in final version due to memory limitations). 
 * __UML__ documentation of project.
+
+
+## Compiling and flashing
+
+__Node 1__ was flashed via a JTAG interface with Atmel ICE, while __Node 2__ was flashed directly over UART.
+This is done by calling   
+```Bash
+cmake .
+sudo make flash
+```  
+in the node1/node2 folders.
 
 
 ## Address space on Node 1
