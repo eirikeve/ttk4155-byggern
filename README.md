@@ -38,8 +38,8 @@ In no specific order, here are the main features implemented in this embedded co
 * "3D" block game with __bouncing/physics emulation__.  
 * __EEPROM writing & reading__ for storage of high scores (Snake) and PID values.  
 * __Custom BLE service on NRF52__ with passthrough of GATT characteristic to an SPI master (not implemented in final version due to an SPI bug we didn't have time to figure out).  
-* Dynamic menu system (not included in final version due to memory limitations). 
-* UML documentation of project.
+* __Dynamic menu system__ (not included in final version due to memory limitations). 
+* __UML__ documentation of project.
 
 
 ## Address space on Node 1
