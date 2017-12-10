@@ -1,5 +1,4 @@
 # Toolchain for AVR atmega 2560. Uses avr-libc and AVRDUDE.
-# Thanks to Sondre Wangenstein Baugstø for help with debugging in the process of setting up the toolchain.
 
 cmake_minimum_required(VERSION 3.5)
 

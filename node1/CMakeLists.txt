@@ -1,5 +1,4 @@
 # Toolchain for AVR atmega 162. Uses avr-libc and AVRDUDE.
-# Thanks to Sondre Wangenstein Baugstø for help with debugging in the process of setting up the toolchain.
 
 cmake_minimum_required(VERSION 3.5)
 
@@ -13,8 +12,6 @@ set(BITCLOCK 1)
 
 # Set CPU frequency
 math(EXPR F_CPU "${FOSC}")
-
-# Program names
 
 # AVR compiler used
 set(CMAKE_C_COMPILER    avr-gcc)
