@@ -13,13 +13,14 @@ private:
   MenuNode *current;
   uint8_t selectIndex;
 
+
 public:
   Menu(MenuNode *head);
 
   uint8_t getSelectIndex();
 
   MenuNode *getCurrent();
-  MenuNode *select();
+  void select();
   void *back();
   void *up();
   void *down();

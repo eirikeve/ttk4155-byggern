@@ -20,3 +20,30 @@ void testADC();
 
 // Test the IR detector
 void testIRDetector();
+
+// Test spi
+void testSpi();
+
+// Test can
+void testCanLoopback();
+void testCanTransmit();
+void testCanReceive();
+
+// Test servo
+void testServo();
+void testControlServoOverCan();
+
+// Test encoder
+void testEncoder();
+
+// Test motor
+void testTuneMotor();
+void testMotor();
+void testMotorOverCan();
+
+
+// Test solenoid
+
+void testSolenoid();
+
+void testLab8();

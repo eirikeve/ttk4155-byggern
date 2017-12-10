@@ -3,24 +3,6 @@
 #include "../utilities/utilities.h"
 ADC_internal::ADC_internal() {
 
-    // // Enable the ADC
-    // set_bit(ADCSRA, ADEN);
-
-    // // ref voltage to AREF 
-    // set_bit(ADMUX, REFS0);
-    // clr_bit(ADMUX, REFS1);
-      
-    
-    // // prescale clock frequency down with a factor of 128
-    // set_bit(ADCSRA, ADPS0);
-    // set_bit(ADCSRA, ADPS1);
-    // set_bit(ADCSRA, ADPS2);
-
-    // //Select channel 0
-    // clr_bit(ADMUX, MUX2);
-    // clr_bit(ADMUX, MUX1);
-    // clr_bit(ADMUX, MUX0);
-
     // Enable the ADC
     ADCSRA |= (1 << ADEN);
     

@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #include "../adc/adc.h"
-#include "../utilities/pin.h"
+#include "../pins/pins.h"
 
 enum Direction
 {

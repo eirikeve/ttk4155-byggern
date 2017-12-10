@@ -1,12 +1,11 @@
 #ifdef __AVR_ATmega162__
 #include "screen.h"
-extern "C" {
-#include <stdlib.h>
-}
+
 
 Screen::Screen()
 {
     oled = OLED();
+    vram = (uint8_t*)AVR_VRAM_1;
     superScreen = NULL;
     subScreen = NULL;
     page0 = 0;
@@ -15,9 +14,9 @@ Screen::Screen()
     col1 = 128;
     pagesize = page1 - page0;
     colsize = col1 - col0;
-    loc_page = 0;
-    loc_col = 0;
+    goToStart();
     has_border_lines = false;
+    ready_to_render = false;
 }
 
 Screen::Screen(Screen *superscreen, uint8_t sz, Orientation o) : Screen()
@@ -37,24 +36,64 @@ Screen::~Screen()
     }
     if (superScreen)
     {
-        if (superScreen->page0 != page0)
+        if (superScreen->page0 > page0)
         {
-            page0 = superScreen->page0;
+            superScreen->page0 = page0;
         }
-        if (superScreen->page1 != page1)
+        if (superScreen->page1 < page1)
         {
-            page1 = superScreen->page1;
+            superScreen->page1 = page1;
         }
-        if (superScreen->col0 != col0)
+        if (superScreen->col0 > col0)
         {
-            col0 = superScreen->col0;
+            superScreen->col0 = col0;
         }
-        if (superScreen->col1 != col1)
+        if (superScreen->col1 < col1)
         {
-            col1 = superScreen->col1;
+            superScreen->col1 = col1;
         }
         superScreen->subScreen = NULL;
+        superScreen->pagesize = superScreen->page1 - superScreen->page0;
+        superScreen->colsize = superScreen->col1 - superScreen->col0;
     }
+}
+
+void Screen::changeBufferTo(uint8_t * buffer)
+{
+
+    if ((uint8_t*)AVR_VRAM_1 == buffer)
+    {
+        vram = (uint8_t*)AVR_VRAM_1;
+    }
+    else
+    {
+        vram = (uint8_t*)AVR_VRAM_2;
+    }
+}
+
+void Screen::copyVRAMtoCurrentBuffer()
+{
+    uint8_t * source;
+    uint8_t * target;
+    if ((uint8_t*)AVR_VRAM_1 == vram)
+    {
+        source = (uint8_t*)AVR_VRAM_2;
+        target = (uint8_t*)AVR_VRAM_1;
+    }
+    else
+    {
+        source = (uint8_t*)AVR_VRAM_1;
+        target = (uint8_t*)AVR_VRAM_2;
+    }
+
+    for (int p = 0; p < 8; ++p)
+    {
+        for (int c = 0; c < 128; ++c)
+        {
+            target[p * 128 + c] = source[p * 128 + c];
+        }
+    }
+
 }
 
 void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
@@ -71,8 +110,11 @@ void Screen::addSubScreen(Screen *subscreen, uint8_t sz, Orientation o)
 
         subScreen = subscreen;
         subScreen->superScreen = this;
+        subScreen->vram = vram;
+
 
         // Update variables - depending on the Orientation o
+        
         subScreen->page0 = page0;
         subScreen->page1 = page1;
         subScreen->col0 = col0;
@@ -114,11 +156,37 @@ void Screen::removeSubScreen()
 {
     if (subScreen)
     {
-        // subScreen.~Screen(); // Also sets page0, page1 etc.
-        // Done by the destructor I thiink?
+        // Set this screen's dimensions
+        if (subScreen->page0 < page0)
+        {
+             page0 = subScreen->page0;
+        }
+        if (subScreen->page1 > page1)
+        {
+            page1 = subScreen->page1;
+        }
+        if (subScreen->col0 < col0)
+        {
+             col0 = subScreen->col0;
+        }
+        if (subScreen->col1 > col1)
+        {
+             col1 = subScreen->col1;
+        }
+        pagesize = page1 - page0;
+        colsize = col1 - col0;
 
+        // Set subScreen's dimensions to 0. Making it a new screen's subScreen will set its dimensions accordingly
+        subScreen->superScreen = NULL;
+        subScreen->page0 = 0;
+        subScreen->page1 = 0;
+        subScreen->col0 = 0;
+        subScreen->col1 = 0;
+        subScreen->colsize = 0;
+        subScreen->pagesize = 0;
         subScreen = NULL;
     }
+    clear();
 }
 
 void Screen::addBorderLines()
@@ -129,33 +197,49 @@ void Screen::addBorderLines()
 
 void Screen::updateBorderLines()
 {
-    // @todo horizontal border lines. Must know what is written to the screen...
-
-    uint8_t old_loc_col = loc_col;
-    uint8_t old_loc_page = loc_page;
-
     // Only draw if we currently have border lines for this screen.
     if (has_border_lines)
     {
-        for (uint8_t p = 0; p < pagesize; ++p)
+        // Vertical borders
+        if (col1 != OLED_PIXELS_WIDTH)
         {
-            goTo(p, 0);
-            Screen::write(0b01010101);
-            goTo(p, colsize - 1);
-            Screen::write(0b10101010);
+            for (uint8_t p = 0; p < pagesize; ++p)
+            {
+                // Write the whole page.
+                vram[(page0 + p)*128 + col1-1] = 0b11111111;
+            }
+        }
+        // Horizontal borders
+        if (page1 != OLED_PAGES_HEIGHT)
+        {
+            for (uint8_t c = 0; c < colsize; ++c)
+            {
+                // Here, we only write one pixel per page. So we need to ensure that we don't erase anything already written
+                vram[(page1-1)*128 + (col0 + c)] |= (0b10000000); // Top pixel in page
+            }
         }
     }
     else
     {
-        for (uint8_t p = 0; p < pagesize; ++p)
+        
+        // Remove vertical borders
+        if (col1 != OLED_PIXELS_WIDTH)
         {
-            goTo(p, 0);
-            Screen::write(0x00);
-            goTo(p, colsize - 1);
-            Screen::write(0x00);
+            for (uint8_t p = 0; p < pagesize; ++p)
+            {
+                vram[(page0 + p)*128 + col1-1] = 0b00000000;
+            }
+        }
+        // Remove horizontal borders
+        if (page1 != OLED_PAGES_HEIGHT)
+        {
+            for (uint8_t c = 0; c < colsize; ++c)
+            {
+                vram[(page1-1)*128 + (col0 + c)] &= (0b01111111); // Bottom pixel
+            }
         }
     }
-    goTo(old_loc_page, old_loc_col);
+    
 }
 
 void Screen::removeBorderLines()
@@ -169,7 +253,6 @@ void Screen::goToPage(uint8_t page)
     if (page < pagesize)
     {
         loc_page = page;
-        oled.goToPage(loc_page + page0);
     }
 }
 
@@ -178,7 +261,6 @@ void Screen::goToColumn(uint8_t col)
     if (col < colsize)
     {
         loc_col = col;
-        oled.goToColumn(loc_col + col0);
     }
 }
 
@@ -190,7 +272,7 @@ void Screen::goTo(uint8_t page, uint8_t col)
 
 void Screen::writeChar(unsigned char c)
 {
-    if (loc_col + character_size <= colsize && loc_page < pagesize)
+    if (loc_col + character_size < colsize && loc_page < pagesize)
     {
         if (c == '\n')
         {
@@ -205,9 +287,12 @@ void Screen::writeChar(unsigned char c)
         else
         {
             // Enough space to write one more char
-            oled.goTo(loc_page + page0, loc_col + col0);
-            oled.writeChar(c);
-            loc_col += (character_size + 1);
+            for (int i = 0; i < 5; i++)
+            {
+                // write auto-increments loc_col by 1 each call.
+                this->write(pgm_read_word(&font5[c - ' '][i]));
+            }
+            loc_col += (1); // Extra padding / space
             if (loc_col >= colsize)
             {
                 loc_col = 1;
@@ -247,18 +332,16 @@ void Screen::writeString(char *string)
 
 void Screen::write(uint8_t c)
 {
-    oled.write(c);
+    vram[(page0 + loc_page) * 128 + (col0 + loc_col++)] = c;
 }
 
 void Screen::fill(uint8_t v)
 {
     for (int j = page0; j < page1; j++)
     {
-        oled.goTo(j, col0);
-
         for (int i = col0; i < col1; i++)
         {
-            oled.write(v);
+            vram[j * 128 + i] = v;
         }
     }
     updateBorderLines();
@@ -266,38 +349,36 @@ void Screen::fill(uint8_t v)
 void Screen::clear()
 {
     fill(0x00);
-    goTo(0, 1);
+    updateBorderLines();
+    goToStart();
 }
 
-void Screen::selfTest()
+
+
+
+void Screen::render(uint8_t * buffer)
 {
-    clear();
-    goTo(0, 0);
-    // addBorderLines();
-    writeString("Screen Test. supSc:");
-    char buffer[5];
-    itoa((int)(superScreen != nullptr), buffer, 10);
-    writeString(buffer);
-    writeString(" subScr:");
-    itoa((int)(subScreen != nullptr), buffer, 10);
-    writeString(buffer);
-    writeString(" page0:");
-    itoa(page0, buffer, 10);
-    writeString(buffer);
-    writeString(" page1:");
-    itoa(page1, buffer, 10);
-    writeString(buffer);
-    writeString(" col0:");
-    itoa(col0, buffer, 10);
-    writeString(buffer);
-    writeString(" col1:");
-    itoa(col1, buffer, 10);
-    writeString(buffer);
-    char dots[160];
-    for (int i = 0; i < 160; i++)
+    if ((uint8_t*)AVR_VRAM_1 == buffer || (uint8_t*)AVR_VRAM_2 == buffer)
     {
-        dots[i] = '.';
+        // Write SRAM data to the screen
+        for (int p = 0; p < 8; ++p)
+        {
+            oled.goToPage(p);
+            oled.goToColumn(0);
+            for (int c = 0; c < 127; ++c)
+            {
+                oled.write(buffer[p * 128 + c]);
+            }
+            oled.write(0x00);
+        }
     }
-    writeString(dots);
+
+    
+
+}
+
+void Screen::flagReadyToRender()
+{
+    ready_to_render = true;
 }
 #endif
