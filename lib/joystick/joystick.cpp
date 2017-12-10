@@ -53,31 +53,17 @@ void Joystick::initialize(ADC *adc, uint8_t threshold, PIN *buttonPin) {
 
 int8_t Joystick::readX()
 {
-    // this->readRawX();
     this->rawX = this->adc->read(CHANNEL::CH1);
     formatValue(this->rawX, &this->x, this->centerX, this->threshold);
     return this->x;
 }
 
-// uint8_t Joystick::readRawX()
-// {
-//     this->rawX = this->adc->read(CHANNEL::CH1);
-//     return this->rawX;
-// }
-
 int8_t Joystick::readY()
 {
-    // this->readRawY();
     this->rawY = this->adc->read(CHANNEL::CH2);
     formatValue(this->rawY, &this->y, this->centerY, this->threshold);
     return this->y;
 }
-
-// uint8_t Joystick::readRawY()
-// {
-//     this->rawY = this->adc->read(CHANNEL::CH2);
-//     return this->rawY;
-// }
 
 Direction Joystick::read(int8_t *x, int8_t *y)
 {
@@ -126,26 +112,6 @@ Direction Joystick::getDir()
     return d;
 }
 
-// Direction Joystick::getDirX() {
-//     Direction d = Direction::NEUTRAL;
-//     if (this->x > 0) {
-//         d = Direction::EAST;
-//     }
-//     else if (this->x < 0) {
-//         d = Direction::WEST;
-//     }
-// }
-
-// Direction Joystick::getDirY() {
-//     Direction d = Direction::NEUTRAL;
-//     if (this->y > 0) {
-//         d = Direction::NORTH;
-//     }
-//     else if (this->y < 0) {
-//         d = Direction::SOUTH;
-//     }
-// }
-
 bool Joystick::buttonPressed() {
     // Check if button is pressed
     if (this->buttonPin != NULL && !test_bit(*this->buttonPin->pin, this->buttonPin->nr)) {
@@ -163,9 +129,6 @@ bool Joystick::buttonPressed() {
 
 void Joystick::calibrate()
 {
-    // Get center points
-    // this->centerX = this->readRawX();
-    // this->centerY = this->readRawY();
     this->centerX = this->adc->read(CHANNEL::CH1);
     this->centerY = this->adc->read(CHANNEL::CH2);
     this->buttonPressedDown = false;

@@ -7,6 +7,9 @@ extern "C" {
     
 }
 
+/**
+ * Implemention for DAC in Node 2.
+ **/
 class DAC
 {
     public:

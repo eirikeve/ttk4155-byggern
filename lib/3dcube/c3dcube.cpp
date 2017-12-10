@@ -24,16 +24,13 @@ void c3DCube::run(bool flexOn)
     btnPress = joystick.buttonPressed();
     _delay_ms(20);
     do{
-        //printf("Loop! Jsx %d, Jsy %d\n", joystick_x, joystick_y);
         joystick_x = joystick.readX();
         joystick_y = -joystick.readY(); // Up reads as positive, but pixel index increase downwards
         btnPress = joystick.buttonPressed();//joystick.buttonPressed();
         s.clear();
-        //printf("Clr\n");
         runTimeStep(joystick_x, joystick_y);
         s.render();
         _delay_ms(5);
-        //printf("render\n");
     } while (!btnPress);
 }
 
@@ -57,15 +54,6 @@ void c3DCube::drawToVram()
 
 
     // Draw upper cube
-    // Version 1: No flex considered
-    /*for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
-    {
-        for (uint8_t y = hi_upper_coord + y_offset; y < hi_lower_coord + y_offset + 1; ++y)
-        {
-            putPixel(x,y);
-        } 
-    }*/
-
     if ( !(flex) )
     {
     drawLine(hi_right_coord + x_offset, hi_upper_coord + y_offset, hi_left_coord + x_offset, hi_upper_coord + y_offset);
@@ -75,6 +63,7 @@ void c3DCube::drawToVram()
     }
     else // Flex on; draw surface which bounces as the upper square
     {
+        // Draws the first part of the upper square. The left/right edges are straight, while the upper/lower edges can be bent.
         for (uint8_t x = hi_left_coord + x_offset; x < hi_right_coord + x_offset + 1; ++x)
         {
             int8_t y_line_offset_here = calcLineOffset(x - (hi_left_coord + x_offset), y_flex);
@@ -82,13 +71,12 @@ void c3DCube::drawToVram()
             if (y0 < 0) y0 = 0;
             int8_t y1 = hi_lower_coord + y_offset + y_line_offset_here + 1;
             if (y1 > OLED_PIXELS_HEIGHT) y1 = OLED_PIXELS_HEIGHT;
-            //printf("x: %d, y:line_offset %d\n", x, y_line_offset_here);
             for (uint8_t y = y0; y < y1; ++y)
             {
                 putPixel(x,y);
             }
         }
-        // Place pixels with X flex, remove pixels that are flexed away
+        // Here, we make the left/right edges bent. So we "carve" a bend on one side, and add a bend on the other.
         for (uint8_t y = 0; y < OLED_PIXELS_HEIGHT; ++y)
         {
             if (y < hi_lower_coord + y_offset && y >= hi_upper_coord + y_offset)
@@ -144,7 +132,6 @@ int8_t c3DCube::calcLineOffset(uint8_t a_coord, int8_t opposite_dim_flex)
 
     int8_t length = 32;
     int8_t base_offset = ((a_coord*(32-a_coord))/16); // Max abs 16
-    //printf("Coord %d, Base offset %d\n", a_coord, base_offset);
     return (base_offset * opposite_dim_flex) / 8; // Max abs 16
 }
 
@@ -170,7 +157,6 @@ void c3DCube::simFlex(int8_t joystick_x, int8_t joystick_y)
     
     int16_t delta_joystick_x = (joystick_x - last_joystick_x);
     int16_t delta_joystick_y = (joystick_y - last_joystick_y);
-    //printf("DeltaX %d, DeltaY %d\n", delta_joystick_x, delta_joystick_y);
     last_joystick_x = joystick_x;
     last_joystick_y = joystick_y;
     int8_t threshold = 5;
@@ -307,10 +293,6 @@ void c3DCube::updateFlex(int8_t &current_flex, int8_t &max_flex, int8_t &current
 
 }
 
-/*
-Bresenham's Line Algorithm, based on this:
-http://raspberrycompote.blogspot.no/2014/04/low-level-graphics-on-raspberry-pi.html
-*/
 void c3DCube::drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
 {
     int8_t dx = x1 - x0;

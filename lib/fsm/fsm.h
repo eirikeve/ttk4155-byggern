@@ -7,15 +7,12 @@
 #include <stdlib.h>
 #define NUM_STATES_NODE1 6
 
-
-//#ifdef __AVR_ATmega162__
 enum state_node1_t 
 {
     STATE_STARTUP1,
     STATE_MENU,
     STATE_GAME,
     STATE_SNAKE,
-    // STATE_DISPLAY,
     STATE_TUNE_PID,
     STATE_ERROR
 };
@@ -29,64 +26,14 @@ enum ev_node1_t
     EV_GAME_OVER,
     EV_START_SNAKE,
     EV_SNAKE_OVER,
-    // EV_START_DISPLAY,
-    // EV_DISPLAY_END,
     EV_START_TUNE_PID,
     EV_STOP_TUNE_PID,
     EV_NO_CAN_ACK,
     EV_MISSING_STATE_FUNCTIONS
 };
-/*#define     STATE_STARTUP1  0
-#define     STATE_MENU      1
-#define     STATE_GAME      2
-#define     STATE_SNAKE     3
-#define     STATE_DISPLAY   4
-#define     STATE_NRF       5
-
-#define EV_GOTO_MENU        0
-#define EV_START_GAME       1
-#define EV_GAME_OVER        2
-#define EV_START_SNAKE      3
-#define EV_SNAKE_OVER       4
-#define EV_START_DISPLAY    5
-#define EV_DISPLAY_END      6
-#define EV_START_NRF        7
-#define EV_NRF_END          8*/
 
 
-//#elif __AVR_ATmega2560__
-/*enum state_node2_t
-{
-    STATE_STARTUP2,
-    STATE_IDLE,
-    STATE_GAME_RUNNING,
-    STATE_GAME_OVER
-};
-
-
-enum ev_node2_t
-{
-    EV_GOTO_IDLE,
-    EV_START_GAME,
-    EV_GAME_OVER,
-    EV_EXIT_GAME
-};
-*/
-/*
-#define STATE_STARTUP2      20
-#define STATE_IDLE          21
-#define STATE_GAME_RUNNING  22
-#define STATE_GAME_OVER     23
-
-#define EV_GOTO_IDLE        20
-#define EV_START_GAME       21
-#define EV_GAME_OVER        22
-#define EV_EXIT_GAME        23
-*/
-
-//#endif //__AVR_ATmega162__
-
-
+// callback_function is a void *function_pointer(void) type
 typedef void (*callback_function)(void);
 
 /*
@@ -98,13 +45,10 @@ typedef void (*callback_function)(void);
 struct stateFunctions{
     // A state from state_node1_t
     uint16_t state;
-    // A void *function(void) which will be called repeatedly after the
-    // transition function was called.
     
     // A void *function(void) which will be called upon transitioning to state
     callback_function stateLoopFunction;
 
-    
     stateFunctions() {state = NULL; stateLoopFunction = NULL;}
     stateFunctions(uint8_t s,  callback_function stateLoopFun)
     {
@@ -146,15 +90,45 @@ public:
     FSM(FSM const&)    = delete;
     // Deleted due to singleton design pattern
     void operator=(FSM const&)  = delete;
+
+    /**
+     * Sets the current state to startup, and clears the stateLoopFunction and
+     * stateFunctionsArray.
+     **/
     void reset();
+
+    /**
+     * Depending on state and event, might transition to a new state.
+     * In that case, it changes stateLoopFunctions to the function in stateFunctionsArray
+     * matching the new state.
+     * @param event: Event from the enum ev_node1_t
+     **/
     void handleEvent(uint8_t event);
+
+    /**
+     * Runs the stateLoopFunction. Might trigger transition to ERROR if the function
+     * is NULL/not initialized
+     **/
     void runStateLoop();
+
+    /**
+     * Adds a stateLoopFunction to the array of stateLoopFunctions
+     * @param s_fun a stateFunctions struct with a state and a callback_function variable
+     **/
     void addStateFunctions(stateFunctions s_fun);
+
+    /**
+     * Returns true if all stateFuntions are not NULL and not nothingHappens
+     **/
     bool checkAllStateFunctionsExist();
 
+    // Returns state, cased to int
     inline int getCurrentState() {return this->current_state;}
 
 };
 
+// Does absolutely nothing
 void nothingHappens(void);
+
+// Extern event handler, gets an instance of the fsm and calls fsm.handleEvent(event)
 void _fsm_extern_handle_event(uint8_t event);
