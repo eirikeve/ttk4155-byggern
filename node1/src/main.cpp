@@ -35,6 +35,7 @@
 #include "../lib/can/canmsg.h"
 #include "../lib/utilities/eeprom.h"
 #include "fsm_state_functions.h"
+#include "../lib/3dcube/c3dcube.h"
 
 
 void toggle_led() {
@@ -43,7 +44,7 @@ void toggle_led() {
 
 int main(void)
 {
-	UART & uart = UART::getInstance();
+	  UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
 
@@ -79,5 +80,5 @@ int main(void)
 	while (true)
 	{
         fsm.runStateLoop();
-	}
+  }
 }
