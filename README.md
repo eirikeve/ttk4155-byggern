@@ -5,6 +5,8 @@ Group: Håvard Borge (__Howiezi__ @ GitHub), Åsmund Eek (__aasmune__ @ GitHub),
 
 https://github.com/eirikeve/Byggern.git
 
+![Breadboard](/images/byggern_img_readme.png)
+
 ## Project Overview
 
 We built an embedded computer system for controlling a "ping-pong"-like game. The computer consisted of two separate MCUs communicating over CAN, along with a set of external components, and the physical game board.
@@ -56,3 +58,5 @@ In no specific order, here are the main features implemented in this embedded co
 [0x1800, 0x1FFF] 2kB
     - VRAM 1: [0x1800, 0x1BFF]
     - VRAM 2: [0x1C00, 0x1FFF]
+    
+
