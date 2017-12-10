@@ -1,6 +1,7 @@
 # Byggern
 
 Project repository for TTK 4155 - Embedded and Industrial Computer Systems Design, Autumn 2017.  
+
 Group: Håvard Borge (__Howiezi__ @ GitHub), Åsmund Eek (__aasmune__ @ GitHub), Eirik Vesterkjær (__eirikeve__ @ GitHub)  
 
 https://github.com/eirikeve/Byggern.git
