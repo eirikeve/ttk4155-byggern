@@ -2,6 +2,10 @@
 #include <avr/io.h>
 #include <stdint.h>
 
+/**
+ * Class for reading analog signal using an external ADC accessed via
+ * an external addres in the memory map, for Node 2.
+ * */
 class ADC_internal
 {
     public:

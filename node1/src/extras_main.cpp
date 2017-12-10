@@ -41,7 +41,9 @@ void toggle_led() {
 }
 
 
-
+/**
+ * Returns when the joystick goes from NEUTRAL to RIGHT
+ **/
 void loopUntilRIGHT(Joystick * joystick)
 {
     Direction dir;
@@ -57,6 +59,9 @@ void loopUntilRIGHT(Joystick * joystick)
 
 }
 
+/**
+ * Demonstration of our display's subscreen capabilities
+ **/
 void displayFunction()
 {
     Joystick & joystick = Joystick::getInstance();
@@ -113,7 +118,11 @@ void displayFunction()
 
 }
 
-
+/**
+ * A menu with an animated header.
+ * Has options to let the user control a 3D cube with the joystick,
+ * and demonstrate our display's subscreen capabilities.
+ **/
 void cubeMenu()
 {
 
@@ -151,7 +160,6 @@ void cubeMenu()
 	Direction currentDir = joystick.read(&x, &y);
     Direction lastDir = currentDir;
     
-    //uint8_t old_state = (uint8_t)fsm.getCurrentState();
     char* scrolling_text = "3DCube Demo!         Run the 3DCube with, or without FLEX PHYSICS (TM)!  ";
     uint8_t scrolling_text_length = 73;
     uint16_t scrolling_text_index_counter = 0;
@@ -249,7 +257,9 @@ void cubeMenu()
 	}
 }
 
-
+/**
+ * This is a separate main loop, which we flash separately from the normal main loop, due to memory constraints.
+ **/
 int main(void)
 {
     UART & uart = UART::getInstance();

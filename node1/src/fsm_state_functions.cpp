@@ -142,6 +142,11 @@ void startupLoop()
 
 }
 
+    /**
+     * Note: We originally implemented a dynamic Menu (see menu.h and menuNode.h).
+     * However, due to memory issues (perhaps due to calling calloc/malloc repeatedly during runtime),
+     * we decided to implement a static menu instead.
+    **/
 void menuLoop() {
     const uint8_t nrOfItems = 3;
 

@@ -18,6 +18,7 @@ FSM::FSM()
 
 void FSM::init()
 {
+    current_state = STATE_STARTUP1;
     stateLoopFunction = NULL;
     for (uint8_t state = (uint8_t)STATE_STARTUP1; state < (uint8_t)STATE_STARTUP1 + NUM_STATES_NODE1; ++state)
     {
@@ -32,7 +33,6 @@ void FSM::reset()
 
 void FSM::transitionTo(uint8_t s)
 {
-    // printf("New state %d\n", s);
     // Change state, set onState function, perform transition function
     current_state = s;
     stateLoopFunction = stateFunctionsArray[s].stateLoopFunction;

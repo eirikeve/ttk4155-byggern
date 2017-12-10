@@ -17,20 +17,31 @@ class Slider
                 static Slider instance(0);
                 return instance;
             }
-            else if (id == 1){
+            else {
                 static Slider instance(1);
                 return instance;
             }
-            else {
-                //printf("Slider error: Maximum number of instances are: 2, with the highest id: 1. Trying to access Slider id: %d\n", id);
-                assert(false);
-            }
         }
+        /**
+         * Initializes the instance.
+         * @param adc: Pointer to ADC object
+         * @param buttonPin: the pin we read the slider button from
+         **/
         void initialize(ADC *adc, PIN *buttonPin);
 
+        /**
+         * Read the current slider position, where center is 0
+         **/
         int8_t read();
 
+        /**
+         * Read the current slider position, where left is 0
+         **/
         uint8_t readRaw();
+
+        /**
+         * Return true if this slider's button is pressed down
+         **/
         bool buttonPressed();
 
     private:

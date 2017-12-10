@@ -1,8 +1,7 @@
 /*
  * canmsg.h
- * Defines IDs and LENGTHs for all CAN messages used in the project
+ * Defines IDs and LENGTHs for CAN messages used in the project
  * IDs have some space between them, in case other messages are added
- * All lengths are >= 1, as it is necessary in our CanMessage implementation
  */
 
 #pragma once
@@ -28,6 +27,9 @@
 
 #define CAN_ID_STOP_SOUND 50
 #define CAN_LENGTH_STOP_SOUND 1 // [(uint8_t)sound_id]
+
+#define CAN_ID_CHANGE_PID_PARAMETERS 60
+#define CAN_LENGTH_CHANGE_PID_PARAMETERS 3
 
 #define CAN_ID_CHANGE_PID_PARAMETERS 60
 #define CAN_LENGTH_CHANGE_PID_PARAMETERS 3
