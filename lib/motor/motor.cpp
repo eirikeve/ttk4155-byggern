@@ -17,12 +17,8 @@
 void controller() {
     Motor& motor = Motor::getInstance();
     int16_t value = motor.encoder->read();
-    // motor.processValue += value;
     
     int8_t u = motor.pid.controller(motor.ref, value);
-    // printf("Input: %d\n", u);
-    motor.u = u;
-    motor.enc = value;
 
     if (u & (1 << 8)) {
         motor.goLeft();
@@ -52,7 +48,6 @@ void Motor::initialize(DAC* dac, Timer* timer, Encoder* encoder, float Kp, float
     this->T = T;
     this->pid = PID();
     this->ref = 0;
-    this->processValue = 0;
 
     set_bit(*EN_PIN.ddr, EN_PIN.nr); // Pin for motor enable
     set_bit(*DIR_PIN.ddr, DIR_PIN.nr); // Pin for motor direction
@@ -67,6 +62,8 @@ void Motor::initialize(DAC* dac, Timer* timer, Encoder* encoder, float Kp, float
 }
 
 void Motor::setPIDparameters(float Kp, float Ti, float Td) {
+    Kp /= 10000.0;
+    Ti *= 250;
     this->pid.setParameters(Kp, Kp * this->T / (float) Ti, Kp * Td / (float) this->T);
 }
 
@@ -84,7 +81,6 @@ void Motor::goLeft() {
 
 void Motor::run(int8_t speed) {
     if (speed > 100 || speed < -100) {
-        //printf("Motor error: Max value in motor::run is 100, got %d\n", speed);
         return;
     }
 

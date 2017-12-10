@@ -34,11 +34,11 @@ extern "C" {
 #endif
 
 #ifndef TEST_MOTOR
-#define TEST_MOTOR 0
+#define TEST_MOTOR 1
 #endif
 
 #ifndef TEST_SERVO
-#define TEST_SERVO 1
+#define TEST_SERVO 0
 #endif
 
 #ifndef TEST_CAN
@@ -193,7 +193,7 @@ void testIRDetector() {
     ADC_internal& adc = ADC_internal::getInstance();
 
     IR_detector& ir = IR_detector::getInstance();
-    ir.initialize(&adc, NULL, 4);
+    ir.initialize(&adc, NULL, 1);
     while (true) {
         if(ir.blocked()) {
             printf("Beam blocked\n");
@@ -216,6 +216,7 @@ void testCanLoopback() {
     UART & uart = UART::getInstance();
     uart.initialize(9600);
     enablePrintfWithUart();
+    printf("Starting\n");
 
     SPI& spi = SPI::getInstance(0);
     CAN& can = CAN::getInstance();
@@ -227,6 +228,7 @@ void testCanLoopback() {
     msg.data[0] = 0;
 
     while (true) {
+        printf("test_bit: %d\n", test_bit(PINE, PE4));
         can.transmit(&msg);
         CanMessage recv = can.receive();
         if (recv.id != NULL) {
@@ -234,6 +236,7 @@ void testCanLoopback() {
         }
 
         msg.data[0]++;
+        // _delay_ms(100);
     }
 }
 
@@ -384,9 +387,9 @@ void testTuneMotor() {
 
     Motor& motor = Motor::getInstance();
 
-    float Kp = 0.008;
-    float Ti = 100000;
-    float Td = 0;
+    uint8_t Kp =60;
+    uint8_t Ti = 100;
+    uint8_t Td = 1;
 
     motor.initialize(&dac, &timer, &encoder, Kp,Ti,Td, 5);
     

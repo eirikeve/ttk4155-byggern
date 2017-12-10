@@ -92,3 +92,4 @@ class CAN
     
 
 bool checkForACK();
+void sendResetUntilACK();

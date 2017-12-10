@@ -70,6 +70,8 @@ class Timer
          * */
         void stop();
 
+        void setInterruptPeriod(uint16_t ms);
+
 
     private:
 
@@ -79,6 +81,7 @@ class Timer
 
         // Id of timer
         uint8_t id;
+        uint16_t period;
 
         // // Maximum number of instances
         // const static int MAXIMUM_NUMBER_OF_INSTANCES = 2;
