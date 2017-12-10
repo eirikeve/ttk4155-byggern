@@ -48,7 +48,7 @@ In no specific order, here are the main features implemented in this embedded co
 
 ## Compiling and flashing
 
-__Node 1__ was flashed via a JTAG interface with Atmel ICE, while __Node 2__ was flashed directly over UART.
+__Node 1__ was flashed via a JTAG interface with Atmel ICE, while __Node 2__ was flashed directly using a serial interface.
 This is done by calling   
 ```Bash
 cmake .
