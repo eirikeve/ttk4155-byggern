@@ -1,9 +1,13 @@
 # Byggern
 
 Project repository for TTK 4155 - Embedded and Industrial Computer Systems Design, Autumn 2017.  
+
 Group: Håvard Borge (__Howiezi__ @ GitHub), Åsmund Eek (__aasmune__ @ GitHub), Eirik Vesterkjær (__eirikeve__ @ GitHub)  
 
 https://github.com/eirikeve/Byggern.git
+
+We forgot to take a nice top-down picture of the project - so here's an image showing the corner of our breadboard while we were in the process of tearing everything apart.
+![Breadboard](/images/byggern_img_readme.png)
 
 ## Project Overview
 
@@ -42,6 +46,17 @@ In no specific order, here are the main features implemented in this embedded co
 * __UML__ documentation of project.
 
 
+## Compiling and flashing
+
+__Node 1__ was flashed via a JTAG interface with Atmel ICE, while __Node 2__ was flashed directly using a serial interface.
+This is done by calling   
+```Bash
+cmake .
+sudo make flash
+```  
+in the node1/node2 folders.
+
+
 ## Address space on Node 1
 - OLED COMMAND
 [0X1000, 0X11FF] 512 BYTES
@@ -56,3 +71,5 @@ In no specific order, here are the main features implemented in this embedded co
 [0x1800, 0x1FFF] 2kB
     - VRAM 1: [0x1800, 0x1BFF]
     - VRAM 2: [0x1C00, 0x1FFF]
+    
+
