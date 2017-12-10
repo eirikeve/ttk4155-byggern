@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include "lib/adc_internal/adc_internal.h"
 
+/**
+ * Class for shooting solenoid using an external power supply and a relay.
+ * */
 class Solenoid
 {
     public:
@@ -14,8 +17,7 @@ class Solenoid
         }
 
         /** 
-         * Check if IR beam is blocked.
-         * @return true if beam is blocked since last check, false else
+         * Shoot solenoid
          * */
         void shoot();
 

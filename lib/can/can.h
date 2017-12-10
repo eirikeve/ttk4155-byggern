@@ -99,5 +99,14 @@ class CAN
 };
     
 
+/**
+ * Check for 1 second if received acknowledge message from other node.
+ * @return true if ack message were received, false else.
+ * */
 bool checkForACK();
+
+/**
+ * Send reset commando until other node sends an acknowledge message.
+ * Used to sync major program flow between the two nodes.
+ * */
 void sendResetUntilACK();

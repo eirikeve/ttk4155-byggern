@@ -17,6 +17,9 @@ namespace {
 #endif
 };
 
+/**
+ * Class for communicating over SPI configured as master.
+ * */
 class SPI
 {
     public:

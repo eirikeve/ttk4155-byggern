@@ -53,8 +53,8 @@ void Motor::initialize(DAC* dac, Timer* timer, Encoder* encoder, float Kp, float
     set_bit(*DIR_PIN.ddr, DIR_PIN.nr); // Pin for motor direction
 
     
-    set_bit(PORTD, PD0); // Move to I2C when ready
-    set_bit(PORTD, PD1); // Move to I2C when ready
+    set_bit(PORTD, PD0); // Pin for I2C
+    set_bit(PORTD, PD1); // Pin for I2C
 
     this->setPIDparameters(Kp, Ti, Td);
     this->timer->initialize(this->T, controller, NULL);

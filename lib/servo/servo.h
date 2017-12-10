@@ -2,7 +2,9 @@
 #include <stdint.h>
 
 
-
+/**
+ * Class for controlling a servo using PWM.
+ * */
 class Servo
 {
     public:

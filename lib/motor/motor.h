@@ -7,6 +7,9 @@
 #include "lib/pid/pid.h"
 
 
+/**
+ * Class of controlling a DC motor using a motor box.
+ * */
 class Motor
 {
     public:
@@ -40,7 +43,7 @@ class Motor
 
         /**
          * Set the reference speed of the PID controller
-         * @param speed: [-127, 127], dir depends on sign, while spd depends on abs value.
+         * @param speed: [-127, 127], dir depends on sign, while speed depends on absolute value.
          **/
         void run(int8_t speed);
 
@@ -68,15 +71,14 @@ class Motor
 
         // Pid
         PID pid;
-
+        
+        // Set desired speed of motor
         void setSpeed(uint8_t speed);
         
-        /**
-         * > 0: right
-         * < 0: left
-         * */
+        // Set direction to right
         void goRight();
 
+        // Set direction to left
         void goLeft();
         
     public:
@@ -86,6 +88,7 @@ class Motor
         // Deleted due to singleton design pattern
         void operator=(Motor const&)  = delete;
 
+        // Function to implement the PID controller.
         friend void controller();
 
 };

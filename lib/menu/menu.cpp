@@ -36,7 +36,7 @@ void Menu::select()
     }
 }
 
-void *Menu::back()
+void Menu::back()
 {
     if (this->current == this->head)
     {
@@ -48,7 +48,7 @@ void *Menu::back()
     this->selectIndex = 0;
 }
 
-void *Menu::up()
+void Menu::up()
 {
     if (this->selectIndex > 0)
     {
@@ -56,7 +56,7 @@ void *Menu::up()
     }
 }
 
-void *Menu::down()
+void Menu::down()
 {
     if (this->selectIndex < this->current->getTotNrOfChildren() - 1)
     {

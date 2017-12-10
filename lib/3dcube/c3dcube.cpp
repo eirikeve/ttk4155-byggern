@@ -1,6 +1,3 @@
-// 3dcube.cpp
-// 19/11/2017
-
 #ifdef __AVR_ATmega162__
 
 #include "c3dcube.h"

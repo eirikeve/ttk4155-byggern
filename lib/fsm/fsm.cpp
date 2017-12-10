@@ -1,14 +1,9 @@
-// fsm.cpp
-// 13/11/2017
+#ifdef __AVR_ATmega162__
+#include <stdio.h>
 
 #include "fsm.h"
 #include "../can/can.h"
 #include "../can/canmsg.h"
-
-#ifdef __AVR_ATmega162__
-
-
-#include <stdio.h>
 
 
 FSM::FSM()
@@ -101,22 +96,6 @@ void FSM::handleEvent(uint8_t event)
                 
                 break;
             }
-            // case EV_START_DISPLAY:
-            // {
-            //     if (current_state == STATE_MENU)
-            //     {
-            //         transitionTo(STATE_DISPLAY);
-            //     }
-            //     break;
-            // }
-            // case EV_DISPLAY_END:
-            // {
-            //     if (current_state == STATE_DISPLAY)
-            //     {
-            //         transitionTo(STATE_MENU);
-            //     }
-            //     break;
-            // }
             case EV_START_TUNE_PID:
             {
                 if (current_state == STATE_MENU)

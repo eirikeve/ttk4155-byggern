@@ -1,3 +1,4 @@
+#ifdef __AVR_ATmega2560__
 #include <stdio.h>
 #include "ir_detector.h"
 
@@ -35,3 +36,5 @@ bool IR_detector::blocked() {
 return beamBlocked;
 
 }
+
+#endif

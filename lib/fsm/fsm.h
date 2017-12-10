@@ -1,6 +1,3 @@
-// fsm.h
-// 13/11/2017
-
 #pragma once
 
 #include <stdint.h>

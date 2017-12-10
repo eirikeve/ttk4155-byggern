@@ -70,6 +70,10 @@ class Timer
          * */
         void stop();
 
+        /**
+         * Set new desired interrupt period for timer.
+         * @param ms new desired value between each interrupt
+         * */
         void setInterruptPeriod(uint16_t ms);
 
 

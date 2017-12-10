@@ -8,7 +8,8 @@ extern "C" {
 }
 
 /**
- * Implemention for DAC in Node 2.
+ * Class for converting a digital value 0 - 255 to an analog value 0 - 5V using a DAC
+ * communicating using I2C (TWI).
  **/
 class DAC
 {
@@ -21,8 +22,16 @@ class DAC
             return instance;
         }
 
+        /**
+         * Initialize DAC.
+         * @param address I2C address for device.
+         **/
         void initialize(uint8_t address);
 
+        /**
+         * Start convertion of value.
+         * @param value value to be converted.
+         * */
         void convert(uint8_t value);
 
     private:

@@ -3,6 +3,10 @@
 #include <stdint.h>
 #include "lib/adc_internal/adc_internal.h"
 
+
+/**
+ * Class for detecting if IR beam has been blocked.
+ * */
 class IR_detector
 {
     public:

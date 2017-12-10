@@ -1,12 +1,10 @@
-// c3dcube.h
-// 19/11/2017
-
 #pragma once
 
-#include "../utilities/utilities.h"
 #include <stdint.h>
-#include "../joystick/joystick.h"
-#include "../display/screen.h"
+
+#include "lib/joystick/joystick.h"
+#include "lib/display/screen.h"
+#include "lib/utilities/utilities.h"
 
 
 

@@ -2,6 +2,9 @@
 #include <avr/io.h>
 #include <stdint.h>
 
+/**
+ * Class for reading encoder values of the DC motor used in the project.
+ * */
 class Encoder
 {
     public:
@@ -15,7 +18,7 @@ class Encoder
 
         /**
          * Reads from the encoder.
-         * Return value is the position change since the last call to Encoder::read()
+         * Return value is the position change since last time.
          **/
         int16_t read();
 

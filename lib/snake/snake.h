@@ -6,6 +6,11 @@
 #include "lib/adc/adc.h"
 #include "lib/joystick/joystick.h"
 
+/**
+ * Lightweight implementation of the known game snake.
+ * Uses the Joystick to get game inputs, and uses the display driver to render
+ * the game to the screen.
+ * */
 class Snake
 {
 private:

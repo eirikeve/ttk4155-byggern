@@ -7,6 +7,9 @@
 #include "../adc/adc.h"
 #include "../pins/pins.h"
 
+/**
+ * Class for reading capacitive slider signals in one direction using an ADC, and single button.
+ * */
 class Slider
 {
     public:
